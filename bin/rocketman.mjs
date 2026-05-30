@@ -62,7 +62,9 @@ function doInit(root) {
   mkdirSync(root, { recursive: true });
   cpSync(join(tpl, 'PM'), join(root, 'PM'), { recursive: true });
   if (existsSync(join(PKG, '.claude', 'skills'))) cpSync(join(PKG, '.claude', 'skills'), join(root, '.claude', 'skills'), { recursive: true });
-  log(`${C.grn}✓ scaffolded${C.rst} PM/ + .claude/skills`);
+  if (existsSync(join(PKG, '.claude', 'hooks'))) cpSync(join(PKG, '.claude', 'hooks'), join(root, '.claude', 'hooks'), { recursive: true });
+  if (existsSync(join(PKG, '.claude', 'settings.json'))) cpSync(join(PKG, '.claude', 'settings.json'), join(root, '.claude', 'settings.json'));
+  log(`${C.grn}✓ scaffolded${C.rst} PM/ + .claude (skills, hooks, settings)`);
   doBuild(root);
   log(`\n  ${C.b}Next:${C.rst} open ${C.cyn}PM/index.html${C.rst} — then edit ${C.cyn}PM/data/*.json${C.rst} and ${C.cyn}rocketman build${C.rst}.`);
 }

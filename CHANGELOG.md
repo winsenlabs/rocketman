@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Skill conventions adopted from gstack** — every `/rm-*` skill now has structured frontmatter
+  (`version`, `allowed-tools`, `triggers`), a "When to invoke" section, an explicit phased
+  workflow with gates, plan-mode awareness, and a Completion Status Protocol (DONE /
+  DONE_WITH_CONCERNS / BLOCKED / NEEDS_CONTEXT). Shared rules live once in
+  `.claude/skills/CONVENTIONS.md`.
+- **Generated-file guard hook** — `.claude/hooks/guard-generated.sh` blocks any direct Write/Edit
+  to `PM/index.html` (wired per-skill via frontmatter and globally via `.claude/settings.json`),
+  enforcing the edit-data-not-HTML rule at the tool level. `rocketman init` now scaffolds the
+  hook + settings.
+- **Root `CLAUDE.md`** with skill-routing rules so agents pick the right `/rm-*` skill.
 - **Fleet view** — a ninth view that renders the agent relay in full: every agent's
   presence, and the complete message + handoff stream between agents (with their
   accept / complete / reply trails), newest first. Agent↔agent conversations are now

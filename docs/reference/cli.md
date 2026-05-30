@@ -12,6 +12,7 @@
 | `rocketman check [dir]` | Exit non-zero if the committed hub is stale (use in CI). |
 | `rocketman new <task\|adr\|debug> "Title"` | Append a correctly-shaped entity stub. |
 | `rocketman doctor [dir]` | Validate data + cross-references (backlinks, owners, epics). |
+| `rocketman serve [dir] [--port]` | Serve an editable hub on localhost (comments, doc edits, task moves). |
 
 ## Relay commands — the agent bus
 

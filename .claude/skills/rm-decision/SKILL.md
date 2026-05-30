@@ -1,14 +1,35 @@
 ---
 name: rm-decision
+version: 0.1.0
 description: Record an architecture/product decision as an ADR in PM/data/content.json. Use when a non-obvious choice is made, a trade-off is settled, or the user says "record a decision", "write an ADR", "we decided to…", or reverses an earlier call.
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Bash
+hooks:
+  PreToolUse:
+    - matcher: "Write|Edit"
+      hooks:
+        - type: command
+          command: 'bash "${CLAUDE_PROJECT_DIR:-.}/.claude/hooks/guard-generated.sh"'
+          statusMessage: "Guarding generated files…"
 ---
 
 # /rm-decision — record an ADR
 
-Capture decisions where the *reasoning* matters, so future readers (and agents) don't relitigate
-them. ADRs are append-mostly: you add new ones and supersede old ones, you don't quietly rewrite.
+## When to invoke
 
-## Add the ADR
+When a non-obvious choice is made, a trade-off is settled, or the user says record a decision /
+write an ADR / "we decided to…" / reverses an earlier call. Capture decisions where the
+*reasoning* matters, so future readers don't relitigate them.
+
+## Conventions
+
+Read `.claude/skills/CONVENTIONS.md` and `PM/CLAUDE.md`. ADRs are append-mostly — add new ones,
+supersede old ones, never quietly rewrite.
+
+## Phase 1 — Add the ADR
 
 Append to `adrs[]` in `PM/data/content.json` with the next id (`adr-NN`):
 
@@ -25,17 +46,18 @@ Append to `adrs[]` in `PM/data/content.json` with the next id (`adr-NN`):
 }
 ```
 
-## Superseding
+## Phase 2 — Supersede (if reversing)
 
-If this reverses a prior ADR: set the old one's `status` to `superseded`, add it to this ADR's
-`backlinks`, and reference the new one back. Never delete the old decision — the trail is the value.
-
-`status`: `proposed` (not yet agreed) · `accepted` · `superseded`.
+Set the old ADR's `status` to `superseded`, add it to this ADR's `backlinks`, and reference the
+new one back. Never delete the old decision — the trail is the value. `status`: `proposed` ·
+`accepted` · `superseded`.
 
 ## Finish
 
 ```bash
-node engine/build.mjs
+rocketman build
 ```
+
+Report Completion Status.
 
 > Recorded <ADR>. It's in the **Decisions** view, linked from everything that references it.
