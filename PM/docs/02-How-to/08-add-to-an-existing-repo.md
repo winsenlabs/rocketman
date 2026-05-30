@@ -8,7 +8,7 @@ Drop the hub into any repo without touching your stack.
 
 ```
 cd your-repo
-npx rocketman init
+npx @winsendotai/rocketman init
 git add PM/ .claude/
 git commit -m "Add Rocketman project hub"
 ```

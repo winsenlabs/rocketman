@@ -4,7 +4,7 @@ title: CLI commands
 
 # CLI commands
 
-`rocketman` is a single zero-dependency Node binary. Run it with `npx rocketman <cmd>`
+`rocketman` is a single zero-dependency Node binary. Run it with `npx @winsendotai/rocketman <cmd>`
 (or `node bin/rocketman.mjs <cmd>` from this repo).
 
 ## Project

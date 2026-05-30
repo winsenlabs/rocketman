@@ -58,8 +58,8 @@ Raw HTML is miserable to diff and unreliable for an agent to hand-edit. So Rocke
 
 ```bash
 # in any repo
-npx rocketman init      # scaffold PM/ + the Claude skill stack
-npx rocketman build     # render PM/data/*.json → PM/index.html
+npx @winsendotai/rocketman init      # scaffold PM/ + the Claude skill stack
+npx @winsendotai/rocketman build     # render PM/data/*.json → PM/index.html
 open PM/index.html      # zero deps, opens offline
 ```
 

@@ -130,9 +130,9 @@
     ],
     "content": {
       "doc-t1": { "kind": "Tutorial", "title": "Your first Rocketman project", "meta": "~2 min",
-        "html": "<p>Install Rocketman, scaffold a hub, and open it.</p><pre><code>npx rocketman init\nnpx rocketman build\nopen PM/index.html</code></pre><p><b>init</b> scaffolds <code>PM/</code> with starter data and a <code>CLAUDE.md</code>. <b>build</b> merges your data into <code>PM/index.html</code>. <b>open</b> it — no server, no dependencies.</p>" },
+        "html": "<p>Install Rocketman, scaffold a hub, and open it.</p><pre><code>npx @winsendotai/rocketman init\nnpx @winsendotai/rocketman build\nopen PM/index.html</code></pre><p><b>init</b> scaffolds <code>PM/</code> with starter data and a <code>CLAUDE.md</code>. <b>build</b> merges your data into <code>PM/index.html</code>. <b>open</b> it — no server, no dependencies.</p>" },
       "doc-h1": { "kind": "How-to", "title": "Add Rocketman to an existing repo", "meta": "how-to",
-        "html": "<p>Drop the hub into any repo without touching your stack.</p><pre><code>cd your-repo\nnpx rocketman init\ngit add PM/ .claude/</code></pre><p>Commit <code>PM/</code> alongside your code — it branches, reviews, and merges with the code, so project state never drifts from the branch it describes.</p>" },
+        "html": "<p>Drop the hub into any repo without touching your stack.</p><pre><code>cd your-repo\nnpx @winsendotai/rocketman init\ngit add PM/ .claude/</code></pre><p>Commit <code>PM/</code> alongside your code — it branches, reviews, and merges with the code, so project state never drifts from the branch it describes.</p>" },
       "doc-h2": { "kind": "How-to", "title": "Write a PRD with the track", "meta": "how-to",
         "html": "<p>Let the skill stack force the thinking, then generate the spec.</p><pre><code>/rm-ideate   # forcing questions\n/rm-prd      # writes PM/data/spec.json\n/rm-plan     # lays out the board</code></pre>" },
       "doc-h3": { "kind": "How-to", "title": "Run a build & verify on CI", "meta": "how-to",

@@ -24,7 +24,7 @@ Read `.claude/skills/CONVENTIONS.md`.
 ## Phase 1 — Scaffold
 
 ```bash
-npx rocketman init        # copies PM/ + .claude/skills, then builds
+npx @winsendotai/rocketman init        # copies PM/ + .claude/skills, then builds
 ```
 
 If the CLI isn't installed, copy `templates/PM/` → `PM/` and `.claude/skills/` from the

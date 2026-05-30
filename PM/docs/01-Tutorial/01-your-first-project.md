@@ -11,7 +11,7 @@ From nothing to a living project hub in about two minutes.
 In any repo (or an empty folder):
 
 ```
-npx rocketman init
+npx @winsendotai/rocketman init
 ```
 
 This creates `PM/` (the hub + data + docs), wires the `.claude/` skills and the
