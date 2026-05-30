@@ -4,7 +4,11 @@
 (function () {
   "use strict";
   const D = JSON.parse(document.getElementById("pm-data").textContent);
-  const RM_EDIT = (location.protocol === "http:" || location.protocol === "https:");
+  // Edit mode is ON only when the local edit server (rocketman serve) is behind
+  // the page — it injects window.__ROCKETMAN_SERVE__. A plain file:// open or a
+  // static host (GitHub Pages, etc.) has no write backend, so the hub stays
+  // read-only there (no composer, no doomed POSTs).
+  const RM_EDIT = (typeof window !== "undefined" && window.__ROCKETMAN_SERVE__ === true);
   const RM_ME = (Object.keys(D.people||{}).find(k => D.people[k].kind === "human")) || "you";
   async function rmApi(path, body) {
     const r = await fetch(path, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
