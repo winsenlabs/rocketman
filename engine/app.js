@@ -14,6 +14,8 @@
     decision:'<path d="M10 3v14M5 7h10M5 7l-2 5h4zM15 7l-2 5h4z"/><path d="M3 12a2 2 0 004 0M13 12a2 2 0 004 0"/>',
     debug:'<rect x="6" y="6" width="8" height="9" rx="4"/><path d="M10 3v3M4 8H2M4 12H2M18 8h-2M18 12h-2M6 6L4 4M14 6l2-2"/>',
     docs:'<path d="M4 4a1 1 0 011-1h5v14H5a1 1 0 01-1-1zM10 3h5a1 1 0 011 1v11a1 1 0 01-1 1h-5z"/>',
+    folder:'<path d="M3 6a1 1 0 011-1h4l2 2h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1z"/>',
+    folderopen:'<path d="M3 6a1 1 0 011-1h4l2 2h6a1 1 0 011 1H5l-2 7V6z"/><path d="M3 15l2-6h13l-2 6z"/>',
     activity:'<path d="M3 10h3l2-5 4 10 2-5h3"/>',
     search:'<circle cx="9" cy="9" r="6"/><path d="M14 14l3 3"/>',
     sun:'<circle cx="8" cy="8" r="3.2"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.4 3.4l1.4 1.4M11.2 11.2l1.4 1.4M3.4 12.6l1.4-1.4M11.2 4.8l1.4-1.4"/>',
@@ -321,15 +323,22 @@
     const tabs = D.debug.map(d => `<button class="debug-tab ${d.id===inv.id?'active':''}" data-inv="${d.id}">
       <div class="dt-id">${d.ref} <span class="dt-state ${d.state}">${d.state}</span></div>
       <div class="dt-title">${d.title}</div></button>`).join("");
-    const tl = inv.timeline.map(node => {
-      let inner = "";
-      if (node.kind === "symptom") inner = `<p>${links(inv.symptom)}</p>`;
-      else if (node.kind === "hypo") inner = `<div class="hypo">${inv.hypotheses.map(h=>`<div class="hypo-item ${h.status}"><span class="hypo-tag ${h.status}">${h.status==='confirmed'?icon("check"):h.status==='refuted'?icon("x"):icon("beaker")}${h.status}</span><div><div class="ht">${links(h.text)}</div><div class="hn">${links(h.note)}</div></div></div>`).join("")}</div>`;
-      else if (node.kind === "repro") inner = `<ol class="repro-steps">${inv.repro.map(r=>`<li>${links(r)}</li>`).join("")}</ol>`;
-      else if (node.kind === "rootcause") inner = `<p>${links(inv.rootCause)}</p>`;
-      else if (node.kind === "fix") inner = `<p>${links(inv.fix.text)}</p><div class="fix-row">${prChip({num:inv.fix.pr,status:'merged'})}<span class="ref-chip"><span class="tt">commit</span> ${inv.fix.commit}</span>${fileChip(inv.fix.file)}</div>`;
-      else if (node.kind === "guard") inner = `<div class="guard-box">${icon("checkcircle")}<div><div style="font-weight:600">Regression guarded</div><div class="gmono">${links(inv.guard)}</div></div></div>`;
-      return `<div class="tl-node ${node.kind}"><div class="tl-dot">${icon(tlIcon(node.kind))}</div><div><div class="tl-stage">${node.stage}</div><div class="tl-card"><h4>${node.stage==='Hypotheses'?`${inv.hyposCount} hypotheses tested`:node.stage==='Root cause'?'Confirmed root cause':node.stage}</h4>${inner}<div class="who">${actorMark(node.who,"sm")} ${P[node.who].name} · ${node.when}</div></div></div></div>`;
+    const STAGES = [
+      { kind:"symptom",   label:"Symptom",      has:()=>inv.symptom, render:()=>`<p>${links(inv.symptom)}</p>` },
+      { kind:"hypo",      label:"Hypotheses",   has:()=>inv.hypotheses&&inv.hypotheses.length, render:()=>`<div class="hypo">${inv.hypotheses.map(h=>`<div class="hypo-item ${h.status}"><span class="hypo-tag ${h.status}">${h.status==='confirmed'?icon("check"):h.status==='refuted'?icon("x"):icon("beaker")}${h.status}</span><div><div class="ht">${links(h.text)}</div><div class="hn">${links(h.note)}</div></div></div>`).join("")}</div>` },
+      { kind:"repro",     label:"Reproduction", has:()=>inv.repro&&inv.repro.length, render:()=>`<ol class="repro-steps">${inv.repro.map(r=>`<li>${links(r)}</li>`).join("")}</ol>` },
+      { kind:"rootcause", label:"Root cause",   has:()=>inv.rootCause, render:()=>`<p>${links(inv.rootCause)}</p>` },
+      { kind:"fix",       label:"Fix",          has:()=>inv.fix&&inv.fix.text, render:()=>`<p>${links(inv.fix.text)}</p><div class="fix-row">${inv.fix.pr?prChip({num:inv.fix.pr,status:'merged'}):""}${inv.fix.commit?`<span class="ref-chip"><span class="tt">commit</span> ${inv.fix.commit}</span>`:""}${inv.fix.file?fileChip(inv.fix.file):""}</div>` },
+      { kind:"guard",     label:"Guard",        has:()=>inv.guard, render:()=>`<div class="guard-box">${icon("checkcircle")}<div><div style="font-weight:600">Regression guarded</div><div class="gmono">${links(inv.guard)}</div></div></div>` }
+    ];
+    const tlMeta = {}; (inv.timeline||[]).forEach(n=>{ if(n){ tlMeta[n.kind]=n; tlMeta[n.stage]=n; } });
+    const tl = STAGES.filter(s=>s.has()).map(s => {
+      const m = tlMeta[s.kind] || {};
+      const who = m.who || inv.owner;
+      const when = m.when || "";
+      const whoLine = (who && P[who]) ? `<div class="who">${actorMark(who,"sm")} ${P[who].name}${when?` · ${when}`:""}</div>` : "";
+      const h4 = s.kind==="hypo" ? `${inv.hyposCount||inv.hypotheses.length} hypotheses tested` : s.kind==="rootcause" ? "Confirmed root cause" : s.label;
+      return `<div class="tl-node ${s.kind}"><div class="tl-dot">${icon(tlIcon(s.kind))}</div><div><div class="tl-stage">${s.label}</div><div class="tl-card"><h4>${h4}</h4>${s.render()}${whoLine}</div></div></div>`;
     }).join("");
     return `
     <div class="view view-wide">
@@ -351,21 +360,39 @@
   function tlIcon(k){return {symptom:"alert",hypo:"beaker",repro:"branch",rootcause:"search",fix:"fix",guard:"checkcircle"}[k]||"commit";}
   function fileChip(f){const m=f.match(/^(.*?):(\d+)$/);return `<span class="ref-chip">${icon("file")}${m?`${m[1]}:<b style="color:var(--accent)">${m[2]}</b>`:f}</span>`;}
 
-  /* ── Docs ── */
-  let openDoc = "doc-t1";
+  /* ── Docs (nested folder tree) ── */
+  let openDoc = null;
+  const docCollapsed = {};
+  function docsTree() {
+    if (D.docs.tree) return D.docs.tree;
+    return (D.docs.groups||[]).map(g => ({ folder:g.name, q:g.q, sub:g.sub, children:(g.items||[]).map(it=>({ doc:it.id, title:it.title })) }));
+  }
+  function firstDoc(nodes){ for(const n of nodes){ if(n.doc) return n.doc; if(n.children){ const f=firstDoc(n.children); if(f) return f; } } return null; }
+  function docNodes(nodes, depth){
+    return (nodes||[]).map(n => {
+      if (n.doc) {
+        const c = D.docs.content[n.doc] || {};
+        return `<div class="dtree-item ${n.doc===openDoc?'active':''}" data-doc="${n.doc}" style="padding-left:${depth*14+12}px">${icon("doc","dtree-ic")}<span>${n.title||c.title||n.doc}</span></div>`;
+      }
+      const key = depth+":"+n.folder;
+      const col = docCollapsed[key];
+      return `<div class="dtree-folder">
+        <div class="dtree-fhead" data-docfolder="${key}" style="padding-left:${depth*14+8}px">${icon("chev","dtree-chev"+(col?"":" open"))}${icon(col?"folder":"folderopen","dtree-ic")}<span class="dtf-name">${n.folder}</span>${n.q?`<span class="dq ${n.q}">${n.q}</span>`:""}</div>
+        <div class="dtree-children" ${col?'style="display:none"':''}>${docNodes(n.children, depth+1)}</div>
+      </div>`;
+    }).join("");
+  }
   V.docs = () => {
-    const tree = D.docs.groups.map(g=>`
-      <div class="dtree-group">
-        <div class="dtg-head"><span class="dq ${g.q}">${g.name}</span><span class="dtg-sub">${g.sub}</span></div>
-        ${g.items.map(it=>`<div class="dtree-item ${it.id===openDoc?'active':''}" data-doc="${it.id}">${it.title}</div>`).join("")}
-      </div>`).join("");
-    const c = D.docs.content[openDoc];
+    const nodes = docsTree();
+    if (!openDoc || !D.docs.content[openDoc]) openDoc = firstDoc(nodes);
+    const tree = docNodes(nodes, 0);
+    const c = D.docs.content[openDoc] || { kind:"", meta:"", title:"No documents yet", html:"<p>Add docs in PM/data/spec.json.</p>" };
     return `
     <div class="view">
-      <div class="ph"><div><h1>Docs</h1><p class="sub">Diátaxis · Tutorial · How-to · Reference · Explanation</p></div></div>
+      <div class="ph"><div><h1>Docs</h1><p class="sub">Nested folders · Diátaxis · Tutorial · How-to · Reference · Explanation</p></div></div>
       <div class="docs-shell">
         <nav class="docs-tree">${tree}</nav>
-        <div class="docs-pane"><div class="doc-meta"><span class="dq ${c.kind}">${c.kind}</span><span>${c.meta}</span></div><div class="doc-body"><h3>${c.title}</h3>${links(c.html)}</div></div>
+        <div class="docs-pane"><div class="doc-meta">${c.kind?`<span class="dq ${c.kind}">${c.kind}</span>`:""}<span>${c.meta||""}</span></div><div class="doc-body"><h3>${c.title}</h3>${links(c.html)}</div></div>
       </div>
     </div>`;
   };
@@ -546,14 +573,14 @@
       <span class="tb-spacer"></span>
       <div class="tb-legend"><span class="lg">${avatar("tejas","sm")} human</span><span class="lg">${iconFill("spark","spark")} agent</span></div>
       <div class="tb-sync"><span class="dot"></span>synced ${D.project.synced}</div>
-      <div class="theme-toggle" id="theme-toggle"><button data-mode="light">${iconFill("sun")}</button><button data-mode="dark">${iconFill("moon")}</button></div>`;
+      <button class="theme-switch" id="theme-switch" title="Toggle theme" aria-label="Toggle light/dark theme"><span class="ts-thumb">${iconFill("sun","ts-sun")}${iconFill("moon","ts-moon")}</span></button>`;
     document.getElementById("topbar").innerHTML = tb;
   }
 
   function applyTheme(m) {
     document.documentElement.setAttribute("data-theme", m);
     try { localStorage.setItem("pm-theme", m); } catch(e){}
-    document.querySelectorAll("#theme-toggle button").forEach(b=>b.classList.toggle("active", b.dataset.mode===m));
+    /* theme switch reflects [data-theme] via CSS */
   }
 
   /* ───────────────────────── events ───────────────────────── */
@@ -571,7 +598,7 @@
     if (e.target.closest("#tb-search")) { openCmd(); return; }
     if (e.target.id==="cmdk-scrim") { closeCmd(); return; }
     const cmd = e.target.closest("[data-cmd]"); if (cmd) { execCmd(cmd.dataset.cmd); return; }
-    const tt = e.target.closest("#theme-toggle button"); if (tt) { applyTheme(tt.dataset.mode); return; }
+    const tt = e.target.closest("#theme-switch"); if (tt) { applyTheme(document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark"); return; }
   });
   document.addEventListener("mousemove", e => {
     const it = e.target.closest && e.target.closest("[data-i]");

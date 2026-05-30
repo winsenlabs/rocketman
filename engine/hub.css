@@ -804,3 +804,28 @@ table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-
   .tb-search { display: none; }
   .tb-legend { display: none; }
 }
+
+/* ── Theme switch (single, click-anywhere flips) ── */
+.theme-switch { width: 44px; height: 24px; border-radius: 999px; background: var(--bg-3); border: 1px solid var(--border); padding: 0; position: relative; flex: none; cursor: pointer; transition: background .16s; }
+.theme-switch:hover { border-color: var(--border-2); }
+.theme-switch .ts-thumb { position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: var(--surface); box-shadow: 0 1px 3px oklch(0% 0 0 / .25); transition: transform .18s ease; display: grid; place-items: center; }
+.theme-switch .ts-sun, .theme-switch .ts-moon { width: 11px; height: 11px; color: var(--ink-3); position: absolute; transition: opacity .16s; }
+.theme-switch .ts-moon { opacity: 0; }
+[data-theme="dark"] .theme-switch { background: var(--accent-soft); }
+[data-theme="dark"] .theme-switch .ts-thumb { transform: translateX(20px); }
+[data-theme="dark"] .theme-switch .ts-sun { opacity: 0; }
+[data-theme="dark"] .theme-switch .ts-moon { opacity: 1; color: var(--accent); }
+
+/* ── Docs nested folder tree ── */
+.dtree-folder { margin-bottom: 1px; }
+.dtree-fhead { display: flex; align-items: center; gap: 6px; padding: 6px 8px; border-radius: var(--radius-sm); cursor: pointer; color: var(--ink-2); font-size: 12.5px; font-weight: 500; user-select: none; }
+.dtree-fhead:hover { background: var(--bg-3); color: var(--ink); }
+.dtree-chev { width: 12px; height: 12px; color: var(--ink-4); transition: transform .15s; flex: none; }
+.dtree-chev.open { transform: rotate(90deg); }
+.dtree-ic { width: 14px; height: 14px; color: var(--ink-4); flex: none; }
+.dtf-name { flex: 1; }
+.dtree-item { display: flex; align-items: center; gap: 7px; padding: 6px 8px 6px 12px; border-radius: var(--radius-sm); cursor: pointer; color: var(--ink-3); font-size: 12.5px; }
+.dtree-item:hover { background: var(--bg-3); color: var(--ink); }
+.dtree-item.active { background: var(--accent-soft); color: var(--accent); font-weight: 500; }
+.dtree-item.active .dtree-ic { color: var(--accent); }
+.dtree-item .dtree-ic { width: 13px; height: 13px; }

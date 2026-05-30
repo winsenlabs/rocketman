@@ -107,26 +107,26 @@
     ]
   },
   "docs": {
-    "groups": [
-      { "id": "tutorial", "q": "T", "name": "Tutorial", "sub": "Learn by doing",
-        "items": [ { "id": "doc-t1", "title": "Your first Rocketman project", "active": true } ] },
-      { "id": "howto", "q": "H", "name": "How-to", "sub": "Solve a task",
-        "items": [
-          { "id": "doc-h1", "title": "Add Rocketman to an existing repo" },
-          { "id": "doc-h2", "title": "Write a PRD with the track" },
-          { "id": "doc-h3", "title": "Run a build & verify on CI" }
-        ] },
-      { "id": "reference", "q": "R", "name": "Reference", "sub": "Look it up",
-        "items": [
-          { "id": "doc-r1", "title": "Data schema" },
-          { "id": "doc-r2", "title": "CLI commands" },
-          { "id": "doc-r3", "title": "The skill stack" }
-        ] },
-      { "id": "explanation", "q": "E", "name": "Explanation", "sub": "Understand why",
-        "items": [
-          { "id": "doc-e1", "title": "Why HTML, not markdown" },
-          { "id": "doc-e2", "title": "The single-writer rule" }
+    "tree": [
+      { "folder": "Tutorial", "q": "T", "children": [
+        { "doc": "doc-t1", "title": "Your first Rocketman project" }
+      ] },
+      { "folder": "How-to", "q": "H", "children": [
+        { "doc": "doc-h1", "title": "Add Rocketman to an existing repo" },
+        { "doc": "doc-h2", "title": "Write a PRD with the track" },
+        { "doc": "doc-h3", "title": "Run a build & verify on CI" }
+      ] },
+      { "folder": "Reference", "q": "R", "children": [
+        { "doc": "doc-r1", "title": "Data schema" },
+        { "doc": "doc-r2", "title": "CLI commands" },
+        { "folder": "Skills", "children": [
+          { "doc": "doc-r3", "title": "The skill stack" }
         ] }
+      ] },
+      { "folder": "Explanation", "q": "E", "children": [
+        { "doc": "doc-e1", "title": "Why HTML, not markdown" },
+        { "doc": "doc-e2", "title": "The single-writer rule" }
+      ] }
     ],
     "content": {
       "doc-t1": { "kind": "Tutorial", "title": "Your first Rocketman project", "meta": "~2 min",
