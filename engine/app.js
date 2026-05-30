@@ -141,7 +141,7 @@
             ${pr.kpis.map(k=>`<div class="kpi"><div class="k">${k.k}</div><div class="v">${k.v}</div><div class="d"><span class="${k.dir==='up'?'up':'down'}">${k.d}</span></div></div>`).join("")}
           </div>
           <div class="burn-card">
-            <div class="sec-head"><h2>Milestone burn-up</h2><span class="desc">${b.done} of ${b.total} pts done</span><span class="spacer"></span><span class="mono" style="font-size:11px;color:var(--ink-3)">Beta · Jun 27</span></div>
+            <div class="sec-head"><h2>Milestone burn-up</h2><span class="desc">${b.done} of ${b.total} pts done</span><span class="spacer"></span><span class="mono" style="font-size:11px;color:var(--ink-3)">${(b.milestones.find(m=>!m.done)||b.milestones[0]||{}).name||""}</span></div>
             <div class="burn-bar">
               <div class="done" style="width:${pct(b.done)}"></div>
               <div class="prog" style="width:${pct(b.progress)}"></div>

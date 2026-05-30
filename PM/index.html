@@ -818,7 +818,30 @@ table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-
 <style>.hljs{color:var(--ink-2)} [data-theme="dark"] .hljs{color:#c9d1d9}</style>
 </head>
 <body>
-<div id="app"></div>
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="content">
+    <header class="topbar" id="topbar"></header>
+    <div class="scroll"><div id="main"></div></div>
+  </main>
+</div>
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Entity detail"></aside>
+<div class="cmdk-scrim" id="cmdk-scrim"></div>
+<div class="cmdk" id="cmdk" role="dialog" aria-label="Command palette">
+  <div class="cmdk-input">
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="6"/><path d="M14 14l3 3"/></svg>
+    <input id="cmdk-input" type="text" placeholder="Search tasks, decisions, debug logs, docs…" autocomplete="off" spellcheck="false"/>
+    <span class="esc">ESC</span>
+  </div>
+  <div class="cmdk-list" id="cmdk-list"></div>
+  <div class="cmdk-foot">
+    <span><span class="kbd">↑</span><span class="kbd">↓</span> navigate</span>
+    <span><span class="kbd">↵</span> open</span>
+    <span><span class="kbd">esc</span> close</span>
+    <span style="margin-left:auto">Rocketman Hub</span>
+  </div>
+</div>
 <script id="pm-data" type="application/json">
 {
  "project": {
@@ -2627,7 +2650,7 @@ table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-
             ${pr.kpis.map(k=>`<div class="kpi"><div class="k">${k.k}</div><div class="v">${k.v}</div><div class="d"><span class="${k.dir==='up'?'up':'down'}">${k.d}</span></div></div>`).join("")}
           </div>
           <div class="burn-card">
-            <div class="sec-head"><h2>Milestone burn-up</h2><span class="desc">${b.done} of ${b.total} pts done</span><span class="spacer"></span><span class="mono" style="font-size:11px;color:var(--ink-3)">Beta · Jun 27</span></div>
+            <div class="sec-head"><h2>Milestone burn-up</h2><span class="desc">${b.done} of ${b.total} pts done</span><span class="spacer"></span><span class="mono" style="font-size:11px;color:var(--ink-3)">${(b.milestones.find(m=>!m.done)||b.milestones[0]||{}).name||""}</span></div>
             <div class="burn-bar">
               <div class="done" style="width:${pct(b.done)}"></div>
               <div class="prog" style="width:${pct(b.progress)}"></div>

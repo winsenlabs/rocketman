@@ -119,7 +119,30 @@ ${css}
 <style>${HLJS}</style>
 </head>
 <body>
-<div id="app"></div>
+<div class="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="content">
+    <header class="topbar" id="topbar"></header>
+    <div class="scroll"><div id="main"></div></div>
+  </main>
+</div>
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Entity detail"></aside>
+<div class="cmdk-scrim" id="cmdk-scrim"></div>
+<div class="cmdk" id="cmdk" role="dialog" aria-label="Command palette">
+  <div class="cmdk-input">
+    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="6"/><path d="M14 14l3 3"/></svg>
+    <input id="cmdk-input" type="text" placeholder="Search tasks, decisions, debug logs, docs…" autocomplete="off" spellcheck="false"/>
+    <span class="esc">ESC</span>
+  </div>
+  <div class="cmdk-list" id="cmdk-list"></div>
+  <div class="cmdk-foot">
+    <span><span class="kbd">↑</span><span class="kbd">↓</span> navigate</span>
+    <span><span class="kbd">↵</span> open</span>
+    <span><span class="kbd">esc</span> close</span>
+    <span style="margin-left:auto">${(D.project && D.project.name) || 'Project'} Hub</span>
+  </div>
+</div>
 <script id="pm-data" type="application/json">
 ${island}
 </script>
