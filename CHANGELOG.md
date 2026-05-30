@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **`/rm-research` skill** — verifies the current, correct tech stack / library / API / version
+  before building on it (WebSearch/WebFetch against present-day official docs), and records the
+  choice as a dated ADR. Counters the #1 agent failure: reaching for a stale or wrong stack from
+  training data. Wired across the track — a standing rule in `CONVENTIONS.md` and a Phase 0 in
+  `/rm-plan` and `/rm-build`.
+- **README opener on responsible token-maxing** — Rocketman + Claude Code turning any idea into a
+  production-grade app on autopilot, with every token leaving a trace.
 - **Favicon** — every built hub now embeds the Rocketman rocket as an SVG-data-URI favicon, so
   the browser tab shows the logo (no external file, stays single-file/offline).
 

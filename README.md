@@ -14,6 +14,23 @@ Built by [Winsen Labs](https://github.com/winsenlabs) · MIT licensed
 
 ---
 
+## Responsible token-maxing
+
+Token-maxing has become a thing — throw enough tokens at a model and watch it go. We've
+always been fans of the *responsible* kind: tokens spent with a plan, a memory, and a paper
+trail, so the output is something you'd actually ship.
+
+That's what Rocketman is for. **Rocketman + Claude Code turns any idea you have into a
+production-grade application on autopilot** — the whole nine yards. Not a demo, not a
+prototype that falls over on the second click. The idea gets pressure-tested, specced,
+planned, built by a fleet of agents, verified, human-tested, launched, and iterated — and
+every token spent leaves a trace in a hub you can read in ten seconds.
+
+The track is the discipline; the hub is the memory; the agents are the throughput. Point them
+at an idea and let them run.
+
+---
+
 ## Why a local HTML hub beats online PM tools in the age of AI coding agents
 
 Project management tools were built for humans clicking around a browser. But the primary worker on a modern codebase is increasingly an **AI coding agent running inside the repo** — and for that worker, a SaaS board behind an API, an OAuth wall, and a rate limiter is exactly the wrong shape. Rocketman is built on a different bet:
@@ -76,6 +93,8 @@ The skill stack walks a product from a raw idea all the way to a shipped, iterat
   Ideate ─▶ PRD ─▶ Plan ─▶ Build ─▶ Verify ─▶ Test ─▶ Launch ─▶ Iterate
    force    spec    track   fleet     gate    human    ship    changelog
   thinking         + board                    test
+            └──────────── /rm-research ────────────┘
+            verify the current, correct stack before you build on it
 ```
 
 ### The skill stack
@@ -83,6 +102,7 @@ The skill stack walks a product from a raw idea all the way to a shipped, iterat
 | Skill | Stage | What it does |
 |---|---|---|
 | `/rm-ideate` | Ideate | Forces product thinking — six questions on demand, status quo, wedge, and why-now before any code. |
+| `/rm-research` | Any | Verifies the current, correct tech stack / library / API / version before you build on it — the antidote to agents reaching for a stale stack from memory. |
 | `/rm-prd` | PRD | Turns the idea brief into a structured spec (vision, personas, requirements, non-goals, risks). |
 | `/rm-plan` | Plan | Decomposes the PRD into milestones, epics, and a board of ready tasks. |
 | `/rm-build` | Build | Turns the board into a work queue; allocates ready tasks to sub-agents on demand. |

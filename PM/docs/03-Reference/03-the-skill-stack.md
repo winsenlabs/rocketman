@@ -17,6 +17,7 @@ Ideate → PRD → Plan → Build → Verify → Test → Launch → Iterate
 | Skill | Stage | Does |
 |---|---|---|
 | `/rm-ideate` | Ideate | Six forcing questions before any code. |
+| `/rm-research` | Any | Verify the current, correct stack/library/API/version before building. Counters stale-stack-from-memory. |
 | `/rm-prd` | PRD | Turns the idea brief into a structured spec. |
 | `/rm-plan` | Plan | Milestones, epics, a board of ready tasks. |
 | `/rm-build` | Build | Allocates ready tasks to a sub-agent fleet. |

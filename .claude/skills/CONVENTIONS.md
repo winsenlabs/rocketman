@@ -9,6 +9,16 @@ reference this file instead of repeating it. (Pattern adopted from gstack.)
 
 > **Edit the data, never the HTML. Then rebuild.**
 
+## Research before you build (non-negotiable)
+
+> **Don't pick a tech stack, library, API, or version from memory. Verify it's current first.**
+
+The most common agent failure is confidently reaching for a stale or wrong stack from training
+data — a deprecated API, a renamed package, last year's idiom, a version that no longer exists.
+Before any stack/dependency decision, run **`/rm-research`** to verify the current, correct
+approach, and record it as an ADR with the version and the date you verified it. This applies in
+every stage, especially `/rm-plan` and `/rm-build`. When in doubt, research.
+
 `PM/index.html` is a generated artifact. Edit `PM/data/*.json` (or `PM/comms/*` for the
 relay), then run `rocketman build`. A PreToolUse hook (`.claude/hooks/guard-generated.sh`)
 blocks direct writes to `PM/index.html` — if you hit it, you're editing the wrong file.

@@ -26,6 +26,7 @@ changing any data.
 When the user's request matches a skill, invoke it via the Skill tool. When in doubt, invoke it.
 
 - New idea / "is this worth building" → `/rm-ideate`
+- What stack/library/API to use / "is this current" → `/rm-research` (run before any stack call)
 - Write the spec / PRD → `/rm-prd`
 - Plan / break into tasks / roadmap → `/rm-plan`
 - Build / work the board / allocate to agents → `/rm-build`

@@ -32,6 +32,12 @@ dependency `backlinks` are `done`.
 
 Read `.claude/skills/CONVENTIONS.md` and `PM/CLAUDE.md` — especially the **single-writer rule**.
 
+## Phase 0 — Research before reaching for a tool
+
+When a task introduces a new dependency, API, or pattern, run **`/rm-research`** first — don't
+build on a stack from memory. Pass the verified version/idiom into the sub-agent briefs so the
+whole fleet builds on the current, correct approach instead of a stale default.
+
 ## Phase 1 — Pick the work
 
 List ready tasks (deps satisfied). If there are many, confirm scope via `AskUserQuestion`.

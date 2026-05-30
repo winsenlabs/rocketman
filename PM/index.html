@@ -1105,6 +1105,38 @@ table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-
  ],
  "tasks": [
   {
+   "id": "rm-14",
+   "ref": "RM-14",
+   "col": "done",
+   "epic": "track",
+   "owner": "opus",
+   "author": "tejas",
+   "title": "/rm-research — verify the current stack",
+   "summary": "A skill that researches the current, correct tech stack before building — counters agents reaching for a stale stack from memory.",
+   "labels": [
+    "skills"
+   ],
+   "points": 3,
+   "age": 0,
+   "pr": {
+    "num": 21,
+    "status": "merged"
+   },
+   "body": "\u003cp>The #1 agent failure is confidently using a deprecated API, a renamed package, or last year's idiom from training data. \u003ccode>/rm-research\u003c/code> forces a present-day check (WebSearch/WebFetch, current year, official docs) and records the choice as an ADR with its version and the date verified. Wired into the conventions and run before any stack call in [[rm-07|/rm-plan]] and [[rm-08|/rm-build]].\u003c/p>",
+   "backlinks": [
+    "rm-07",
+    "rm-08"
+   ],
+   "comments": [],
+   "activity": [
+    {
+     "when": "just now",
+     "who": "opus",
+     "line": "shipped \u003cb>/rm-research\u003c/b> and wired it across the track"
+    }
+   ]
+  },
+  {
    "id": "rm-01",
    "ref": "RM-1",
    "col": "done",
@@ -2032,7 +2064,7 @@ table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-
     "kind": "Reference",
     "title": "The skill stack",
     "meta": "",
-    "html": "\u003cp>Rocketman ships 15 Claude skills in \u003ccode>.claude/skills/\u003c/code>. They share a common structure (frontmatter, \"When to invoke\", phased workflow, Completion Status) so any Claude instance behaves predictably. Shared rules live once in \u003ccode>.claude/skills/CONVENTIONS.md\u003c/code>.\u003c/p>\n\u003ch3>The Rocketman Track\u003c/h3>\n\u003cpre>\u003ccode>Ideate → PRD → Plan → Build → Verify → Test → Launch → Iterate\u003c/code>\u003c/pre>\n\u003ctable>\u003cthead>\u003ctr>\u003cth>Skill\u003c/th>\u003cth>Stage\u003c/th>\u003cth>Does\u003c/th>\u003c/tr>\u003c/thead>\u003ctbody>\u003ctr>\u003ctd>\u003ccode>/rm-ideate\u003c/code>\u003c/td>\u003ctd>Ideate\u003c/td>\u003ctd>Six forcing questions before any code.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-prd\u003c/code>\u003c/td>\u003ctd>PRD\u003c/td>\u003ctd>Turns the idea brief into a structured spec.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-plan\u003c/code>\u003c/td>\u003ctd>Plan\u003c/td>\u003ctd>Milestones, epics, a board of ready tasks.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-build\u003c/code>\u003c/td>\u003ctd>Build\u003c/td>\u003ctd>Allocates ready tasks to a sub-agent fleet.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-verify\u003c/code>\u003c/td>\u003ctd>Verify\u003c/td>\u003ctd>The automated gate — build, lint, tests, doctor.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-test\u003c/code>\u003c/td>\u003ctd>Test\u003c/td>\u003ctd>A human test script; records pass/fail.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-launch\u003c/code>\u003c/td>\u003ctd>Launch\u003c/td>\u003ctd>Ships: tag, changelog, release.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-iterate\u003c/code>\u003c/td>\u003ctd>Iterate\u003c/td>\u003ctd>Captures post-launch changes.\u003c/td>\u003c/tr>\u003c/tbody>\u003c/table>\n\u003ch3>Infra &amp; multi-agent\u003c/h3>\n\u003ctable>\u003cthead>\u003ctr>\u003cth>Skill\u003c/th>\u003cth>Does\u003c/th>\u003c/tr>\u003c/thead>\u003ctbody>\u003ctr>\u003ctd>\u003ccode>/rm-init\u003c/code> · \u003ccode>/rm-sync\u003c/code>\u003c/td>\u003ctd>Scaffold; reconcile the hub from git.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-decision\u003c/code> · \u003ccode>/rm-debug\u003c/code> · \u003ccode>/rm-brief\u003c/code>\u003c/td>\u003ctd>Record an ADR; log an investigation; status read-out.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-relay\u003c/code>\u003c/td>\u003ctd>Inter-agent messages + handoffs over \u003ccode>PM/comms/\u003c/code>. Pair with \u003ccode>/loop\u003c/code>.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-mirror\u003c/code>\u003c/td>\u003ctd>Mirror the hub into Linear / FanDesk / Jira / etc. (sync-optional).\u003c/td>\u003c/tr>\u003c/tbody>\u003c/table>\n\u003cp>Every skill ends with a Completion Status: DONE / DONE_WITH_CONCERNS / BLOCKED / NEEDS_CONTEXT.\u003c/p>"
+    "html": "\u003cp>Rocketman ships 15 Claude skills in \u003ccode>.claude/skills/\u003c/code>. They share a common structure (frontmatter, \"When to invoke\", phased workflow, Completion Status) so any Claude instance behaves predictably. Shared rules live once in \u003ccode>.claude/skills/CONVENTIONS.md\u003c/code>.\u003c/p>\n\u003ch3>The Rocketman Track\u003c/h3>\n\u003cpre>\u003ccode>Ideate → PRD → Plan → Build → Verify → Test → Launch → Iterate\u003c/code>\u003c/pre>\n\u003ctable>\u003cthead>\u003ctr>\u003cth>Skill\u003c/th>\u003cth>Stage\u003c/th>\u003cth>Does\u003c/th>\u003c/tr>\u003c/thead>\u003ctbody>\u003ctr>\u003ctd>\u003ccode>/rm-ideate\u003c/code>\u003c/td>\u003ctd>Ideate\u003c/td>\u003ctd>Six forcing questions before any code.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-research\u003c/code>\u003c/td>\u003ctd>Any\u003c/td>\u003ctd>Verify the current, correct stack/library/API/version before building. Counters stale-stack-from-memory.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-prd\u003c/code>\u003c/td>\u003ctd>PRD\u003c/td>\u003ctd>Turns the idea brief into a structured spec.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-plan\u003c/code>\u003c/td>\u003ctd>Plan\u003c/td>\u003ctd>Milestones, epics, a board of ready tasks.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-build\u003c/code>\u003c/td>\u003ctd>Build\u003c/td>\u003ctd>Allocates ready tasks to a sub-agent fleet.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-verify\u003c/code>\u003c/td>\u003ctd>Verify\u003c/td>\u003ctd>The automated gate — build, lint, tests, doctor.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-test\u003c/code>\u003c/td>\u003ctd>Test\u003c/td>\u003ctd>A human test script; records pass/fail.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-launch\u003c/code>\u003c/td>\u003ctd>Launch\u003c/td>\u003ctd>Ships: tag, changelog, release.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-iterate\u003c/code>\u003c/td>\u003ctd>Iterate\u003c/td>\u003ctd>Captures post-launch changes.\u003c/td>\u003c/tr>\u003c/tbody>\u003c/table>\n\u003ch3>Infra &amp; multi-agent\u003c/h3>\n\u003ctable>\u003cthead>\u003ctr>\u003cth>Skill\u003c/th>\u003cth>Does\u003c/th>\u003c/tr>\u003c/thead>\u003ctbody>\u003ctr>\u003ctd>\u003ccode>/rm-init\u003c/code> · \u003ccode>/rm-sync\u003c/code>\u003c/td>\u003ctd>Scaffold; reconcile the hub from git.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-decision\u003c/code> · \u003ccode>/rm-debug\u003c/code> · \u003ccode>/rm-brief\u003c/code>\u003c/td>\u003ctd>Record an ADR; log an investigation; status read-out.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-relay\u003c/code>\u003c/td>\u003ctd>Inter-agent messages + handoffs over \u003ccode>PM/comms/\u003c/code>. Pair with \u003ccode>/loop\u003c/code>.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-mirror\u003c/code>\u003c/td>\u003ctd>Mirror the hub into Linear / FanDesk / Jira / etc. (sync-optional).\u003c/td>\u003c/tr>\u003c/tbody>\u003c/table>\n\u003cp>Every skill ends with a Completion Status: DONE / DONE_WITH_CONCERNS / BLOCKED / NEEDS_CONTEXT.\u003c/p>"
    },
    "doc-04-explanation-01-why-html-not-markdown": {
     "kind": "Explanation",

@@ -29,6 +29,13 @@ the spec into an executable plan: milestones, epics, and a board of well-shaped 
 Read `.claude/skills/CONVENTIONS.md` and `PM/CLAUDE.md`. Work from the current
 `PM/data/spec.json`.
 
+## Phase 0 — Research the stack first
+
+Before you bake any tech choice into the plan, run **`/rm-research`** for each stack /
+library / API / framework decision. Don't pick from memory — verify the current, correct
+version and idiom, and record it as an ADR. A plan built on a stale stack wastes the whole
+fleet's tokens downstream.
+
 ## Phase 1 — Structure (`core.json`)
 
 - **Epics** (`epics{}`) — the major workstreams, each `{name, color}`.

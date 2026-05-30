@@ -1,6 +1,16 @@
 {
   "tasks": [
     {
+      "id": "rm-14", "ref": "RM-14", "col": "done", "epic": "track", "owner": "opus", "author": "tejas",
+      "title": "/rm-research — verify the current stack",
+      "summary": "A skill that researches the current, correct tech stack before building — counters agents reaching for a stale stack from memory.",
+      "labels": ["skills"], "points": 3, "age": 0, "pr": { "num": 21, "status": "merged" },
+      "body": "<p>The #1 agent failure is confidently using a deprecated API, a renamed package, or last year's idiom from training data. <code>/rm-research</code> forces a present-day check (WebSearch/WebFetch, current year, official docs) and records the choice as an ADR with its version and the date verified. Wired into the conventions and run before any stack call in [[rm-07|/rm-plan]] and [[rm-08|/rm-build]].</p>",
+      "backlinks": ["rm-07", "rm-08"],
+      "comments": [],
+      "activity": [{ "when": "just now", "who": "opus", "line": "shipped <b>/rm-research</b> and wired it across the track" }]
+    },
+    {
       "id": "rm-01", "ref": "RM-1", "col": "done", "epic": "engine", "owner": "opus", "author": "tejas",
       "title": "Data → HTML bundler (build.mjs)",
       "summary": "Inlines hub.css, app.js, and the merged data island into one self-contained PM/index.html.",
