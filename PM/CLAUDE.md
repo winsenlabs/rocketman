@@ -86,8 +86,10 @@ This keeps a fleet's output consistent, conflict-free, and reviewable, with prov
 Drive idea → production with the skill stack (see `.claude/skills/`):
 
 `/rm-ideate` → `/rm-prd` → `/rm-plan` → `/rm-build` → `/rm-verify` → `/rm-test` →
-`/rm-launch` → `/rm-iterate`. Infra: `/rm-init`, `/rm-sync`, `/rm-decision`, `/rm-debug`,
-`/rm-brief`. Sync-optional: `/rm-mirror` (Linear / FanDesk / Cheetah / Winsen).
+`/rm-launch` → `/rm-iterate`. Cross-cutting: `/rm-research` (verify the current, correct stack
+before building — run before any stack/dependency call). Infra: `/rm-init`, `/rm-sync`,
+`/rm-decision`, `/rm-debug`, `/rm-brief`. Multi-agent: `/rm-relay`. Sync-optional: `/rm-mirror`
+(Linear / FanDesk / Cheetah / Winsen).
 
 ## After any change
 
