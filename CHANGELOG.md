@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Markdown docs** — drop `.md` files in `PM/docs/` and they render in the hub's **Docs** view.
+  Folders become the nested tree (numeric prefixes order them; names are title-cased). A
+  zero-dependency Markdown converter (`engine/md.mjs`) handles headings, lists, tables, code
+  fences, blockquotes, links, and images. The how-tos now cover adding tasks, decisions, debug
+  logs, spec sections, docs, browser editing, and existing-repo setup — and the same Markdown is
+  readable both in the repo and inside Rocketman.
+- **PDF & image attachments** — put a file in `PM/files/`, link it from a doc, and the build
+  embeds it as a data URI so `PM/index.html` stays a single offline file. PDFs render as an
+  attachment card (Open/download + inline preview); images embed inline. Files over 8 MB are left
+  as links with a build warning.
+- Root docs moved into `PM/docs/` (single source: the repo Markdown *is* the in-hub docs).
 - **Skill conventions adopted from gstack** — every `/rm-*` skill now has structured frontmatter
   (`version`, `allowed-tools`, `triggers`), a "When to invoke" section, an explicit phased
   workflow with gates, plan-mode awareness, and a Completion Status Protocol (DONE /

@@ -16,7 +16,6 @@
     "templates",
     "bin",
     ".claude",
-    "docs",
     "README.md",
     "LICENSE",
     "CHANGELOG.md"

@@ -15,9 +15,10 @@
      node engine/build.mjs <root>     # build a different project root
    ════════════════════════════════════════════════════════════════════════ */
 
-import { readFileSync, writeFileSync, existsSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { dirname, join } from 'node:path';
+import { dirname, join, extname, basename, relative } from 'node:path';
+import { markdownToHtml, docTitle, frontmatter } from './md.mjs';
 
 const ENGINE = dirname(fileURLToPath(import.meta.url));
 
@@ -62,6 +63,93 @@ export function loadComms(root) {
   const acks = dir('acks');
   if (!agents.length && !messages.length && !acks.length) return null;
   return { agents, messages, acks };
+}
+
+/* ── ingest PM/docs/**.md → the hub Docs view (nested folder tree) ──────── */
+/* Drop a .md file in PM/docs/ and it appears in the Docs view. Folders become
+   collapsible groups. Local links/images that resolve into PM/files/ are
+   embedded as base64 data URIs so the hub stays single-file and offline. */
+const MIME = {
+  '.pdf': 'application/pdf', '.png': 'image/png', '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.svg': 'image/svg+xml', '.webp': 'image/webp',
+};
+const ASSET_MAX = 8 * 1024 * 1024; // 8 MB — bigger files stay referenced, not embedded
+
+function slug(s) { return s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+
+function embedAssets(html, mdPath, root, warnings) {
+  return html.replace(/(src|href)="([^"]+)"/g, (m, attr, url) => {
+    if (/^(https?:|data:|mailto:|#|\/\/)/.test(url)) return m;
+    // resolve relative to the .md file, then require it to live under PM/
+    const abs = join(dirname(mdPath), url.split(/[?#]/)[0]);
+    if (!existsSync(abs)) return m;
+    const ext = extname(abs).toLowerCase();
+    const mime = MIME[ext];
+    if (!mime) return m;
+    const size = statSync(abs).size;
+    if (size > ASSET_MAX) {
+      warnings.push(`asset too large to embed (${Math.round(size / 1024)}KB): ${relative(root, abs)}`);
+      return m;
+    }
+    const b64 = readFileSync(abs).toString('base64');
+    const dataUri = `data:${mime};base64,${b64}`;
+    if (ext === '.pdf') {
+      // an attachment card: open/download button + best-effort inline preview
+      const name = basename(abs);
+      return `${attr}="${dataUri}"`; // href on the <a>; card wrapper added below
+    }
+    return `${attr}="${dataUri}"`;
+  });
+}
+
+/* Wrap PDF links in an attachment card (button + preview) after embedding. */
+function pdfCards(html) {
+  return html.replace(/<a href="(data:application\/pdf;base64,[^"]+)">([^<]*)<\/a>/g,
+    (_, uri, label) =>
+      `<div class="doc-attach"><div class="doc-attach-bar"><span class="doc-attach-ic">PDF</span>` +
+      `<span class="doc-attach-name">${label || 'document.pdf'}</span>` +
+      `<a class="doc-attach-open" href="${uri}" target="_blank" rel="noopener" download>Open / download</a></div>` +
+      `<iframe class="doc-attach-frame" src="${uri}" title="${label || 'PDF preview'}"></iframe></div>`);
+}
+
+export function loadDocs(root, warnings = []) {
+  const base = join(root, 'PM', 'docs');
+  if (!existsSync(base)) return null;
+
+  const content = {};
+  const order = (name) => { const m = name.match(/^(\d+)[-_]/); return m ? parseInt(m[1], 10) : 999; };
+  const label = (name) => name.replace(/\.md$/i, '').replace(/^\d+[-_]/, '').replace(/[-_]/g, ' ')
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+
+  function walk(dir) {
+    const entries = readdirSync(dir)
+      .filter((n) => !n.startsWith('.'))
+      .sort((a, b) => order(a) - order(b) || a.localeCompare(b));
+    const nodes = [];
+    for (const name of entries) {
+      const p = join(dir, name);
+      if (statSync(p).isDirectory()) {
+        const children = walk(p);
+        if (children.length) nodes.push({ folder: label(name), children });
+      } else if (/\.md$/i.test(name)) {
+        const src = readFileSync(p, 'utf8');
+        const id = 'doc-' + slug(relative(base, p).replace(/\.md$/i, ''));
+        const kindFolder = relative(base, dirname(p)).split('/')[0].replace(/^\d+[-_]/, '') || '';
+        // The renderer shows the title separately; drop a leading H1 so it isn't doubled.
+        const { body } = frontmatter(src);
+        let html = markdownToHtml(body.replace(/^\s*#\s+[^\n]*\n?/, ''));
+        html = embedAssets(html, p, root, warnings);
+        html = pdfCards(html);
+        content[id] = { kind: kindFolder || 'Doc', title: docTitle(src, label(name)), meta: '', html };
+        nodes.push({ doc: id, title: docTitle(src, label(name)) });
+      }
+    }
+    return nodes;
+  }
+
+  const tree = walk(base);
+  if (!tree.length) return null;
+  return { tree, content };
 }
 
 /* ── validate cross-references (the doctor) ─────────────────────────────── */
@@ -168,7 +256,11 @@ export function build(root) {
   const D = loadData(root);
   const comms = loadComms(root);
   if (comms) D.comms = comms;
-  const issues = validate(D);
+  // PM/docs/**.md, if present, supersedes spec.json's `docs` for the Docs view.
+  const docWarnings = [];
+  const docs = loadDocs(root, docWarnings);
+  if (docs) D.docs = docs;
+  const issues = validate(D).concat(docWarnings);
   const html = render(D, { css, app });
   return { html, issues, D };
 }

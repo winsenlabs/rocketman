@@ -1885,124 +1885,165 @@ table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-
   "tree": [
    {
     "folder": "Tutorial",
-    "q": "T",
     "children": [
      {
-      "doc": "doc-t1",
+      "doc": "doc-01-tutorial-01-your-first-project",
       "title": "Your first Rocketman project"
      }
     ]
    },
    {
-    "folder": "How-to",
-    "q": "H",
+    "folder": "How To",
     "children": [
      {
-      "doc": "doc-h1",
+      "doc": "doc-02-how-to-01-add-a-task",
+      "title": "Add a task"
+     },
+     {
+      "doc": "doc-02-how-to-02-record-a-decision",
+      "title": "Record a decision (ADR)"
+     },
+     {
+      "doc": "doc-02-how-to-03-log-a-debug-investigation",
+      "title": "Log a debug investigation"
+     },
+     {
+      "doc": "doc-02-how-to-04-add-a-doc",
+      "title": "Add a doc (Markdown)"
+     },
+     {
+      "doc": "doc-02-how-to-05-attach-a-pdf-or-image",
+      "title": "Attach a PDF or image"
+     },
+     {
+      "doc": "doc-02-how-to-06-add-a-spec-section",
+      "title": "Add a spec section"
+     },
+     {
+      "doc": "doc-02-how-to-07-edit-from-the-browser",
+      "title": "Edit from the browser"
+     },
+     {
+      "doc": "doc-02-how-to-08-add-to-an-existing-repo",
       "title": "Add Rocketman to an existing repo"
-     },
-     {
-      "doc": "doc-h2",
-      "title": "Write a PRD with the track"
-     },
-     {
-      "doc": "doc-h3",
-      "title": "Run a build & verify on CI"
      }
     ]
    },
    {
     "folder": "Reference",
-    "q": "R",
     "children": [
      {
-      "doc": "doc-r1",
+      "doc": "doc-03-reference-01-data-schema",
       "title": "Data schema"
      },
      {
-      "doc": "doc-r2",
+      "doc": "doc-03-reference-02-cli",
       "title": "CLI commands"
      },
      {
-      "folder": "Skills",
-      "children": [
-       {
-        "doc": "doc-r3",
-        "title": "The skill stack"
-       }
-      ]
+      "doc": "doc-03-reference-03-the-skill-stack",
+      "title": "The skill stack"
      }
     ]
    },
    {
     "folder": "Explanation",
-    "q": "E",
     "children": [
      {
-      "doc": "doc-e1",
-      "title": "Why HTML, not markdown"
+      "doc": "doc-04-explanation-01-why-html-not-markdown",
+      "title": "Why HTML, not Markdown"
      },
      {
-      "doc": "doc-e2",
+      "doc": "doc-04-explanation-02-the-single-writer-rule",
       "title": "The single-writer rule"
      }
     ]
    }
   ],
   "content": {
-   "doc-t1": {
+   "doc-01-tutorial-01-your-first-project": {
     "kind": "Tutorial",
     "title": "Your first Rocketman project",
-    "meta": "~2 min",
-    "html": "\u003cp>Install Rocketman, scaffold a hub, and open it.\u003c/p>\u003cpre>\u003ccode>npx rocketman init\nnpx rocketman build\nopen PM/index.html\u003c/code>\u003c/pre>\u003cp>\u003cb>init\u003c/b> scaffolds \u003ccode>PM/\u003c/code> with starter data and a \u003ccode>CLAUDE.md\u003c/code>. \u003cb>build\u003c/b> merges your data into \u003ccode>PM/index.html\u003c/code>. \u003cb>open\u003c/b> it — no server, no dependencies.\u003c/p>"
+    "meta": "",
+    "html": "\u003cp>From nothing to a living project hub in about two minutes.\u003c/p>\n\u003ch3>1. Scaffold\u003c/h3>\n\u003cp>In any repo (or an empty folder):\u003c/p>\n\u003cpre>\u003ccode>npx rocketman init\u003c/code>\u003c/pre>\n\u003cp>This creates \u003ccode>PM/\u003c/code> (the hub + data + docs), wires the \u003ccode>.claude/\u003c/code> skills and the generated-file guard hook, and builds \u003ccode>PM/index.html\u003c/code> from the starter data.\u003c/p>\n\u003ch3>2. Open the hub\u003c/h3>\n\u003cpre>\u003ccode>open PM/index.html\u003c/code>\u003c/pre>\n\u003cp>No server, no dependencies. You see nine views: Dashboard, Board, Spec, Roadmap, Decisions, Debug, Docs, Activity, Fleet.\u003c/p>\n\u003ch3>3. Make it yours\u003c/h3>\n\u003cp>Open \u003ccode>PM/data/core.json\u003c/code>, set your \u003ccode>project.name\u003c/code>, \u003ccode>repo\u003c/code>, and \u003ccode>tagline\u003c/code>, then rebuild:\u003c/p>\n\u003cpre>\u003ccode>rocketman build\u003c/code>\u003c/pre>\n\u003cp>Refresh the hub — your name is on it.\u003c/p>\n\u003ch3>4. The one rule\u003c/h3>\n\u003cblockquote>\u003cb>Edit the data, never the HTML. Then rebuild.\u003c/b>\u003c/blockquote>\n\u003cp>\u003ccode>PM/index.html\u003c/code> is generated. You edit the files under \u003ccode>PM/\u003c/code> and run \u003ccode>rocketman build\u003c/code>. A guard hook even blocks accidental edits to the HTML.\u003c/p>\n\u003ch3>What next\u003c/h3>\n\u003cul>\n\u003cli>Add work to the board → \u003cb>How-to → Add a task\u003c/b>\u003c/li>\n\u003cli>Write docs (like this page) → \u003cb>How-to → Add a doc\u003c/b>\u003c/li>\n\u003cli>Attach a PDF or image → \u003cb>How-to → Attach a PDF or image\u003c/b>\u003c/li>\n\u003cli>Run the idea → production track → start with \u003ccode>/rm-ideate\u003c/code>\u003c/li>\n\u003c/ul>"
    },
-   "doc-h1": {
+   "doc-02-how-to-01-add-a-task": {
+    "kind": "How-to",
+    "title": "Add a task",
+    "meta": "",
+    "html": "\u003cp>Tasks are the board. They live in \u003ccode>PM/data/tasks.json\u003c/code>.\u003c/p>\n\u003ch3>The fast way\u003c/h3>\n\u003cpre>\u003ccode>rocketman new task \"Wire the billing webhook\"\nrocketman build\u003c/code>\u003c/pre>\n\u003cp>This appends a correctly-shaped task stub with the next free id (\u003ccode>rm-13\u003c/code>, \u003ccode>rm-14\u003c/code>, …). Open \u003ccode>PM/data/tasks.json\u003c/code>, fill in the fields, and rebuild.\u003c/p>\n\u003ch3>By hand\u003c/h3>\n\u003cp>Add an object to the \u003ccode>tasks\u003c/code> array:\u003c/p>\n\u003cpre>\u003ccode>{\n  \"id\": \"rm-14\", \"ref\": \"RM-14\", \"col\": \"todo\", \"epic\": \"engine\",\n  \"owner\": \"opus\", \"author\": \"tejas\",\n  \"title\": \"Wire the billing webhook\",\n  \"summary\": \"One scannable line — this is what shows on the card.\",\n  \"labels\": [\"engine\"], \"points\": 3,\n  \"body\": \"&lt;p&gt;The full description, HTML.&lt;/p&gt;\",\n  \"backlinks\": [\"adr-05\"], \"comments\": [], \"activity\": []\n}\u003c/code>\u003c/pre>\n\u003ch3>Fields that matter\u003c/h3>\n\u003ctable>\u003cthead>\u003ctr>\u003cth>Field\u003c/th>\u003cth>What it does\u003c/th>\u003c/tr>\u003c/thead>\u003ctbody>\u003ctr>\u003ctd>\u003ccode>col\u003c/code>\u003c/td>\u003ctd>Which column: \u003ccode>backlog\u003c/code> · \u003ccode>todo\u003c/code> · \u003ccode>progress\u003c/code> · \u003ccode>review\u003c/code> · \u003ccode>done\u003c/code> · \u003ccode>blocked\u003c/code>\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>summary\u003c/code>\u003c/td>\u003ctd>The one-line AI summary shown on the card — write it so the board is skimmable\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>owner\u003c/code>\u003c/td>\u003ctd>A person id from \u003ccode>core.json\u003c/code> \u003ccode>people{}\u003c/code> (human or agent)\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>backlinks\u003c/code>\u003c/td>\u003ctd>Related ids (\u003ccode>adr-05\u003c/code>, \u003ccode>rm-07\u003c/code>) — render as links + bidirectional \"referenced by\"\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>blockedReason\u003c/code>\u003c/td>\u003ctd>Set this when \u003ccode>col\u003c/code> is \u003ccode>blocked\u003c/code>\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>pr\u003c/code>\u003c/td>\u003ctd>`{ \"num\": 31, \"status\": \"open\\\u003c/td>\u003ctd>review\\\u003c/td>\u003ctd>merged\\\u003c/td>\u003ctd>draft\" }`\u003c/td>\u003c/tr>\u003c/tbody>\u003c/table>\n\u003cp>Then \u003ccode>rocketman build\u003c/code>. The doctor will warn if a \u003ccode>backlink\u003c/code> or \u003ccode>owner\u003c/code> doesn't resolve.\u003c/p>"
+   },
+   "doc-02-how-to-02-record-a-decision": {
+    "kind": "How-to",
+    "title": "Record a decision (ADR)",
+    "meta": "",
+    "html": "\u003cp>Capture decisions where the \u003cem>reasoning\u003c/em> matters, so nobody relitigates them later. ADRs live in \u003ccode>PM/data/content.json\u003c/code> under \u003ccode>adrs[]\u003c/code> and render in the \u003cb>Decisions\u003c/b> view.\u003c/p>\n\u003ch3>The fast way\u003c/h3>\n\u003cpre>\u003ccode>rocketman new adr \"Use a file bus for the agent relay\"\nrocketman build\u003c/code>\u003c/pre>\n\u003cp>Or run the \u003cb>\u003ccode>/rm-decision\u003c/code>\u003c/b> skill, which walks you through it.\u003c/p>\n\u003ch3>The shape\u003c/h3>\n\u003cpre>\u003ccode>{\n  \"id\": \"adr-09\", \"ref\": \"ADR-9\", \"title\": \"...\", \"status\": \"accepted\",\n  \"date\": \"2026-05-30\", \"author\": \"tejas\",\n  \"summary\": \"one line — what was decided\",\n  \"context\": \"the forces and constraints in play\",\n  \"options\": [\n    { \"text\": \"Option A\", \"chosen\": false },\n    { \"text\": \"Option B\", \"chosen\": true }\n  ],\n  \"decision\": \"what we chose and the rule going forward\",\n  \"consequences\": \"what this makes easy, hard, or commits us to\",\n  \"backlinks\": [\"rm-13\"]\n}\u003c/code>\u003c/pre>\n\u003ch3>Superseding an old decision\u003c/h3>\n\u003cp>Decisions are append-mostly — you don't rewrite them. When a new ADR reverses an old one:\u003c/p>\n\u003col>\n\u003cli>Set the old ADR's \u003ccode>status\u003c/code> to \u003ccode>superseded\u003c/code>.\u003c/li>\n\u003cli>Add the old id to the new ADR's \u003ccode>backlinks\u003c/code>, and reference the new one back.\u003c/li>\n\u003c/ol>\n\u003cp>\u003ccode>status\u003c/code> is one of: \u003ccode>proposed\u003c/code> · \u003ccode>accepted\u003c/code> · \u003ccode>superseded\u003c/code>. The Decisions view shows the supersede chain so the trail stays intact. Then \u003ccode>rocketman build\u003c/code>.\u003c/p>"
+   },
+   "doc-02-how-to-03-log-a-debug-investigation": {
+    "kind": "How-to",
+    "title": "Log a debug investigation",
+    "meta": "",
+    "html": "\u003cp>Turn debugging into a durable, linkable trail instead of lost chat history. Investigations live in \u003ccode>PM/data/content.json\u003c/code> under \u003ccode>debug[]\u003c/code> and render in the \u003cb>Debug\u003c/b> view as a timeline: symptom → hypotheses → repro → root cause → fix → guard.\u003c/p>\n\u003ch3>The fast way\u003c/h3>\n\u003cpre>\u003ccode>rocketman new debug \"Hub renders blank from the bundle\"\nrocketman build\u003c/code>\u003c/pre>\n\u003cp>Or run \u003cb>\u003ccode>/rm-debug\u003c/code>\u003c/b>, which enforces the discipline (no fix without a confirmed root cause).\u003c/p>\n\u003ch3>The shape\u003c/h3>\n\u003cpre>\u003ccode>{\n  \"id\": \"bug-04\", \"ref\": \"BUG-4\", \"title\": \"...\", \"state\": \"investigating\",\n  \"task\": \"rm-02\", \"owner\": \"opus\", \"elapsed\": \"25m\", \"hyposCount\": 2,\n  \"summary\": \"one line — the failure\",\n  \"symptom\": \"what's observed\",\n  \"hypotheses\": [\n    { \"status\": \"refuted\",   \"text\": \"...\", \"note\": \"evidence\" },\n    { \"status\": \"confirmed\", \"text\": \"...\", \"note\": \"evidence\" }\n  ],\n  \"repro\": [\"step 1\", \"step 2\"],\n  \"rootCause\": \"the confirmed cause\",\n  \"fix\": { \"text\": \"what fixed it\", \"pr\": 1, \"commit\": \"a1b2c3d\", \"file\": \"engine/build.mjs\" },\n  \"guard\": \"the test/assert that stops it recurring\",\n  \"timeline\": [ { \"stage\": \"symptom\", \"kind\": \"alert\", \"when\": \"25m ago\", \"who\": \"opus\" } ],\n  \"backlinks\": [\"rm-02\"]\n}\u003c/code>\u003c/pre>\n\u003ch3>Notes\u003c/h3>\n\u003cul>\n\u003cli>\u003ccode>state\u003c/code>: \u003ccode>investigating\u003c/code> → \u003ccode>root-caused\u003c/code> → \u003ccode>fixed\u003c/code> → \u003ccode>monitoring\u003c/code>.\u003c/li>\n\u003cli>Each hypothesis has a \u003ccode>status\u003c/code>: \u003ccode>testing\u003c/code> · \u003ccode>confirmed\u003c/code> · \u003ccode>refuted\u003c/code> — shown with a tag.\u003c/li>\n\u003cli>Every fix needs a \u003ccode>guard\u003c/code>: the regression test that makes the bug unable to recur\u003c/li>\n\u003c/ul>\n\u003cp>  silently.\u003c/p>\n\u003cul>\n\u003cli>The Debug view builds the timeline from whichever content fields are present, so you can\u003c/li>\n\u003c/ul>\n\u003cp>  fill it in as the investigation unfolds. Then \u003ccode>rocketman build\u003c/code>.\u003c/p>"
+   },
+   "doc-02-how-to-04-add-a-doc": {
+    "kind": "How-to",
+    "title": "Add a doc (Markdown)",
+    "meta": "",
+    "html": "\u003cp>Docs in the hub are plain Markdown files under \u003ccode>PM/docs/\u003c/code>. Drop a \u003ccode>.md\u003c/code> file in, rebuild, and it appears in the \u003cb>Docs\u003c/b> view. This very page is one of them.\u003c/p>\n\u003ch3>The fast way\u003c/h3>\n\u003cpre>\u003ccode># create the file\nmkdir -p PM/docs/How-to\necho \"# My new guide\\n\\nSteps go here.\" &gt; PM/docs/How-to/my-guide.md\n\n# rebuild the hub\nrocketman build\u003c/code>\u003c/pre>\n\u003cp>Open the Docs view — \"My Guide\" is now in the \u003cb>How-to\u003c/b> folder.\u003c/p>\n\u003ch3>Folders become the tree\u003c/h3>\n\u003cp>The folder structure under \u003ccode>PM/docs/\u003c/code> \u003cem>is\u003c/em> the navigation tree, nested as deep as you like:\u003c/p>\n\u003cpre>\u003ccode>PM/docs/\n  01-Tutorial/\n    01-your-first-project.md\n  02-How-to/\n    04-add-a-doc.md\n  03-Reference/\n    01-data-schema.md\u003c/code>\u003c/pre>\n\u003cul>\n\u003cli>A numeric prefix (\u003ccode>01-\u003c/code>, \u003ccode>02-\u003c/code>) controls order and is stripped from the label.\u003c/li>\n\u003cli>Dashes and underscores become spaces; the label is title-cased.\u003c/li>\n\u003cli>Sub-folders nest — \u003ccode>PM/docs/Reference/API/auth.md\u003c/code> makes a \u003ccode>Reference → API\u003c/code> tree.\u003c/li>\n\u003c/ul>\n\u003ch3>Optional frontmatter\u003c/h3>\n\u003cp>Set the display title explicitly with YAML frontmatter at the top:\u003c/p>\n\u003cpre>\u003ccode>---\ntitle: A nicer title than the filename\n---\n\n# Heading\n...\u003c/code>\u003c/pre>\n\u003cp>Without it, the title comes from the first \u003ccode># heading\u003c/code>, then the filename.\u003c/p>\n\u003ch3>What Markdown is supported\u003c/h3>\n\u003cp>Headings, \u003cb>bold\u003c/b>, \u003cem>italic\u003c/em>, \u003ccode>inline code\u003c/code>, lists (nested), ordered lists, links, images, code fences, blockquotes, pipe tables, and horizontal rules. Enough for real docs, zero dependencies.\u003c/p>\n\u003ch3>How it works\u003c/h3>\n\u003cp>\u003ccode>rocketman build\u003c/code> converts every \u003ccode>.md\u003c/code> under \u003ccode>PM/docs/\u003c/code> to HTML and folds it into the hub. If \u003ccode>PM/docs/\u003c/code> exists, it is the source for the Docs view (it supersedes any \u003ccode>docs\u003c/code> block in \u003ccode>spec.json\u003c/code>). Edit the Markdown, rebuild, done — the golden rule holds: you never touch \u003ccode>PM/index.html\u003c/code>.\u003c/p>"
+   },
+   "doc-02-how-to-05-attach-a-pdf-or-image": {
+    "kind": "How-to",
+    "title": "Attach a PDF or image",
+    "meta": "",
+    "html": "\u003cp>Put the file in \u003ccode>PM/files/\u003c/code>, link to it from any doc, and rebuild. The build embeds it into the hub as a data URI, so \u003ccode>PM/index.html\u003c/code> stays a single offline file — the PDF travels inside it.\u003c/p>\n\u003ch3>Add a PDF\u003c/h3>\n\u003cpre>\u003ccode># 1. drop the file in\ncp ~/Downloads/spec-v2.pdf PM/files/\n\n# 2. link to it from a doc (relative path from the .md to PM/files/)\n#    in PM/docs/How-to/something.md:\n#    [Spec v2](../../files/spec-v2.pdf)\n\n# 3. rebuild\nrocketman build\u003c/code>\u003c/pre>\n\u003cp>A PDF link renders as an attachment card with an \u003cb>Open / download\u003c/b> button and an inline preview. Here is the sample shipped with Rocketman:\u003c/p>\n\u003cp>\u003cdiv class=\"doc-attach\">\u003cdiv class=\"doc-attach-bar\">\u003cspan class=\"doc-attach-ic\">PDF\u003c/span>\u003cspan class=\"doc-attach-name\">Rocketman overview (sample PDF)\u003c/span>\u003ca class=\"doc-attach-open\" href=\"data:application/pdf;base64,JVBERi0xLjQKMSAwIG9iago8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgPj4KZW5kb2JqCjIgMCBvYmoKPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFszIDAgUl0gL0NvdW50IDEgPj4KZW5kb2JqCjMgMCBvYmoKPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAyIDAgUiAvTWVkaWFCb3ggWzAgMCA0MjAgMjAwXSAvQ29udGVudHMgNCAwIFIgL1Jlc291cmNlcyA8PCAvRm9udCA8PCAvRjEgNSAwIFIgPj4gPj4gPj4KZW5kb2JqCjQgMCBvYmoKPDwgL0xlbmd0aCAxNjIgPj4Kc3RyZWFtCkJUIC9GMSAyMCBUZiA0MCAxNDAgVGQgKFJvY2tldG1hbikgVGogL0YxIDEyIFRmIDAgLTMwIFRkIChTYW1wbGUgYXR0YWNobWVudCBlbWJlZGRlZCBpbiB0aGUgaHViLikgVGogMCAtMjAgVGQgKERyb3AgYSBQREYgaW4gUE0vZmlsZXMvLCBsaW5rIGl0IGZyb20gYSBkb2MuKSBUaiBFVAplbmRzdHJlYW0KZW5kb2JqCjUgMCBvYmoKPDwgL1R5cGUgL0ZvbnQgL1N1YnR5cGUgL1R5cGUxIC9CYXNlRm9udCAvSGVsdmV0aWNhID4+CmVuZG9iagp4cmVmCjAgNgowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMDkgMDAwMDAgbiAKMDAwMDAwMDA1OCAwMDAwMCBuIAowMDAwMDAwMTE1IDAwMDAwIG4gCjAwMDAwMDAyNDEgMDAwMDAgbiAKMDAwMDAwMDQ1NCAwMDAwMCBuIAp0cmFpbGVyCjw8IC9TaXplIDYgL1Jvb3QgMSAwIFIgPj4Kc3RhcnR4cmVmCjUyNAolJUVPRg==\" target=\"_blank\" rel=\"noopener\" download>Open / download\u003c/a>\u003c/div>\u003ciframe class=\"doc-attach-frame\" src=\"data:application/pdf;base64,JVBERi0xLjQKMSAwIG9iago8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgPj4KZW5kb2JqCjIgMCBvYmoKPDwgL1R5cGUgL1BhZ2VzIC9LaWRzIFszIDAgUl0gL0NvdW50IDEgPj4KZW5kb2JqCjMgMCBvYmoKPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAyIDAgUiAvTWVkaWFCb3ggWzAgMCA0MjAgMjAwXSAvQ29udGVudHMgNCAwIFIgL1Jlc291cmNlcyA8PCAvRm9udCA8PCAvRjEgNSAwIFIgPj4gPj4gPj4KZW5kb2JqCjQgMCBvYmoKPDwgL0xlbmd0aCAxNjIgPj4Kc3RyZWFtCkJUIC9GMSAyMCBUZiA0MCAxNDAgVGQgKFJvY2tldG1hbikgVGogL0YxIDEyIFRmIDAgLTMwIFRkIChTYW1wbGUgYXR0YWNobWVudCBlbWJlZGRlZCBpbiB0aGUgaHViLikgVGogMCAtMjAgVGQgKERyb3AgYSBQREYgaW4gUE0vZmlsZXMvLCBsaW5rIGl0IGZyb20gYSBkb2MuKSBUaiBFVAplbmRzdHJlYW0KZW5kb2JqCjUgMCBvYmoKPDwgL1R5cGUgL0ZvbnQgL1N1YnR5cGUgL1R5cGUxIC9CYXNlRm9udCAvSGVsdmV0aWNhID4+CmVuZG9iagp4cmVmCjAgNgowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAwMDkgMDAwMDAgbiAKMDAwMDAwMDA1OCAwMDAwMCBuIAowMDAwMDAwMTE1IDAwMDAwIG4gCjAwMDAwMDAyNDEgMDAwMDAgbiAKMDAwMDAwMDQ1NCAwMDAwMCBuIAp0cmFpbGVyCjw8IC9TaXplIDYgL1Jvb3QgMSAwIFIgPj4Kc3RhcnR4cmVmCjUyNAolJUVPRg==\" title=\"Rocketman overview (sample PDF)\">\u003c/iframe>\u003c/div>\u003c/p>\n\u003ch3>Add an image\u003c/h3>\n\u003cp>Images embed inline. Use Markdown image syntax:\u003c/p>\n\u003cpre>\u003ccode>![Pipeline diagram](../../files/diagram.svg)\u003c/code>\u003c/pre>\n\u003cp>\u003cimg src=\"data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgNDIwIDEyMCI+CiAgPHJlY3Qgd2lkdGg9IjQyMCIgaGVpZ2h0PSIxMjAiIHJ4PSIxMCIgZmlsbD0iI2VlZjFmYiIvPgogIDx0ZXh0IHg9IjIwIiB5PSI0MCIgZm9udC1mYW1pbHk9InVpLXNhbnMtc2VyaWYsc3lzdGVtLXVpIiBmb250LXNpemU9IjE1IiBmb250LXdlaWdodD0iNjAwIiBmaWxsPSIjMmIzYThjIj5QTS9kYXRhLyouanNvbjwvdGV4dD4KICA8dGV4dCB4PSIyMDAiIHk9IjQwIiBmb250LWZhbWlseT0idWktbW9ub3NwYWNlLG1vbm9zcGFjZSIgZm9udC1zaXplPSIxMyIgZmlsbD0iIzViNjI3NSI+cm9ja2V0bWFuIGJ1aWxkIOKGkjwvdGV4dD4KICA8dGV4dCB4PSIyMCIgeT0iODAiIGZvbnQtZmFtaWx5PSJ1aS1zYW5zLXNlcmlmLHN5c3RlbS11aSIgZm9udC1zaXplPSIxNSIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iIzJiM2E4YyI+UE0vaW5kZXguaHRtbDwvdGV4dD4KICA8dGV4dCB4PSIyMDAiIHk9IjgwIiBmb250LWZhbWlseT0idWktbW9ub3NwYWNlLG1vbm9zcGFjZSIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzViNjI3NSI+b25lIG9mZmxpbmUgZmlsZSwgOSB2aWV3czwvdGV4dD4KPC9zdmc+Cg==\" alt=\"Pipeline diagram\"/>\u003c/p>\n\u003cp>PNG, JPG, GIF, SVG, and WebP all work.\u003c/p>\n\u003ch3>Rules &amp; limits\u003c/h3>\n\u003cul>\n\u003cli>\u003cb>Paths are relative to the \u003ccode>.md\u003c/code> file.\u003c/b> From \u003ccode>PM/docs/How-to/x.md\u003c/code>, the files\u003c/li>\n\u003c/ul>\n\u003cp>  folder is \u003ccode>../../files/\u003c/code>.\u003c/p>\n\u003cul>\n\u003cli>\u003cb>Local only.\u003c/b> \u003ccode>http(s)://\u003c/code> and \u003ccode>data:\u003c/code> links are left as-is, not embedded.\u003c/li>\n\u003cli>\u003cb>Size guard.\u003c/b> Files over 8 MB are left as a plain link (not embedded) and the build\u003c/li>\n\u003c/ul>\n\u003cp>  prints a warning, so the hub never balloons. Keep attachments small, or link out for   big ones.\u003c/p>\n\u003cul>\n\u003cli>\u003cb>It stays offline.\u003c/b> Because the bytes are embedded, the single \u003ccode>PM/index.html\u003c/code> opens\u003c/li>\n\u003c/ul>\n\u003cp>  the PDF and shows the image with no network and no sidecar files.\u003c/p>"
+   },
+   "doc-02-how-to-06-add-a-spec-section": {
+    "kind": "How-to",
+    "title": "Add a spec section",
+    "meta": "",
+    "html": "\u003cp>The product spec lives in \u003ccode>PM/data/spec.json\u003c/code> under \u003ccode>spec.sections[]\u003c/code> and renders in the \u003cb>Spec\u003c/b> view. Add a section object and a matching nav entry.\u003c/p>\n\u003ch3>Add the section\u003c/h3>\n\u003cpre>\u003ccode>{\n  \"id\": \"metrics\", \"n\": \"07\", \"kicker\": \"Success Metrics\",\n  \"title\": \"How we'll know it works\",\n  \"blocks\": [\n    { \"type\": \"metrics\", \"items\": [\n      { \"v\": \"&lt; 10s\", \"k\": \"Time to project state\", \"t\": \"open hub → understand status\" }\n    ]}\n  ]\n}\u003c/code>\u003c/pre>\n\u003cp>Mirror it in \u003ccode>spec.nav[]\u003c/code> so it appears in the section rail:\u003c/p>\n\u003cpre>\u003ccode>{ \"id\": \"metrics\", \"label\": \"Success Metrics\", \"group\": \"Outcomes\" }\u003c/code>\u003c/pre>\n\u003ch3>Block types\u003c/h3>\n\u003ctable>\u003cthead>\u003ctr>\u003cth>Type\u003c/th>\u003cth>Use for\u003c/th>\u003c/tr>\u003c/thead>\u003ctbody>\u003ctr>\u003ctd>\u003ccode>p\u003c/code>\u003c/td>\u003ctd>Prose (\u003ccode>&lt;b&gt;\u003c/code>, \u003ccode>&lt;em&gt;\u003c/code>, \u003ccode>&lt;code&gt;\u003c/code>, and `[[id\\\u003c/td>\u003ctd>label]]` links)\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>persona\u003c/code>\u003c/td>\u003ctd>\u003ccode>{ name, role, jobs: [] }\u003c/code>\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>story\u003c/code>\u003c/td>\u003ctd>\u003ccode>{ sid, title, asIf, ac: [] }\u003c/code> — user story + Given/When/Then criteria\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>table\u003c/code>\u003c/td>\u003ctd>`{ title, rows: [{ id, prio: \"must\\\u003c/td>\u003ctd>should\\\u003c/td>\u003ctd>could\", text }] }`\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>budgets\u003c/code>\u003c/td>\u003ctd>\u003ccode>{ items: [{ k, v, d }] }\u003c/code> — non-functional budgets\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>metrics\u003c/code>\u003c/td>\u003ctd>\u003ccode>{ items: [{ v, k, t }] }\u003c/code> — success metrics\u003c/td>\u003c/tr>\u003c/tbody>\u003c/table>\n\u003cp>The fastest way to author a whole spec is the \u003cb>\u003ccode>/rm-prd\u003c/code>\u003c/b> skill, which generates these sections from an idea brief. Then \u003ccode>rocketman build\u003c/code>.\u003c/p>"
+   },
+   "doc-02-how-to-07-edit-from-the-browser": {
+    "kind": "How-to",
+    "title": "Edit from the browser",
+    "meta": "",
+    "html": "\u003cp>The committed \u003ccode>PM/index.html\u003c/code> is read-only by design — you open it offline and it can't write to disk. When you want to add comments, edit docs, or move cards \u003cem>from the browser\u003c/em>, run the local edit server.\u003c/p>\n\u003ch3>Start the server\u003c/h3>\n\u003cpre>\u003ccode>rocketman serve\u003c/code>\u003c/pre>\n\u003cp>It serves the same hub at \u003ccode>http://localhost:4317\u003c/code>. Because it's served over http (not \u003ccode>file://\u003c/code>), edit affordances light up:\u003c/p>\n\u003cul>\n\u003cli>A \u003cb>comment composer\u003c/b> on tasks and decisions\u003c/li>\n\u003cli>A \u003cb>\"Move to\"\u003c/b> dropdown on tasks\u003c/li>\n\u003cli>An \u003cb>Edit\u003c/b> button on docs\u003c/li>\n\u003c/ul>\n\u003cp>Every change writes straight back to \u003ccode>PM/data/*.json\u003c/code> and rebuilds \u003ccode>PM/index.html\u003c/code>. The committed file stays read-only; editing is opt-in via the server.\u003c/p>\n\u003ch3>Why two modes\u003c/h3>\n\u003ctable>\u003cthead>\u003ctr>\u003cth>\u003c/th>\u003cth>\u003ccode>file://\u003c/code> (double-click)\u003c/th>\u003cth>\u003ccode>rocketman serve\u003c/code> (localhost)\u003c/th>\u003c/tr>\u003c/thead>\u003ctbody>\u003ctr>\u003ctd>Read everything\u003c/td>\u003ctd>✅\u003c/td>\u003ctd>✅\u003c/td>\u003c/tr>\u003ctr>\u003ctd>Works offline, no setup\u003c/td>\u003ctd>✅\u003c/td>\u003ctd>needs the server running\u003c/td>\u003c/tr>\u003ctr>\u003ctd>Add comments / edit docs / move cards\u003c/td>\u003ctd>—\u003c/td>\u003ctd>✅\u003c/td>\u003c/tr>\u003ctr>\u003ctd>Writes to\u003c/td>\u003ctd>nothing (read-only)\u003c/td>\u003ctd>\u003ccode>PM/data/*.json\u003c/code>, then rebuilds\u003c/td>\u003c/tr>\u003c/tbody>\u003c/table>\n\u003cp>Stop the server with Ctrl-C. Use \u003ccode>--port\u003c/code> to change the port.\u003c/p>"
+   },
+   "doc-02-how-to-08-add-to-an-existing-repo": {
     "kind": "How-to",
     "title": "Add Rocketman to an existing repo",
-    "meta": "how-to",
-    "html": "\u003cp>Drop the hub into any repo without touching your stack.\u003c/p>\u003cpre>\u003ccode>cd your-repo\nnpx rocketman init\ngit add PM/ .claude/\u003c/code>\u003c/pre>\u003cp>Commit \u003ccode>PM/\u003c/code> alongside your code — it branches, reviews, and merges with the code, so project state never drifts from the branch it describes.\u003c/p>"
+    "meta": "",
+    "html": "\u003cp>Drop the hub into any repo without touching your stack.\u003c/p>\n\u003cpre>\u003ccode>cd your-repo\nnpx rocketman init\ngit add PM/ .claude/\ngit commit -m \"Add Rocketman project hub\"\u003c/code>\u003c/pre>\n\u003cp>\u003ccode>init\u003c/code> scaffolds \u003ccode>PM/\u003c/code> (data + docs), the \u003ccode>.claude/\u003c/code> skills, and the generated-file guard hook, then builds the hub.\u003c/p>\n\u003ch3>Wire git so diffs stay clean\u003c/h3>\n\u003cp>The generated hub is an artifact. Mark it so GitHub collapses it and excludes it from language stats — \u003ccode>init\u003c/code> writes this for you, but if you add it manually:\u003c/p>\n\u003cpre>\u003ccode># .gitattributes\nPM/index.html linguist-generated=true -diff\u003c/code>\u003c/pre>\n\u003ch3>Why commit \u003ccode>PM/\u003c/code>?\u003c/h3>\n\u003cp>Because it lives in the repo, your project state \u003cb>branches, reviews, and merges with the code.\u003c/b> A feature branch carries its own spec and board changes; they show up in the PR; they can never silently drift from the work they describe.\u003c/p>\n\u003ch3>Keep it honest in CI\u003c/h3>\n\u003cp>Fail a PR if someone forgot to rebuild the hub or broke a reference:\u003c/p>\n\u003cpre>\u003ccode># .github/workflows/pm.yml\n- run: node bin/rocketman.mjs doctor      # references resolve\n- run: node engine/build.mjs --check      # the committed hub isn't stale\u003c/code>\u003c/pre>"
    },
-   "doc-h2": {
-    "kind": "How-to",
-    "title": "Write a PRD with the track",
-    "meta": "how-to",
-    "html": "\u003cp>Let the skill stack force the thinking, then generate the spec.\u003c/p>\u003cpre>\u003ccode>/rm-ideate   # forcing questions\n/rm-prd      # writes PM/data/spec.json\n/rm-plan     # lays out the board\u003c/code>\u003c/pre>"
-   },
-   "doc-h3": {
-    "kind": "How-to",
-    "title": "Run a build & verify on CI",
-    "meta": "how-to",
-    "html": "\u003cp>Fail the PR if the committed hub is stale or any reference is broken.\u003c/p>\u003cpre>\u003ccode>node engine/build.mjs --check\u003c/code>\u003c/pre>\u003cp>The check rebuilds in memory and compares against the committed \u003ccode>PM/index.html\u003c/code>; a non-zero exit means someone forgot to rebuild.\u003c/p>"
-   },
-   "doc-r1": {
+   "doc-03-reference-01-data-schema": {
     "kind": "Reference",
     "title": "Data schema",
-    "meta": "reference",
-    "html": "\u003cp>Four files merge — flat — into one \u003ccode>#pm-data\u003c/code> island.\u003c/p>\u003cul>\u003cli>\u003ccode>core.json\u003c/code> — project, burn, people, epics, labels, columns\u003c/li>\u003cli>\u003ccode>tasks.json\u003c/code> — the board\u003c/li>\u003cli>\u003ccode>spec.json\u003c/code> — spec sections + docs\u003c/li>\u003cli>\u003ccode>content.json\u003c/code> — ADRs, debug logs, activity\u003c/li>\u003c/ul>\u003cpre>\u003ccode>{ \"id\": \"rm-01\", \"col\": \"done\", \"owner\": \"opus\",\n  \"summary\": \"...\", \"backlinks\": [\"adr-02\"] }\u003c/code>\u003c/pre>"
+    "meta": "",
+    "html": "\u003cp>Four JSON files under \u003ccode>PM/data/\u003c/code> merge — flat — into one \u003ccode>#pm-data\u003c/code> island that the hub reads at runtime. Top-level keys must not collide across files.\u003c/p>\n\u003ctable>\u003cthead>\u003ctr>\u003cth>File\u003c/th>\u003cth>Top-level keys\u003c/th>\u003c/tr>\u003c/thead>\u003ctbody>\u003ctr>\u003ctd>\u003ccode>core.json\u003c/code>\u003c/td>\u003ctd>\u003ccode>project\u003c/code>, \u003ccode>burn\u003c/code>, \u003ccode>people\u003c/code>, \u003ccode>epics\u003c/code>, \u003ccode>labels\u003c/code>, \u003ccode>columns\u003c/code>\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>tasks.json\u003c/code>\u003c/td>\u003ctd>\u003ccode>tasks\u003c/code>\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>spec.json\u003c/code>\u003c/td>\u003ctd>\u003ccode>spec\u003c/code> (\u003ccode>{title, lede, nav[], sections[]}\u003c/code>), \u003ccode>docs\u003c/code> (fallback if no \u003ccode>PM/docs/\u003c/code>)\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>content.json\u003c/code>\u003c/td>\u003ctd>\u003ccode>adrs\u003c/code>, \u003ccode>debug\u003c/code>, \u003ccode>activity\u003c/code>\u003c/td>\u003c/tr>\u003c/tbody>\u003c/table>\n\u003cp>Plus two directories the build folds in:\u003c/p>\n\u003cul>\n\u003cli>\u003ccode>PM/docs/**/*.md\u003c/code> → the \u003cb>Docs\u003c/b> view (supersedes \u003ccode>spec.json\u003c/code> \u003ccode>docs\u003c/code>).\u003c/li>\n\u003cli>\u003ccode>PM/comms/{agents,messages,acks}/*.json\u003c/code> → the \u003cb>Fleet\u003c/b> view (the agent relay).\u003c/li>\n\u003cli>\u003ccode>PM/files/\u003c/code> → assets (PDF/images) embedded into docs as data URIs.\u003c/li>\n\u003c/ul>\n\u003ch3>IDs\u003c/h3>\n\u003cp>Lowercase, kebab, prefixed by type. Allocate the next free number per type.\u003c/p>\n\u003cul>\n\u003cli>Tasks: \u003ccode>rm-01\u003c/code> … (display \u003ccode>ref\u003c/code>: \u003ccode>RM-1\u003c/code>)\u003c/li>\n\u003cli>ADRs: \u003ccode>adr-01\u003c/code> … (display \u003ccode>ref\u003c/code>: \u003ccode>ADR-1\u003c/code>)\u003c/li>\n\u003cli>Debug: \u003ccode>bug-01\u003c/code> … (display \u003ccode>ref\u003c/code>: \u003ccode>BUG-1\u003c/code>)\u003c/li>\n\u003cli>Epics: the object key (\u003ccode>engine\u003c/code>, \u003ccode>track\u003c/code>)\u003c/li>\n\u003cli>Spec sections: the section \u003ccode>id\u003c/code> (\u003ccode>vision\u003c/code>, \u003ccode>problem\u003c/code>)\u003c/li>\n\u003c/ul>\n\u003ch3>People &amp; provenance\u003c/h3>\n\u003cp>\u003ccode>core.json\u003c/code> \u003ccode>people{}\u003c/code> maps an id to \u003ccode>{ name, kind, ... }\u003c/code>. \u003ccode>kind\u003c/code> is \u003ccode>human\u003c/code> (with \u003ccode>av\u003c/code> initials and a \u003ccode>tone\u003c/code>) or \u003ccode>agent\u003c/code> (with a \u003ccode>model\u003c/code>: \u003ccode>opus\u003c/code> / \u003ccode>sonnet\u003c/code> / \u003ccode>haiku\u003c/code>). Every task \u003ccode>owner\u003c/code>/\u003ccode>author\u003c/code> and activity \u003ccode>who\u003c/code> is one of these ids — that's how the hub shows human-vs-agent provenance everywhere.\u003c/p>\n\u003ch3>Backlinks\u003c/h3>\n\u003cp>Relate entities with their bare id in a \u003ccode>backlinks\u003c/code> array, or inline in prose with \u003ccode>[[id|label]]\u003c/code>. The hub renders them bidirectionally (\"referenced by\") and the doctor checks every reference resolves.\u003c/p>"
    },
-   "doc-r2": {
+   "doc-03-reference-02-cli": {
     "kind": "Reference",
     "title": "CLI commands",
-    "meta": "reference",
-    "html": "\u003cul>\u003cli>\u003ccode>rocketman init\u003c/code> — scaffold PM/ into a repo\u003c/li>\u003cli>\u003ccode>rocketman build\u003c/code> — regenerate PM/index.html\u003c/li>\u003cli>\u003ccode>rocketman new &lt;task|adr|debug&gt;\u003c/code> — create an entity\u003c/li>\u003cli>\u003ccode>rocketman doctor\u003c/code> — validate data + references\u003c/li>\u003c/ul>"
+    "meta": "",
+    "html": "\u003cp>\u003ccode>rocketman\u003c/code> is a single zero-dependency Node binary. Run it with \u003ccode>npx rocketman &lt;cmd&gt;\u003c/code> (or \u003ccode>node bin/rocketman.mjs &lt;cmd&gt;\u003c/code> from this repo).\u003c/p>\n\u003ch3>Project\u003c/h3>\n\u003ctable>\u003cthead>\u003ctr>\u003cth>Command\u003c/th>\u003cth>Does\u003c/th>\u003c/tr>\u003c/thead>\u003ctbody>\u003ctr>\u003ctd>\u003ccode>rocketman init [dir]\u003c/code>\u003c/td>\u003ctd>Scaffold \u003ccode>PM/\u003c/code> + \u003ccode>.claude/\u003c/code> (skills, hooks, settings) into a repo, then build.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>rocketman build [dir]\u003c/code>\u003c/td>\u003ctd>Render \u003ccode>PM/data/*.json\u003c/code> + \u003ccode>PM/docs/\u003c/code> + \u003ccode>PM/comms/\u003c/code> → \u003ccode>PM/index.html\u003c/code>. Deterministic.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>rocketman check [dir]\u003c/code>\u003c/td>\u003ctd>Exit non-zero if the committed hub is stale (use in CI).\u003c/td>\u003c/tr>\u003ctr>\u003ctd>`rocketman new &lt;task\\\u003c/td>\u003ctd>adr\\\u003c/td>\u003ctd>debug&gt; \"Title\"`\u003c/td>\u003ctd>Append a correctly-shaped entity stub.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>rocketman doctor [dir]\u003c/code>\u003c/td>\u003ctd>Validate data + cross-references (backlinks, owners, epics).\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>rocketman serve [dir] [--port]\u003c/code>\u003c/td>\u003ctd>Serve an editable hub on localhost (comments, doc edits, task moves).\u003c/td>\u003c/tr>\u003c/tbody>\u003c/table>\n\u003ch3>Relay (the agent bus)\u003c/h3>\n\u003cp>Coordination between agent sessions in separate terminals. Each agent writes only its own files under \u003ccode>PM/comms/\u003c/code>, so it's conflict-free.\u003c/p>\n\u003ctable>\u003cthead>\u003ctr>\u003cth>Command\u003c/th>\u003cth>Does\u003c/th>\u003c/tr>\u003c/thead>\u003ctbody>\u003ctr>\u003ctd>\u003ccode>rocketman relay register &lt;session&gt; &lt;agent&gt; \"focus\"\u003c/code>\u003c/td>\u003ctd>Announce this terminal's presence.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>rocketman relay here &lt;session&gt;\u003c/code>\u003c/td>\u003ctd>Heartbeat / update presence.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>rocketman relay agents\u003c/code>\u003c/td>\u003ctd>List active sessions.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>`rocketman relay send &lt;from&gt; &lt;to\\\u003c/td>\u003ctd>all&gt; \"subject\" \"body\" [--kind handoff] [--task rm-07]`\u003c/td>\u003ctd>Send a message or handoff.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>rocketman relay inbox &lt;session&gt;\u003c/code>\u003c/td>\u003ctd>Show messages/handoffs for this session.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>rocketman relay poll &lt;session&gt;\u003c/code>\u003c/td>\u003ctd>Same, as JSON (for \u003ccode>/rm-relay\u003c/code>).\u003c/td>\u003c/tr>\u003ctr>\u003ctd>`rocketman relay accept\\\u003c/td>\u003ctd>complete\\\u003c/td>\u003ctd>reply &lt;session&gt; &lt;msgid&gt; [--note]`\u003c/td>\u003ctd>Act on a handoff/message.\u003c/td>\u003c/tr>\u003c/tbody>\u003c/table>\n\u003cp>Pair \u003ccode>relay poll\u003c/code> with the \u003ccode>/rm-relay\u003c/code> skill and \u003ccode>/loop 30s /rm-relay\u003c/code> to poll continuously.\u003c/p>"
    },
-   "doc-r3": {
+   "doc-03-reference-03-the-skill-stack": {
     "kind": "Reference",
     "title": "The skill stack",
-    "meta": "reference",
-    "html": "\u003cp>The track, as Claude skills:\u003c/p>\u003cul>\u003cli>\u003ccode>/rm-ideate\u003c/code> · \u003ccode>/rm-prd\u003c/code> · \u003ccode>/rm-plan\u003c/code> · \u003ccode>/rm-build\u003c/code>\u003c/li>\u003cli>\u003ccode>/rm-verify\u003c/code> · \u003ccode>/rm-test\u003c/code> · \u003ccode>/rm-launch\u003c/code> · \u003ccode>/rm-iterate\u003c/code>\u003c/li>\u003cli>Infra: \u003ccode>/rm-init\u003c/code> · \u003ccode>/rm-sync\u003c/code> · \u003ccode>/rm-mirror\u003c/code> · \u003ccode>/rm-decision\u003c/code> · \u003ccode>/rm-debug\u003c/code>\u003c/li>\u003c/ul>"
+    "meta": "",
+    "html": "\u003cp>Rocketman ships 15 Claude skills in \u003ccode>.claude/skills/\u003c/code>. They share a common structure (frontmatter, \"When to invoke\", phased workflow, Completion Status) so any Claude instance behaves predictably. Shared rules live once in \u003ccode>.claude/skills/CONVENTIONS.md\u003c/code>.\u003c/p>\n\u003ch3>The Rocketman Track\u003c/h3>\n\u003cpre>\u003ccode>Ideate → PRD → Plan → Build → Verify → Test → Launch → Iterate\u003c/code>\u003c/pre>\n\u003ctable>\u003cthead>\u003ctr>\u003cth>Skill\u003c/th>\u003cth>Stage\u003c/th>\u003cth>Does\u003c/th>\u003c/tr>\u003c/thead>\u003ctbody>\u003ctr>\u003ctd>\u003ccode>/rm-ideate\u003c/code>\u003c/td>\u003ctd>Ideate\u003c/td>\u003ctd>Six forcing questions before any code.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-prd\u003c/code>\u003c/td>\u003ctd>PRD\u003c/td>\u003ctd>Turns the idea brief into a structured spec.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-plan\u003c/code>\u003c/td>\u003ctd>Plan\u003c/td>\u003ctd>Milestones, epics, a board of ready tasks.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-build\u003c/code>\u003c/td>\u003ctd>Build\u003c/td>\u003ctd>Allocates ready tasks to a sub-agent fleet.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-verify\u003c/code>\u003c/td>\u003ctd>Verify\u003c/td>\u003ctd>The automated gate — build, lint, tests, doctor.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-test\u003c/code>\u003c/td>\u003ctd>Test\u003c/td>\u003ctd>A human test script; records pass/fail.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-launch\u003c/code>\u003c/td>\u003ctd>Launch\u003c/td>\u003ctd>Ships: tag, changelog, release.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-iterate\u003c/code>\u003c/td>\u003ctd>Iterate\u003c/td>\u003ctd>Captures post-launch changes.\u003c/td>\u003c/tr>\u003c/tbody>\u003c/table>\n\u003ch3>Infra &amp; multi-agent\u003c/h3>\n\u003ctable>\u003cthead>\u003ctr>\u003cth>Skill\u003c/th>\u003cth>Does\u003c/th>\u003c/tr>\u003c/thead>\u003ctbody>\u003ctr>\u003ctd>\u003ccode>/rm-init\u003c/code> · \u003ccode>/rm-sync\u003c/code>\u003c/td>\u003ctd>Scaffold; reconcile the hub from git.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-decision\u003c/code> · \u003ccode>/rm-debug\u003c/code> · \u003ccode>/rm-brief\u003c/code>\u003c/td>\u003ctd>Record an ADR; log an investigation; status read-out.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-relay\u003c/code>\u003c/td>\u003ctd>Inter-agent messages + handoffs over \u003ccode>PM/comms/\u003c/code>. Pair with \u003ccode>/loop\u003c/code>.\u003c/td>\u003c/tr>\u003ctr>\u003ctd>\u003ccode>/rm-mirror\u003c/code>\u003c/td>\u003ctd>Mirror the hub into Linear / FanDesk / Jira / etc. (sync-optional).\u003c/td>\u003c/tr>\u003c/tbody>\u003c/table>\n\u003cp>Every skill ends with a Completion Status: DONE / DONE_WITH_CONCERNS / BLOCKED / NEEDS_CONTEXT.\u003c/p>"
    },
-   "doc-e1": {
+   "doc-04-explanation-01-why-html-not-markdown": {
     "kind": "Explanation",
-    "title": "Why HTML, not markdown",
-    "meta": "explanation",
-    "html": "\u003cp>Humans don't read long markdown, and raw HTML is terrible to diff and for agents to edit reliably.\u003c/p>\u003cp>Rocketman splits the two. Structured data is the source of truth — small, diffable, agent-writable. The HTML is a generated, read-only view. You edit data; the build renders the hub. Best of both worlds.\u003c/p>"
+    "title": "Why HTML, not Markdown",
+    "meta": "",
+    "html": "\u003ch3>Humans don't read long Markdown\u003c/h3>\n\u003cp>A Markdown spec is a wall of text you skim. A project hub should be the opposite — a surface you actually look at: a board you scan in seconds, a burn-up you glance at, a timeline you follow. HTML makes structured, spatial information \u003cem>visible\u003c/em> instead of flattening it into prose.\u003c/p>\n\u003ch3>But raw HTML is the wrong source of truth\u003c/h3>\n\u003cp>Hand-written HTML is miserable to diff and unreliable for an agent to edit — one stray tag and the page breaks. So Rocketman splits the two:\u003c/p>\n\u003cul>\n\u003cli>\u003cb>Data\u003c/b> — small JSON files (and Markdown docs). Easy to diff, easy for an agent to edit\u003c/li>\n\u003c/ul>\n\u003cp>  precisely, easy to validate.\u003c/p>\n\u003cul>\n\u003cli>\u003cb>Presentation\u003c/b> — \u003ccode>PM/index.html\u003c/code>, generated from the data and read-only.\u003c/li>\n\u003c/ul>\n\u003cp>You edit data; \u003ccode>rocketman build\u003c/code> renders the hub. The build is deterministic — the same data always produces a byte-identical file — so CI can fail a PR whose committed hub is stale.\u003c/p>\n\u003ch3>Why local-first beats an online tool for AI agents\u003c/h3>\n\u003cp>The primary worker on a modern codebase is increasingly an agent running inside the repo. For that worker, a SaaS board behind an API, an auth wall, and a rate limiter is the wrong shape. An in-repo hub is readable with no network, version-controlled with the code, and offline-portable — one file that outlives any vendor.\u003c/p>\n\u003cp>None of this abandons the tools your team likes: the \u003ccode>/rm-mirror\u003c/code> skill pushes the hub into Linear, FanDesk, Jira, or Asana on demand. The repo stays the source of truth; the SaaS board becomes a read-out.\u003c/p>"
    },
-   "doc-e2": {
+   "doc-04-explanation-02-the-single-writer-rule": {
     "kind": "Explanation",
     "title": "The single-writer rule",
-    "meta": "explanation",
-    "html": "\u003cp>When a parent agent allocates work to a fleet of sub-agents, concurrent writes corrupt shared state.\u003c/p>\u003cul>\u003cli>Sub-agents \u003cb>read\u003c/b> the hub and \u003cb>return\u003c/b> structured results\u003c/li>\u003cli>The parent is the \u003cb>sole writer\u003c/b> back to PM/ data\u003c/li>\u003cli>Only the append-only activity log may be appended concurrently\u003c/li>\u003c/ul>\u003cp>Serializing writes through one parent keeps a fleet's output consistent and reviewable, with full provenance preserved.\u003c/p>"
+    "meta": "",
+    "html": "\u003cp>When a parent agent allocates work to a fleet of sub-agents, concurrent writes corrupt shared state. Rocketman's rule keeps a fleet consistent.\u003c/p>\n\u003cul>\n\u003cli>Sub-agents \u003cb>read\u003c/b> the hub and \u003cb>return\u003c/b> structured results. They do not write to\u003c/li>\n\u003c/ul>\n\u003cp>  \u003ccode>PM/data\u003c/code>.\u003c/p>\n\u003cul>\n\u003cli>The parent agent is the \u003cb>sole writer\u003c/b> back to \u003ccode>PM/data\u003c/code>, applying results one at a time.\u003c/li>\n\u003cli>The only things safe to append concurrently are the \u003ccode>activity\u003c/code> log and the \u003ccode>PM/comms/\u003c/code>\u003c/li>\n\u003c/ul>\n\u003cp>  relay — both are one-file-per-fact, so no two writers touch the same file.\u003c/p>\n\u003cp>Serializing writes through one parent keeps the fleet's output consistent, conflict-free, and reviewable, with full human-vs-agent provenance preserved.\u003c/p>\n\u003ch3>The relay applies the same idea\u003c/h3>\n\u003cp>The agent relay (\u003ccode>PM/comms/\u003c/code>) lets agents in separate terminals talk — messages and task handoffs. It stays conflict-free because \u003cb>each agent writes only its own files\u003c/b>: its presence, the messages it sends, and its own acks. Reading the bus is just listing a directory. The \u003cb>Fleet\u003c/b> view renders all of it: who's online, every message, every handoff with its accept/complete trail.\u003c/p>"
    }
   }
  },

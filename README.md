@@ -115,7 +115,9 @@ Skills live in [`.claude/skills/`](.claude/skills/) and load automatically in Cl
 - **`build.mjs`** flat-merges them into one `#pm-data` island and inlines the engine CSS + JS into a single HTML file. Deterministic: same data in, byte-identical hub out.
 - **The HTML is generated and read-only.** Never hand-edit it — edit the data and rebuild. ([ADR-2](PM/index.html))
 
-See [`docs/`](docs/) for the full Diátaxis documentation (tutorial · how-to · reference · explanation).
+See [`PM/docs/`](PM/docs/) for the full Diátaxis documentation (tutorial · how-to · reference ·
+explanation) — the same Markdown also renders inside the hub's **Docs** view. The how-tos cover
+adding tasks, decisions, debug logs, spec sections, Markdown docs, and PDF/image attachments.
 
 ---
 
@@ -126,19 +128,18 @@ rocketman/
 ├── PM/
 │   ├── index.html          # the generated hub — open this  (do not hand-edit)
 │   ├── CLAUDE.md           # conventions that make agents fluent
-│   └── data/               # the source of truth
-│       ├── core.json       # project, milestones, people, epics, labels, columns
-│       ├── tasks.json      # the board
-│       ├── spec.json       # spec sections + docs
-│       └── content.json    # ADRs, debug logs, activity
+│   ├── data/               # the source of truth (core, tasks, spec, content)
+│   ├── docs/               # Markdown docs → rendered in the hub's Docs view
+│   ├── files/              # attachments (PDF, images) embedded into the hub
+│   └── comms/              # the agent relay bus (presence, messages, handoffs)
 ├── engine/                 # the hub engine (reusable, zero-dep)
-│   ├── build.mjs           # the content pipeline: data → index.html
+│   ├── build.mjs           # the content pipeline: data + docs → index.html
+│   ├── md.mjs              # the Markdown → HTML converter
 │   ├── app.js              # the hub renderer
 │   └── hub.css             # the "calm command center" theme
 ├── templates/              # what `rocketman init` scaffolds into a repo
-├── bin/rocketman.mjs       # the CLI
-├── .claude/skills/         # the Rocketman Track skill stack
-└── docs/                   # Diátaxis documentation
+├── bin/rocketman.mjs       # the CLI (init · build · new · doctor · serve · relay)
+└── .claude/                # the Rocketman Track skills + guard hook + settings
 ```
 
 ---
