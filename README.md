@@ -95,7 +95,7 @@ That's it. Commit `PM/` alongside your code and you have a living project hub th
 | | |
 |---|---|
 | 🗂 **One offline file** | The whole project renders to a single self-contained `PM/index.html`. No server, no deps, no network. |
-| 🎛 **Nine views** | Dashboard · Board · Spec · Roadmap · Decisions · Debug · Docs · Activity · **Fleet** — a "calm command center" UI. |
+| 🎛 **Eleven views** | Dashboard · Board · **List** · Spec · Roadmap · Decisions · Debug · Docs · Activity · Fleet · **Dependencies** — a "calm command center" UI. |
 | 🧠 **AI summary lines** | Every entity carries a one-line summary, so the whole board is skimmable at a glance. |
 | 🔗 **Backlinks** | `[[id]]` wiki-links between tasks, ADRs, debug logs, and spec — with automatic "referenced by". |
 | 👥 **Provenance** | Every item and event is attributed **human vs agent** (`opus` / `sonnet` / `haiku`). |
