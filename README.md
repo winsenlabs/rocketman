@@ -54,6 +54,27 @@ Raw HTML is miserable to diff and unreliable for an agent to hand-edit. So Rocke
 
 ---
 
+## Hand it to Claude
+
+New here? Don't read the docs — let your agent evaluate it for you. Copy this into Claude Code
+(or any coding agent) inside a project you care about:
+
+```text
+Take a look at Rocketman: https://github.com/winsenlabs/rocketman
+(npm: @winsendotai/rocketman). It's an in-repo HTML project hub plus a Claude
+skill track that walks an idea from product thinking → spec → plan → build →
+verify → launch, all managed inside the repo.
+
+Evaluate whether it would actually be useful for THIS project. If it is, run
+`npx @winsendotai/rocketman init` to scaffold it, open PM/index.html, and walk
+me through what it set up and how I'd use it day to day. If you don't think it
+fits, tell me why instead of installing it.
+```
+
+The agent reads the repo, makes the call, and sets Rocketman up for you if it's a fit.
+
+---
+
 ## Quickstart
 
 ```bash
