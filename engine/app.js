@@ -397,6 +397,65 @@
     </div>`;
   };
 
+  /* ── Fleet (multi-agent relay: presence + conversations + handoffs) ── */
+  V.fleet = () => {
+    const c = D.comms || { agents: [], messages: [], acks: [] };
+    const agents = c.agents || [], msgs = (c.messages || []).slice().sort((a,b)=>String(b.ts).localeCompare(String(a.ts))), acks = c.acks || [];
+    const who = id => P[id] ? P[id].name : id;
+    const actorOf = sess => { const a = agents.find(x => x.session === sess); return a ? a.agent : sess; };
+    const acksFor = mid => acks.filter(a => a.msg === mid).sort((a,b)=>String(a.ts).localeCompare(String(b.ts)));
+    const rel = ts => { try { return new Date(ts).toLocaleString(); } catch { return ts || ""; } };
+
+    if (!agents.length && !msgs.length) {
+      return `<div class="view view-wide">
+        <div class="ph"><div><h1>Fleet</h1><p class="sub">Agent presence, messages & handoffs over the relay</p></div></div>
+        <div class="empty"><div class="e-mark">${icon("blocks")}</div>No relay activity yet. When agents register and message each other via <code>rocketman relay</code>, every conversation and handoff shows up here. Run <code>/loop 30s /rm-relay</code> in each terminal.</div>
+      </div>`;
+    }
+
+    const agentCards = agents.map(a => {
+      const active = (a.status || "active") === "active";
+      return `<div class="fl-agent">
+        <div class="fl-ag-top">${actorMark(a.session && P[a.session] ? a.session : (a.model||"opus") , "lg")}<div class="fl-ag-id"><div class="fl-ag-name">${a.agent||a.session}</div><div class="fl-ag-sess mono">${a.session}${a.model?` · ${a.model}`:""}</div></div><span class="fl-dot ${active?'on':'off'}" title="${a.status||'active'}"></span></div>
+        <div class="fl-ag-focus">${a.focus||"(idle)"}</div>
+        <div class="fl-ag-foot mono">heartbeat ${a.heartbeat?rel(a.heartbeat):"—"}</div>
+      </div>`;
+    }).join("");
+
+    const stream = msgs.map(m => {
+      const isHand = m.kind === "handoff";
+      const ms = acksFor(m.id);
+      const trail = ms.map(a => `<div class="fl-ack ${a.kind}">${a.kind==='accept'?icon("check"):a.kind==='complete'?icon("checkcircle"):icon("comment")}<span><b>${actorOf(a.by)}</b> ${a.kind==='accept'?'accepted':a.kind==='complete'?'completed':a.kind==='reply'?'replied':'read'}${a.note?`: ${links(a.note)}`:""} <span class="mono fl-when">${rel(a.ts)}</span></span></div>`).join("");
+      const status = ms.some(a=>a.kind==='complete') ? 'complete' : ms.some(a=>a.kind==='accept') ? 'accepted' : 'open';
+      return `<div class="fl-msg ${isHand?'handoff':'message'}">
+        <div class="fl-msg-rail"><span class="fl-kind ${isHand?'handoff':'message'}">${isHand?icon("link"):icon("comment")}</span></div>
+        <div class="fl-msg-body">
+          <div class="fl-msg-head">
+            <span class="fl-from">${actorOf(m.from)}</span>${icon("arrow","fl-arrow")}<span class="fl-to">${m.to==='all'?'everyone':actorOf(m.to)}</span>
+            ${isHand?`<span class="fl-tag handoff">handoff</span>`:`<span class="fl-tag message">message</span>`}
+            ${m.task?`<span class="ref-chip" data-link="${m.task}"><span class="tt">task</span> ${REG[m.task]?REG[m.task].label:m.task}</span>`:""}
+            <span class="fl-status ${status}">${status}</span>
+            <span class="fl-when mono">${rel(m.ts)}</span>
+          </div>
+          <div class="fl-subject">${links(m.subject||"")}</div>
+          ${m.body?`<div class="fl-text">${links(m.body)}</div>`:""}
+          ${trail?`<div class="fl-trail">${trail}</div>`:""}
+        </div>
+      </div>`;
+    }).join("");
+
+    return `<div class="view view-wide">
+      <div class="ph"><div><h1>Fleet</h1><p class="sub">Agent presence, conversations & handoffs · the relay, in full</p></div>
+        <span class="spacer"></span>
+        <div class="fl-counts mono"><span>${agents.length} agents</span><span>${msgs.length} messages</span><span>${msgs.filter(m=>m.kind==='handoff').length} handoffs</span></div>
+      </div>
+      <div class="sec-head"><h2>Agents</h2><span class="desc">who's on the bus</span></div>
+      <div class="fl-agents">${agentCards||'<div class="empty">No agents registered.</div>'}</div>
+      <div class="sec-head" style="margin-top:22px"><h2>Conversation</h2><span class="desc">every message & handoff, newest first</span></div>
+      <div class="fl-stream">${stream||'<div class="empty">No messages yet.</div>'}</div>
+    </div>`;
+  };
+
   /* ── Activity ── */
   V.activity = () => {
     const feed = D.activity.map(day=>`
@@ -613,7 +672,7 @@
       else if (e.key==="ArrowUp"){e.preventDefault();cmdSel=Math.max(cmdSel-1,0);renderCmd();}
       else if (e.key==="Enter"){e.preventDefault();if(cmdResults[cmdSel])execCmd(cmdResults[cmdSel].id);}
     } else if (!/input|textarea/i.test((e.target.tagName||""))) {
-      const map={d:"dashboard",b:"board",s:"spec",r:"roadmap",c:"decisions",g:"debug",o:"docs",a:"activity"};
+      const map={d:"dashboard",b:"board",s:"spec",r:"roadmap",c:"decisions",g:"debug",o:"docs",a:"activity",f:"fleet"};
       if(map[e.key.toLowerCase()] && !e.metaKey && !e.ctrlKey) go(map[e.key.toLowerCase()]);
     }
   });

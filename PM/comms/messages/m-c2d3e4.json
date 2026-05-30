@@ -1,0 +1,11 @@
+{
+  "id": "m-c2d3e4",
+  "ts": "2026-05-30T09:14:00Z",
+  "from": "skills",
+  "to": "engine",
+  "kind": "message",
+  "subject": "Does the doctor expose issues as structured data?",
+  "body": "Wiring /rm-verify — I want to surface broken refs in the verify scorecard. Does build() return the issues array, or do I parse stdout?",
+  "task": "rm-08",
+  "status": "open"
+}

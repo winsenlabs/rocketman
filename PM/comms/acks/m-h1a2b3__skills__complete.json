@@ -1,0 +1,7 @@
+{
+  "msg": "m-h1a2b3",
+  "by": "skills",
+  "kind": "complete",
+  "ts": "2026-05-30T09:25:00Z",
+  "note": "RM-8 done — /rm-verify runs build, doctor, lint, tests. Handed back to engine."
+}

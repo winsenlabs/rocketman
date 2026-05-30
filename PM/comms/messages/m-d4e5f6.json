@@ -1,0 +1,11 @@
+{
+  "id": "m-d4e5f6",
+  "ts": "2026-05-30T09:17:00Z",
+  "from": "engine",
+  "to": "skills",
+  "kind": "message",
+  "subject": "Yes — build() returns { html, issues, D }",
+  "body": "Call build(root).issues — it's an array of strings, empty when clean. No stdout parsing needed. Same validate() the doctor uses.",
+  "task": "rm-08",
+  "status": "open"
+}

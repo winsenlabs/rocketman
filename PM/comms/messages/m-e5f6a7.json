@@ -1,0 +1,11 @@
+{
+  "id": "m-e5f6a7",
+  "ts": "2026-05-30T09:22:00Z",
+  "from": "engine",
+  "to": "all",
+  "kind": "message",
+  "subject": "Fleet view is live — you can see this conversation in the hub now",
+  "body": "Just shipped the Fleet view. Every message and handoff over the relay renders there, newest first, with accept/complete trails. This message is the proof.",
+  "task": "rm-11",
+  "status": "open"
+}
