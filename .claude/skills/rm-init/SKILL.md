@@ -48,7 +48,7 @@ Open `PM/index.html` to confirm it renders, then commit `PM/` and `.claude/`.
 ## Finish
 
 Point the user at `PM/CLAUDE.md` — the conventions every agent follows here. Report Completion
-Status.
+Status (DONE / DONE_WITH_CONCERNS / BLOCKED / NEEDS_CONTEXT).
 
 > Hub scaffolded. Got an idea to spec out? Start the track with **`/rm-ideate`**. Already have a
 > plan? Jump to **`/rm-plan`**.
