@@ -7,8 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Fleet view** — a ninth view that renders the agent relay in full: every agent's
+  presence, and the complete message + handoff stream between agents (with their
+  accept / complete / reply trails), newest first. Agent↔agent conversations are now
+  visible in the hub (`RM-11`).
+- **Edit mode via `rocketman serve`** — a zero-dependency localhost server that serves
+  the same hub with write APIs. Add comments, edit docs, and move tasks straight from
+  the browser; changes write back to `PM/data/*.json` and rebuild. The committed
+  `file://` hub stays read-only — editing is opt-in.
+- **Nested-folder docs** — the Docs view is now an arbitrarily deep, collapsible folder
+  tree (was a flat one-level list).
+
+### Changed
+- **Theme toggle is a single switch** that flips on any click and slides.
+
+### Fixed
+- **Debug log rendered blank** — the timeline keyed off `node.kind` and fell through to
+  empty for this project's data. It now derives from whichever content fields exist
+  (symptom, hypotheses, repro, root cause, fix, guard).
+- **Dashboard metric row was cramped** — the state-card, metric row, and KPI cards now
+  have proper spacing.
+
 ### Planned
-- **Fleet view** — a ninth view rendering parent → sub-agent run trees (`RM-11`).
 - **Cross-repo rollup** — aggregate many repos' `PM/` data into one read-only org hub (`RM-12`).
 - `/rm-launch` + `/rm-iterate` once the CLI exposes ship hooks (`RM-9`).
 

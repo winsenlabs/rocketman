@@ -4,6 +4,15 @@
 (function () {
   "use strict";
   const D = JSON.parse(document.getElementById("pm-data").textContent);
+  const RM_EDIT = (location.protocol === "http:" || location.protocol === "https:");
+  const RM_ME = (Object.keys(D.people||{}).find(k => D.people[k].kind === "human")) || "you";
+  async function rmApi(path, body) {
+    const r = await fetch(path, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.error || ("HTTP " + r.status));
+    return j;
+  }
+  function rmRefresh(D2) { if (D2) { for (const k in D2) D[k] = D2[k]; rebuildRegistry(); } }
 
   /* ───────────────────────── icons ───────────────────────── */
   const I = {
@@ -50,12 +59,16 @@
 
   /* ───────────────────────── registry + linking ───────────────────────── */
   const REG = {};
-  D.tasks.forEach(t => REG[t.id] = { kind: "task", label: t.ref, sub: t.summary, ent: t });
-  D.adrs.forEach(a => REG[a.id] = { kind: "adr", label: a.ref, sub: a.summary, ent: a });
-  D.debug.forEach(b => REG[b.id] = { kind: "debug", label: b.ref, sub: b.summary, ent: b });
-  D.burn.milestones.forEach(m => REG[m.id] = { kind: "milestone", label: m.name });
-  D.spec.sections.forEach(s => REG["spec-"+s.id] = { kind: "spec", label: s.title, sec: s.id });
-  Object.keys(D.docs.content).forEach(k => REG[k] = { kind: "doc", label: D.docs.content[k].title, doc: k });
+  function rebuildRegistry() {
+    for (const k in REG) delete REG[k];
+    D.tasks.forEach(t => REG[t.id] = { kind: "task", label: t.ref, sub: t.summary, ent: t });
+    D.adrs.forEach(a => REG[a.id] = { kind: "adr", label: a.ref, sub: a.summary, ent: a });
+    D.debug.forEach(b => REG[b.id] = { kind: "debug", label: b.ref, sub: b.summary, ent: b });
+    D.burn.milestones.forEach(m => REG[m.id] = { kind: "milestone", label: m.name });
+    D.spec.sections.forEach(s => REG["spec-"+s.id] = { kind: "spec", label: s.title, sec: s.id });
+    Object.keys(D.docs.content).forEach(k => REG[k] = { kind: "doc", label: D.docs.content[k].title, doc: k });
+  }
+  rebuildRegistry();
 
   function links(str) {
     if (!str) return "";
@@ -392,7 +405,7 @@
       <div class="ph"><div><h1>Docs</h1><p class="sub">Nested folders · Diátaxis · Tutorial · How-to · Reference · Explanation</p></div></div>
       <div class="docs-shell">
         <nav class="docs-tree">${tree}</nav>
-        <div class="docs-pane"><div class="doc-meta">${c.kind?`<span class="dq ${c.kind}">${c.kind}</span>`:""}<span>${c.meta||""}</span></div><div class="doc-body"><h3>${c.title}</h3>${links(c.html)}</div></div>
+        <div class="docs-pane"><div class="doc-meta">${c.kind?`<span class="dq ${c.kind}">${c.kind}</span>`:""}<span>${c.meta||""}</span>${RM_EDIT?`<button class="btn tiny" data-docedit="${openDoc}" style="margin-left:auto">${icon("doc")} Edit</button>`:""}</div><div class="doc-body" id="doc-body"><h3>${c.title}</h3>${links(c.html)}</div></div>
       </div>
     </div>`;
   };
@@ -518,8 +531,9 @@
       </div>
       ${t.blockedReason?`<div class="callout question" style="margin-bottom:16px"><span class="cmark">${icon("block")}</span><div><div class="ctitle">Blocked</div><p>${t.blockedReason}</p></div></div>`:""}
       <div class="d-sec"><h3>Description</h3><div class="d-body">${links(t.body)}</div></div>
+      ${RM_EDIT?`<div class="d-sec"><h3>Move to</h3><select class="rm-select" data-move="${t.id}">${D.columns.map(col=>`<option value="${col.id}" ${col.id===t.col?"selected":""}>${col.name}</option>`).join("")}</select></div>`:""}
       <div class="d-sec"><h3>Referenced by <span class="c">${(t.backlinks||[]).length}</span></h3><div class="backlinks">${backlinkChips(t.backlinks)||'<span style="color:var(--ink-4);font-size:12px">No backlinks</span>'}</div></div>
-      <div class="d-sec"><h3>Comments <span class="c">${(t.comments||[]).length}</span></h3>${commentsBlock(t.comments)}</div>
+      <div class="d-sec"><h3>Comments <span class="c">${(t.comments||[]).length}</span></h3>${commentsBlock(t.comments)}${RM_EDIT?`<div class="cmt-compose"><textarea class="rm-ta" id="cmt-text" placeholder="Add a comment…" rows="2"></textarea><button class="btn accent tiny" data-comment="${t.id}">Comment</button></div>`:""}</div>
       <div class="d-sec"><h3>Activity</h3>${activityBlock(t.activity)}</div>
       </div></div>`;
   }
@@ -657,7 +671,42 @@
     if (e.target.closest("#tb-search")) { openCmd(); return; }
     if (e.target.id==="cmdk-scrim") { closeCmd(); return; }
     const cmd = e.target.closest("[data-cmd]"); if (cmd) { execCmd(cmd.dataset.cmd); return; }
+    const cbtn = e.target.closest("[data-comment]");
+    if (cbtn) {
+      const ta = document.getElementById("cmt-text"); const txt = (ta && ta.value || "").trim();
+      if (!txt) return;
+      cbtn.disabled = true; cbtn.textContent = "Saving…";
+      rmApi("/api/comment", { entity: cbtn.dataset.comment, author: RM_ME, text: txt })
+        .then(j => { rmRefresh(j.D); openDrawer(cbtn.dataset.comment); })
+        .catch(err => { cbtn.disabled = false; cbtn.textContent = "Comment"; alert("Save failed: " + err.message); });
+      return;
+    }
+    const dEdit = e.target.closest("[data-docedit]");
+    if (dEdit) {
+      const id = dEdit.dataset.docedit; const body = document.getElementById("doc-body");
+      const cur = (D.docs.content[id] || {}).html || "";
+      body.innerHTML = '<textarea class="rm-ta doc-edit-ta" id="doc-edit-ta" data-id="' + id + '">' + cur.replace(/&/g,"&amp;").replace(/</g,"&lt;") + '</textarea><div class="doc-edit-bar"><button class="btn accent tiny" id="doc-save">Save</button><button class="btn tiny" id="doc-cancel">Cancel</button></div>';
+      document.getElementById("doc-edit-ta").focus();
+      return;
+    }
+    if (e.target.id === "doc-cancel") { document.getElementById("main").innerHTML = V.docs(); return; }
+    if (e.target.id === "doc-save") {
+      const ta = document.getElementById("doc-edit-ta"); const id = ta.dataset.id;
+      e.target.disabled = true; e.target.textContent = "Saving…";
+      rmApi("/api/doc", { id, html: ta.value })
+        .then(j => { rmRefresh(j.D); document.getElementById("main").innerHTML = V.docs(); })
+        .catch(err => { e.target.disabled = false; e.target.textContent = "Save"; alert("Save failed: " + err.message); });
+      return;
+    }
     const tt = e.target.closest("#theme-switch"); if (tt) { applyTheme(document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark"); return; }
+  });
+  document.addEventListener("change", e => {
+    const mv = e.target.closest("[data-move]");
+    if (mv) {
+      rmApi("/api/task", { id: mv.dataset.move, col: mv.value })
+        .then(j => { rmRefresh(j.D); openDrawer(mv.dataset.move); })
+        .catch(err => alert("Move failed: " + err.message));
+    }
   });
   document.addEventListener("mousemove", e => {
     const it = e.target.closest && e.target.closest("[data-i]");

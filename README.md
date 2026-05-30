@@ -57,14 +57,14 @@ That's it. Commit `PM/` alongside your code and you have a living project hub th
 | | |
 |---|---|
 | 🗂 **One offline file** | The whole project renders to a single self-contained `PM/index.html`. No server, no deps, no network. |
-| 🎛 **Eight views** | Dashboard · Board · Spec · Roadmap · Decisions · Debug · Docs · Activity — a "calm command center" UI. |
+| 🎛 **Nine views** | Dashboard · Board · Spec · Roadmap · Decisions · Debug · Docs · Activity · **Fleet** — a "calm command center" UI. |
 | 🧠 **AI summary lines** | Every entity carries a one-line summary, so the whole board is skimmable at a glance. |
 | 🔗 **Backlinks** | `[[id]]` wiki-links between tasks, ADRs, debug logs, and spec — with automatic "referenced by". |
 | 👥 **Provenance** | Every item and event is attributed **human vs agent** (`opus` / `sonnet` / `haiku`). |
 | 🛠 **The Rocketman Track** | A Claude skill stack that forces product thinking and drives idea → production. |
 | 🔁 **Sync-optional** | Mirror the hub into Linear / FanDesk / Cheetah / Winsen whenever you want. |
 | 🤖 **Fleet-ready** | The board is a work queue; a parent agent allocates ready tasks to sub-agents on demand. |
-| 📡 **Agent relay** | Agents in separate terminals message each other and hand off tasks over a conflict-free file bus — no more copy-paste between tabs. |
+| 📡 **Agent relay + Fleet view** | Agents in separate terminals message each other and hand off tasks over a conflict-free file bus — and the **Fleet view** shows every conversation, handoff, and who's online. No more copy-paste between tabs. |
 
 ---
 
