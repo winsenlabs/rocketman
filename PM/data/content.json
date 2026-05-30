@@ -1,125 +1,258 @@
 {
   "adrs": [
     {
-      "id": "adr-01", "ref": "ADR-1", "title": "Markdown project docs", "status": "superseded",
-      "date": "2026-05-20", "author": "tejas",
+      "id": "adr-01",
+      "ref": "ADR-1",
+      "title": "Markdown project docs",
+      "status": "superseded",
+      "date": "2026-05-20",
+      "author": "tejas",
       "summary": "Originally we kept PM docs as plain markdown for simplicity.",
       "context": "We wanted project context in the repo and easy to diff in a PR. Markdown is the obvious default.",
       "options": [
-        { "text": "Plain markdown files", "chosen": true },
-        { "text": "Structured data + generated HTML", "chosen": false },
-        { "text": "An external SaaS tool", "chosen": false }
+        {
+          "text": "Plain markdown files",
+          "chosen": true
+        },
+        {
+          "text": "Structured data + generated HTML",
+          "chosen": false
+        },
+        {
+          "text": "An external SaaS tool",
+          "chosen": false
+        }
       ],
       "decision": "Chose plain markdown for the first cut.",
       "consequences": "Superseded by ADR-2. Long markdown went unread by humans and was lossy for the rich, scannable views we wanted.",
-      "backlinks": ["adr-02"]
+      "backlinks": [
+        "adr-02"
+      ]
     },
     {
-      "id": "adr-02", "ref": "ADR-2", "title": "Separate data from presentation", "status": "accepted",
-      "date": "2026-05-22", "author": "tejas",
+      "id": "adr-02",
+      "ref": "ADR-2",
+      "title": "Separate data from presentation",
+      "status": "accepted",
+      "date": "2026-05-22",
+      "author": "tejas",
       "summary": "Structured data is the source of truth; the hub is generated, read-only HTML.",
       "context": "We need humans to skim HTML, agents to edit reliably, and git to diff cleanly — all from one source.",
       "options": [
-        { "text": "Hand-write and hand-edit HTML", "chosen": false },
-        { "text": "Data is truth; generate read-only HTML", "chosen": true },
-        { "text": "Keep everything in markdown", "chosen": false }
+        {
+          "text": "Hand-write and hand-edit HTML",
+          "chosen": false
+        },
+        {
+          "text": "Data is truth; generate read-only HTML",
+          "chosen": true
+        },
+        {
+          "text": "Keep everything in markdown",
+          "chosen": false
+        }
       ],
       "decision": "Author structured data; a generator renders read-only HTML. Never hand-edit the HTML.",
       "consequences": "Clean, reviewable diffs and reliable agent edits — at the cost of requiring a build step to regenerate the hub.",
-      "backlinks": ["adr-01", "rm-01"]
+      "backlinks": [
+        "adr-01",
+        "rm-01"
+      ]
     },
     {
-      "id": "adr-03", "ref": "ADR-3", "title": "One offline, committed HTML file", "status": "accepted",
-      "date": "2026-05-23", "author": "tejas",
+      "id": "adr-03",
+      "ref": "ADR-3",
+      "title": "One offline, committed HTML file",
+      "status": "accepted",
+      "date": "2026-05-23",
+      "author": "tejas",
       "summary": "Generate a single self-contained index.html, commit it, open offline.",
       "context": "How should a human view the hub with the least friction — no server, no network?",
       "options": [
-        { "text": "Build on demand + GitHub Pages", "chosen": false },
-        { "text": "Local server (rocketman serve)", "chosen": false },
-        { "text": "Committed self-contained file", "chosen": true }
+        {
+          "text": "Build on demand + GitHub Pages",
+          "chosen": false
+        },
+        {
+          "text": "Local server (rocketman serve)",
+          "chosen": false
+        },
+        {
+          "text": "Committed self-contained file",
+          "chosen": true
+        }
       ],
       "decision": "Generate one self-contained index.html, commit it, and open it at file:// with zero dependencies.",
       "consequences": "Works fully offline from any checkout; marked linguist-generated so diffs stay collapsed.",
-      "backlinks": ["adr-02"]
+      "backlinks": [
+        "adr-02"
+      ]
     },
     {
-      "id": "adr-04", "ref": "ADR-4", "title": "Flat-merge JSON data islands", "status": "accepted",
-      "date": "2026-05-24", "author": "opus",
+      "id": "adr-04",
+      "ref": "ADR-4",
+      "title": "Flat-merge JSON data islands",
+      "status": "accepted",
+      "date": "2026-05-24",
+      "author": "opus",
       "summary": "Four focused JSON files merge into one flat #pm-data island at build time.",
       "context": "One large data file is conflict-prone; deeply nested data is awkward to edit.",
       "options": [
-        { "text": "One big data file", "chosen": false },
-        { "text": "Four flat-merged files", "chosen": true },
-        { "text": "One file per entity now", "chosen": false }
+        {
+          "text": "One big data file",
+          "chosen": false
+        },
+        {
+          "text": "Four flat-merged files",
+          "chosen": true
+        },
+        {
+          "text": "One file per entity now",
+          "chosen": false
+        }
       ],
       "decision": "Author core, tasks, spec, and content; the build flat-merges them into one island.",
       "consequences": "Smaller, focused diffs and a simple runtime read; the build owns the merge step.",
-      "backlinks": ["adr-02", "rm-01"]
+      "backlinks": [
+        "adr-02",
+        "rm-01"
+      ]
     },
     {
-      "id": "adr-05", "ref": "ADR-5", "title": "Single-writer rule for agent fleets", "status": "accepted",
-      "date": "2026-05-25", "author": "tejas",
+      "id": "adr-05",
+      "ref": "ADR-5",
+      "title": "Single-writer rule for agent fleets",
+      "status": "accepted",
+      "date": "2026-05-25",
+      "author": "tejas",
       "summary": "Sub-agents read and return results; the parent is the sole writer to PM/ data.",
       "context": "A parent agent allocates work to sub-agents on demand; concurrent writes would corrupt the hub.",
       "options": [
-        { "text": "Every agent writes directly to PM/ data", "chosen": false },
-        { "text": "Parent is sole writer; sub-agents return results", "chosen": true }
+        {
+          "text": "Every agent writes directly to PM/ data",
+          "chosen": false
+        },
+        {
+          "text": "Parent is sole writer; sub-agents return results",
+          "chosen": true
+        }
       ],
       "decision": "Sub-agents read context and return structured results. The parent serializes all writes; only the activity log is append-only.",
       "consequences": "No concurrent-write corruption and fully reviewable fleet output; the parent becomes a clear serialization point.",
-      "backlinks": ["adr-02", "adr-04", "rm-07"]
+      "backlinks": [
+        "adr-02",
+        "adr-04",
+        "rm-07"
+      ]
     },
     {
-      "id": "adr-06", "ref": "ADR-6", "title": "Calm command center aesthetic", "status": "accepted",
-      "date": "2026-05-26", "author": "tejas",
+      "id": "adr-06",
+      "ref": "ADR-6",
+      "title": "Calm command center aesthetic",
+      "status": "accepted",
+      "date": "2026-05-26",
+      "author": "tejas",
       "summary": "Linear/Height energy: cool neutrals, one blue accent, semantic status colors, system fonts.",
       "context": "The hub must be instantly scannable, not flashy or noisy.",
       "options": [
-        { "text": "Dense cockpit (terminal/Bloomberg)", "chosen": false },
-        { "text": "Editorial document (Stripe docs)", "chosen": false },
-        { "text": "Calm command center (Linear/Height)", "chosen": true }
+        {
+          "text": "Dense cockpit (terminal/Bloomberg)",
+          "chosen": false
+        },
+        {
+          "text": "Editorial document (Stripe docs)",
+          "chosen": false
+        },
+        {
+          "text": "Calm command center (Linear/Height)",
+          "chosen": true
+        }
       ],
       "decision": "Cool-neutral oklch grays, a single blue accent, semantic status colors, and system fonts only.",
       "consequences": "Fast to scan, no dependency on web fonts, and consistent light and dark themes.",
-      "backlinks": ["rm-02"]
+      "backlinks": [
+        "rm-02"
+      ]
     },
     {
-      "id": "adr-07", "ref": "ADR-7", "title": "Per-entity data files", "status": "proposed",
-      "date": "2026-05-29", "author": "opus",
+      "id": "adr-07",
+      "ref": "ADR-7",
+      "title": "Per-entity data files",
+      "status": "proposed",
+      "date": "2026-05-29",
+      "author": "opus",
       "summary": "Proposed: split tasks/ADRs/debug into one file per entity for cleaner history.",
       "context": "Large projects may hit merge conflicts on a single tasks.json.",
       "options": [
-        { "text": "Keep one file per type (today)", "chosen": false },
-        { "text": "One file per entity", "chosen": false }
+        {
+          "text": "Keep one file per type (today)",
+          "chosen": false
+        },
+        {
+          "text": "One file per entity",
+          "chosen": false
+        }
       ],
       "decision": "Undecided. Proposed to glob a directory of per-entity files for cleaner git blame and fewer conflicts.",
       "consequences": "Better per-entity history at the cost of many more files; the build would glob a directory instead of reading one file.",
-      "backlinks": ["adr-04"]
+      "backlinks": [
+        "adr-04"
+      ]
     },
     {
-      "id": "adr-08", "ref": "ADR-8", "title": "File-based agent relay bus", "status": "accepted",
-      "date": "2026-05-30", "author": "tejas",
+      "id": "adr-08",
+      "ref": "ADR-8",
+      "title": "File-based agent relay bus",
+      "status": "accepted",
+      "date": "2026-05-30",
+      "author": "tejas",
       "summary": "Agents coordinate through a per-file bus in PM/comms, polled on an interval.",
       "context": "Multiple agent sessions in separate terminals can't talk; coordination meant manual copy-paste. We need messages + task handoffs without standing up a server.",
       "options": [
-        { "text": "A single shared comms.json", "chosen": false },
-        { "text": "A network message broker / server", "chosen": false },
-        { "text": "Per-file bus in PM/comms, polled", "chosen": true }
+        {
+          "text": "A single shared comms.json",
+          "chosen": false
+        },
+        {
+          "text": "A network message broker / server",
+          "chosen": false
+        },
+        {
+          "text": "Per-file bus in PM/comms, polled",
+          "chosen": true
+        }
       ],
       "decision": "Each agent writes only its own files (presence, the messages it sends, its own acks) under PM/comms; polling reads the directory. Handoffs follow an offer → accept → complete lifecycle.",
       "consequences": "Conflict-free with no server and no merge races; it travels in the repo and folds into the hub. Coordination is eventually-consistent at the poll interval rather than instant.",
-      "backlinks": ["adr-05", "rm-13"]
+      "backlinks": [
+        "adr-05",
+        "rm-13"
+      ]
     }
   ],
   "debug": [
     {
-      "id": "bug-01", "ref": "BUG-1", "title": "Hub renders blank from the design bundle", "state": "fixed",
-      "task": "rm-01", "owner": "opus", "elapsed": "25m", "hyposCount": 2,
+      "id": "bug-01",
+      "ref": "BUG-1",
+      "title": "Hub renders blank from the design bundle",
+      "state": "fixed",
+      "task": "rm-01",
+      "owner": "opus",
+      "elapsed": "25m",
+      "hyposCount": 2,
       "summary": "The exported index.html shipped with app.js stubbed out as a placeholder, so nothing rendered.",
       "symptom": "Opening the bundled index.html shows only the empty shell — no views paint.",
       "hypotheses": [
-        { "status": "refuted", "text": "The data island is missing", "note": "#pm-data is present and valid JSON." },
-        { "status": "confirmed", "text": "app.js was never inlined", "note": "The script body is a literal placeholder, so boot() is undefined." }
+        {
+          "status": "refuted",
+          "text": "The data island is missing",
+          "note": "#pm-data is present and valid JSON."
+        },
+        {
+          "status": "confirmed",
+          "text": "app.js was never inlined",
+          "note": "The script body is a literal placeholder, so boot() is undefined."
+        }
       ],
       "repro": [
         "Open the shipped PM/index.html",
@@ -128,25 +261,72 @@
         "boot() is never called"
       ],
       "rootCause": "The design export stubs large scripts to keep the bundle small; the real app.js was never inlined.",
-      "fix": { "text": "build.mjs inlines the real engine/app.js plus a fresh data island into the template.", "pr": 1, "commit": "a1b2c3d", "file": "engine/build.mjs" },
+      "fix": {
+        "text": "build.mjs inlines the real engine/app.js plus a fresh data island into the template.",
+        "pr": 1,
+        "commit": "a1b2c3d",
+        "file": "engine/build.mjs"
+      },
       "guard": "The build asserts app.js is over 10KB and contains boot() before it writes index.html.",
       "timeline": [
-        { "stage": "symptom", "kind": "alert", "when": "25m ago", "who": "opus" },
-        { "stage": "hypothesis", "kind": "search", "when": "20m ago", "who": "opus" },
-        { "stage": "repro", "kind": "check", "when": "16m ago", "who": "opus" },
-        { "stage": "rootcause", "kind": "bug", "when": "12m ago", "who": "opus" },
-        { "stage": "fix", "kind": "commit", "when": "6m ago", "who": "opus" },
-        { "stage": "guard", "kind": "check", "when": "2m ago", "who": "opus" }
+        {
+          "stage": "symptom",
+          "kind": "alert",
+          "when": "25m ago",
+          "who": "opus"
+        },
+        {
+          "stage": "hypothesis",
+          "kind": "search",
+          "when": "20m ago",
+          "who": "opus"
+        },
+        {
+          "stage": "repro",
+          "kind": "check",
+          "when": "16m ago",
+          "who": "opus"
+        },
+        {
+          "stage": "rootcause",
+          "kind": "bug",
+          "when": "12m ago",
+          "who": "opus"
+        },
+        {
+          "stage": "fix",
+          "kind": "commit",
+          "when": "6m ago",
+          "who": "opus"
+        },
+        {
+          "stage": "guard",
+          "kind": "check",
+          "when": "2m ago",
+          "who": "opus"
+        }
       ],
-      "backlinks": ["rm-01"]
+      "backlinks": [
+        "rm-01"
+      ]
     },
     {
-      "id": "bug-02", "ref": "BUG-2", "title": "Closing script tag in content breaks the island", "state": "fixed",
-      "task": "rm-01", "owner": "opus", "elapsed": "16m", "hyposCount": 1,
+      "id": "bug-02",
+      "ref": "BUG-2",
+      "title": "Closing script tag in content breaks the island",
+      "state": "fixed",
+      "task": "rm-01",
+      "owner": "opus",
+      "elapsed": "16m",
+      "hyposCount": 1,
       "summary": "A literal closing-script sequence inside embedded JSON ended the data script early and truncated the page.",
       "symptom": "When a doc contained a closing-script string, everything below it disappeared.",
       "hypotheses": [
-        { "status": "confirmed", "text": "The HTML parser closes the island early", "note": "The JSON is parsed as raw text; a nested close-tag ends the script." }
+        {
+          "status": "confirmed",
+          "text": "The HTML parser closes the island early",
+          "note": "The JSON is parsed as raw text; a nested close-tag ends the script."
+        }
       ],
       "repro": [
         "Add a doc whose body contains a closing script tag",
@@ -155,57 +335,269 @@
         "Everything after the tag is gone"
       ],
       "rootCause": "Embedded JSON must escape the script-close sequence before it lands in the HTML.",
-      "fix": { "text": "build.mjs replaces < with its unicode escape inside the JSON island.", "pr": 1, "commit": "d4e5f6a", "file": "engine/build.mjs" },
+      "fix": {
+        "text": "build.mjs replaces < with its unicode escape inside the JSON island.",
+        "pr": 1,
+        "commit": "d4e5f6a",
+        "file": "engine/build.mjs"
+      },
       "guard": "A self-check round-trips a closing-script string through the bundler and asserts the data survives.",
       "timeline": [
-        { "stage": "symptom", "kind": "alert", "when": "40m ago", "who": "opus" },
-        { "stage": "hypothesis", "kind": "search", "when": "34m ago", "who": "opus" },
-        { "stage": "rootcause", "kind": "bug", "when": "30m ago", "who": "opus" },
-        { "stage": "fix", "kind": "commit", "when": "26m ago", "who": "opus" },
-        { "stage": "guard", "kind": "check", "when": "24m ago", "who": "opus" }
+        {
+          "stage": "symptom",
+          "kind": "alert",
+          "when": "40m ago",
+          "who": "opus"
+        },
+        {
+          "stage": "hypothesis",
+          "kind": "search",
+          "when": "34m ago",
+          "who": "opus"
+        },
+        {
+          "stage": "rootcause",
+          "kind": "bug",
+          "when": "30m ago",
+          "who": "opus"
+        },
+        {
+          "stage": "fix",
+          "kind": "commit",
+          "when": "26m ago",
+          "who": "opus"
+        },
+        {
+          "stage": "guard",
+          "kind": "check",
+          "when": "24m ago",
+          "who": "opus"
+        }
       ],
-      "backlinks": ["rm-01"]
+      "backlinks": [
+        "rm-01"
+      ]
     },
     {
-      "id": "bug-03", "ref": "BUG-3", "title": "oklch colors fall back to black on old browsers", "state": "monitoring",
-      "task": "rm-02", "owner": "sonnet", "elapsed": "—", "hyposCount": 1,
+      "id": "bug-03",
+      "ref": "BUG-3",
+      "title": "oklch colors fall back to black on old browsers",
+      "state": "monitoring",
+      "task": "rm-02",
+      "owner": "sonnet",
+      "elapsed": "—",
+      "hyposCount": 1,
       "summary": "Browsers older than mid-2023 don't support the oklch() color function the theme is built on.",
       "symptom": "On very old browsers the entire UI renders close to black.",
       "hypotheses": [
-        { "status": "confirmed", "text": "oklch() is unsupported", "note": "Verified against caniuse and a legacy-browser VM." }
+        {
+          "status": "confirmed",
+          "text": "oklch() is unsupported",
+          "note": "Verified against caniuse and a legacy-browser VM."
+        }
       ],
       "repro": [
         "Open the hub in a pre-2023 browser",
         "Observe the near-black UI"
       ],
       "rootCause": "The theme is built entirely on oklch() color tokens with no sRGB fallback.",
-      "fix": { "text": "Document the supported-browser baseline; evaluate sRGB fallbacks if demand warrants.", "pr": 0, "commit": "", "file": "engine/hub.css" },
+      "fix": {
+        "text": "Document the supported-browser baseline; evaluate sRGB fallbacks if demand warrants.",
+        "pr": 0,
+        "commit": "",
+        "file": "engine/hub.css"
+      },
       "guard": "Track real usage; revisit fallbacks only if a meaningful share of users are affected.",
       "timeline": [
-        { "stage": "symptom", "kind": "alert", "when": "2d ago", "who": "sonnet" },
-        { "stage": "hypothesis", "kind": "search", "when": "2d ago", "who": "sonnet" },
-        { "stage": "rootcause", "kind": "bug", "when": "1d ago", "who": "sonnet" }
+        {
+          "stage": "symptom",
+          "kind": "alert",
+          "when": "2d ago",
+          "who": "sonnet"
+        },
+        {
+          "stage": "hypothesis",
+          "kind": "search",
+          "when": "2d ago",
+          "who": "sonnet"
+        },
+        {
+          "stage": "rootcause",
+          "kind": "bug",
+          "when": "1d ago",
+          "who": "sonnet"
+        }
       ],
-      "backlinks": ["rm-02"]
+      "backlinks": [
+        "rm-02"
+      ]
+    },
+    {
+      "id": "bug-04",
+      "ref": "BUG-4",
+      "title": "Empty debug log blanks the whole hub on boot",
+      "state": "fixed",
+      "task": "rm-15",
+      "owner": "opus",
+      "elapsed": "20m",
+      "hyposCount": 2,
+      "summary": "A project with no debug entries (incl. a stock rocketman init) crashed at boot — the entire hub rendered blank.",
+      "symptom": "Open the hub for a project whose debug log is empty; nothing paints — a blank page, no views.",
+      "hypotheses": [
+        {
+          "status": "refuted",
+          "text": "The data island failed to parse",
+          "note": "#pm-data is present and valid JSON."
+        },
+        {
+          "status": "confirmed",
+          "text": "A top-level read assumes debug is non-empty",
+          "note": "app.js ran D.debug[0].id at module load; D.debug[0] is undefined when debug is []."
+        }
+      ],
+      "repro": [
+        "rocketman init a fresh project (template ships debug: [])",
+        "open PM/index.html",
+        "observe a blank page",
+        "headless console: Uncaught TypeError: Cannot read properties of undefined (reading id)"
+      ],
+      "rootCause": "app.js dereferenced D.debug[0].id at top level during boot; with an empty debug array that threw before any view rendered, aborting the whole page.",
+      "fix": {
+        "text": "Guarded the boot read (D.debug[0] && ...), added a Debug empty-state, and guarded REG[inv.task] and the dashboard activity read. The renderer now tolerates empty debug/activity/owner.",
+        "pr": 0,
+        "commit": "",
+        "file": "engine/app.js"
+      },
+      "guard": "A fresh rocketman init hub is headless-booted in verification: empty debug + empty activity + unassigned owner must render with no uncaught error.",
+      "timeline": [
+        {
+          "stage": "symptom",
+          "kind": "alert",
+          "when": "20m ago",
+          "who": "opus"
+        },
+        {
+          "stage": "hypothesis",
+          "kind": "search",
+          "when": "16m ago",
+          "who": "opus"
+        },
+        {
+          "stage": "rootcause",
+          "kind": "bug",
+          "when": "12m ago",
+          "who": "opus"
+        },
+        {
+          "stage": "fix",
+          "kind": "commit",
+          "when": "6m ago",
+          "who": "opus"
+        },
+        {
+          "stage": "guard",
+          "kind": "check",
+          "when": "2m ago",
+          "who": "opus"
+        }
+      ],
+      "backlinks": [
+        "rm-15"
+      ]
     }
   ],
   "activity": [
-    { "day": "Today", "events": [
-      { "when": "just now", "who": "opus", "icon": "link", "line": "handed <b>RM-8</b> off to <b>skills</b> over the relay", "detail": "skills accepted — wiring /rm-verify · [[rm-13|RM-13]]" },
-      { "when": "just now", "who": "opus", "icon": "commit", "line": "wrote <b>build.mjs</b> — data → single-file hub", "detail": "The content pipeline lands · [[rm-01|RM-1]]" },
-      { "when": "12m ago", "who": "opus", "icon": "check", "line": "merged <b>PR #2</b> — calm command center hub", "detail": "8 views, light + dark · [[rm-02|RM-2]]" },
-      { "when": "30m ago", "who": "sonnet", "icon": "review", "line": "moved <b>RM-3</b> to Review", "detail": "Schema + doctor validator · [[rm-03|RM-3]]" },
-      { "when": "40m ago", "who": "tejas", "icon": "check", "line": "accepted <b>ADR-5</b>", "detail": "Single-writer rule for fleets · [[adr-05|ADR-5]]" },
-      { "when": "1h ago", "who": "opus", "icon": "check", "line": "closed <b>BUG-1</b> — blank hub", "detail": "app.js was stubbed in the bundle · [[bug-01|BUG-1]]" }
-    ]},
-    { "day": "Yesterday", "events": [
-      { "when": "yesterday", "who": "opus", "icon": "commit", "line": "shipped <b>/rm-ideate</b> and <b>/rm-prd</b>", "detail": "Track stages 1–2 · [[rm-05|RM-5]] · [[rm-06|RM-6]]" },
-      { "when": "yesterday", "who": "haiku", "icon": "task", "line": "opened <b>PR #14</b> — Diátaxis docs", "detail": "Tutorial, how-tos, reference · [[rm-10|RM-10]]" },
-      { "when": "yesterday", "who": "sonnet", "icon": "link", "line": "linked <b>RM-9</b> to <b>RM-4</b>", "detail": "Launch skills wait on the CLI ship hooks" }
-    ]},
-    { "day": "Earlier", "events": [
-      { "when": "2d ago", "who": "opus", "icon": "commit", "line": "fixed <b>BUG-2</b> — script-close in the island", "detail": "Escape the markup in the data island · [[bug-02|BUG-2]]" },
-      { "when": "3d ago", "who": "tejas", "icon": "task", "line": "created the project from the locked spec", "detail": "One version, final · [[spec-vision|Spec]]" }
-    ]}
+    {
+      "day": "Today",
+      "events": [
+        {
+          "when": "just now",
+          "who": "opus",
+          "icon": "link",
+          "line": "handed <b>RM-8</b> off to <b>skills</b> over the relay",
+          "detail": "skills accepted — wiring /rm-verify · [[rm-13|RM-13]]"
+        },
+        {
+          "when": "just now",
+          "who": "opus",
+          "icon": "commit",
+          "line": "wrote <b>build.mjs</b> — data → single-file hub",
+          "detail": "The content pipeline lands · [[rm-01|RM-1]]"
+        },
+        {
+          "when": "12m ago",
+          "who": "opus",
+          "icon": "check",
+          "line": "merged <b>PR #2</b> — calm command center hub",
+          "detail": "8 views, light + dark · [[rm-02|RM-2]]"
+        },
+        {
+          "when": "30m ago",
+          "who": "sonnet",
+          "icon": "review",
+          "line": "moved <b>RM-3</b> to Review",
+          "detail": "Schema + doctor validator · [[rm-03|RM-3]]"
+        },
+        {
+          "when": "40m ago",
+          "who": "tejas",
+          "icon": "check",
+          "line": "accepted <b>ADR-5</b>",
+          "detail": "Single-writer rule for fleets · [[adr-05|ADR-5]]"
+        },
+        {
+          "when": "1h ago",
+          "who": "opus",
+          "icon": "check",
+          "line": "closed <b>BUG-1</b> — blank hub",
+          "detail": "app.js was stubbed in the bundle · [[bug-01|BUG-1]]"
+        }
+      ]
+    },
+    {
+      "day": "Yesterday",
+      "events": [
+        {
+          "when": "yesterday",
+          "who": "opus",
+          "icon": "commit",
+          "line": "shipped <b>/rm-ideate</b> and <b>/rm-prd</b>",
+          "detail": "Track stages 1–2 · [[rm-05|RM-5]] · [[rm-06|RM-6]]"
+        },
+        {
+          "when": "yesterday",
+          "who": "haiku",
+          "icon": "task",
+          "line": "opened <b>PR #14</b> — Diátaxis docs",
+          "detail": "Tutorial, how-tos, reference · [[rm-10|RM-10]]"
+        },
+        {
+          "when": "yesterday",
+          "who": "sonnet",
+          "icon": "link",
+          "line": "linked <b>RM-9</b> to <b>RM-4</b>",
+          "detail": "Launch skills wait on the CLI ship hooks"
+        }
+      ]
+    },
+    {
+      "day": "Earlier",
+      "events": [
+        {
+          "when": "2d ago",
+          "who": "opus",
+          "icon": "commit",
+          "line": "fixed <b>BUG-2</b> — script-close in the island",
+          "detail": "Escape the markup in the data island · [[bug-02|BUG-2]]"
+        },
+        {
+          "when": "3d ago",
+          "who": "tejas",
+          "icon": "task",
+          "line": "created the project from the locked spec",
+          "detail": "One version, final · [[spec-vision|Spec]]"
+        }
+      ]
+    }
   ]
 }

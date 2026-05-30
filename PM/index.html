@@ -894,6 +894,30 @@ table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-
 .doc-edit-ta { min-height: 340px; font-family: var(--font-mono); font-size: 12px; line-height: 1.6; }
 .doc-edit-bar { display: flex; gap: 8px; margin-top: 10px; }
 
+/* ── Dependencies view ── */
+.dep-counts { display: flex; gap: 14px; font-size: 11px; color: var(--ink-3); }
+.dep-counts span { background: var(--bg-3); padding: 3px 9px; border-radius: 999px; }
+.dep-counts .flagged { background: var(--s-review-soft); color: var(--s-review); font-weight: 600; }
+.sec-head .sh-ic { width: 14px; height: 14px; color: var(--s-review); vertical-align: -2px; }
+.dep-list { display: flex; flex-direction: column; gap: 8px; }
+.dep-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px; }
+.dep-row.gated { grid-template-columns: 26px 1fr auto; border-left: 3px solid var(--s-review); }
+.dep-flag { width: 22px; height: 22px; display: grid; place-items: center; color: var(--s-review); }
+.dep-flag svg { width: 16px; height: 16px; }
+.dep-body { min-width: 0; }
+.dep-title { font-size: 13px; font-weight: 550; color: var(--ink); letter-spacing: -0.005em; cursor: pointer; }
+.dep-title:hover { color: var(--accent); }
+.dep-ref { color: var(--ink-4); font-size: 11px; font-weight: 600; }
+.dep-reason { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+.dep-deps { font-size: 11.5px; color: var(--ink-3); margin-top: 5px; display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+.dep-who { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--ink-2); white-space: nowrap; }
+.dep-who-name { font-weight: 500; }
+.dep-tag { font-family: var(--font-mono); font-size: 9.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 7px; border-radius: 999px; background: var(--s-review-soft); color: var(--s-review); }
+.dep-tag.decision { background: var(--accent-soft); color: var(--accent); }
+.dep-tag.handoff { background: var(--s-review-soft); color: var(--s-review); }
+.empty-sm { font-size: 12px; color: var(--ink-4); padding: 10px 2px; }
+.kc-unassigned { color: var(--ink-4); font-size: 13px; }
+
 </style>
 <style>.hljs{color:var(--ink-2)} [data-theme="dark"] .hljs{color:#c9d1d9}</style>
 </head>
@@ -976,7 +1000,8 @@ table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-
     "d": "Fleet view planned",
     "dir": "up"
    }
-  ]
+  ],
+  "version": "0.1.1"
  },
  "burn": {
   "total": 74,
@@ -1104,6 +1129,39 @@ table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-
   }
  ],
  "tasks": [
+  {
+   "id": "rm-15",
+   "ref": "RM-15",
+   "col": "done",
+   "epic": "engine",
+   "owner": "opus",
+   "author": "tejas",
+   "title": "Dependencies view + boot-crash guards",
+   "summary": "A 10th view surfacing what is blocked and flagging anything that needs a human; plus renderer guards so empty data can never blank the hub.",
+   "labels": [
+    "engine",
+    "design"
+   ],
+   "points": 5,
+   "age": 0,
+   "pr": {
+    "num": 22,
+    "status": "merged"
+   },
+   "body": "\u003cp>The \u003cb>Dependencies\u003c/b> view answers two questions at a glance: what is blocked on other work (an agent can take it once deps land), and what is \u003cb>waiting on a human\u003c/b> — blocked tasks, proposed ADRs, human-owned reviews, and unaccepted handoffs are flagged at the top so the autopilot’s human-gated items never get lost. Shipped alongside four renderer guards from [[bug-04|BUG-4]] so empty debug/activity/owner data can never blank the hub again.\u003c/p>",
+   "backlinks": [
+    "bug-04",
+    "rm-11"
+   ],
+   "comments": [],
+   "activity": [
+    {
+     "when": "just now",
+     "who": "opus",
+     "line": "shipped the \u003cb>Dependencies\u003c/b> view + boot-crash guards"
+    }
+   ]
+  },
   {
    "id": "rm-14",
    "ref": "RM-14",
@@ -2512,6 +2570,79 @@ table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-
    "backlinks": [
     "rm-02"
    ]
+  },
+  {
+   "id": "bug-04",
+   "ref": "BUG-4",
+   "title": "Empty debug log blanks the whole hub on boot",
+   "state": "fixed",
+   "task": "rm-15",
+   "owner": "opus",
+   "elapsed": "20m",
+   "hyposCount": 2,
+   "summary": "A project with no debug entries (incl. a stock rocketman init) crashed at boot — the entire hub rendered blank.",
+   "symptom": "Open the hub for a project whose debug log is empty; nothing paints — a blank page, no views.",
+   "hypotheses": [
+    {
+     "status": "refuted",
+     "text": "The data island failed to parse",
+     "note": "#pm-data is present and valid JSON."
+    },
+    {
+     "status": "confirmed",
+     "text": "A top-level read assumes debug is non-empty",
+     "note": "app.js ran D.debug[0].id at module load; D.debug[0] is undefined when debug is []."
+    }
+   ],
+   "repro": [
+    "rocketman init a fresh project (template ships debug: [])",
+    "open PM/index.html",
+    "observe a blank page",
+    "headless console: Uncaught TypeError: Cannot read properties of undefined (reading id)"
+   ],
+   "rootCause": "app.js dereferenced D.debug[0].id at top level during boot; with an empty debug array that threw before any view rendered, aborting the whole page.",
+   "fix": {
+    "text": "Guarded the boot read (D.debug[0] && ...), added a Debug empty-state, and guarded REG[inv.task] and the dashboard activity read. The renderer now tolerates empty debug/activity/owner.",
+    "pr": 0,
+    "commit": "",
+    "file": "engine/app.js"
+   },
+   "guard": "A fresh rocketman init hub is headless-booted in verification: empty debug + empty activity + unassigned owner must render with no uncaught error.",
+   "timeline": [
+    {
+     "stage": "symptom",
+     "kind": "alert",
+     "when": "20m ago",
+     "who": "opus"
+    },
+    {
+     "stage": "hypothesis",
+     "kind": "search",
+     "when": "16m ago",
+     "who": "opus"
+    },
+    {
+     "stage": "rootcause",
+     "kind": "bug",
+     "when": "12m ago",
+     "who": "opus"
+    },
+    {
+     "stage": "fix",
+     "kind": "commit",
+     "when": "6m ago",
+     "who": "opus"
+    },
+    {
+     "stage": "guard",
+     "kind": "check",
+     "when": "2m ago",
+     "who": "opus"
+    }
+   ],
+   "backlinks": [
+    "rm-15"
+   ]
   }
  ],
  "activity": [
@@ -2886,7 +3017,7 @@ table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-
           </div>
           <div class="rail-card">
             <h3>Recent activity <span class="c">live</span></h3>
-            ${D.activity[0].events.slice(0,5).map(e=>`<div class="feed-row"><span>${actorMark(e.who,"sm")}</span><div class="feed-body"><div class="feed-line">${links(e.line)}</div><div class="feed-when">${e.when}</div></div></div>`).join("")}
+            ${((D.activity[0]||{events:[]}).events||[]).slice(0,5).map(e=>`<div class="feed-row"><span>${actorMark(e.who,"sm")}</span><div class="feed-body"><div class="feed-line">${links(e.line)}</div><div class="feed-when">${e.when}</div></div></div>`).join("")}
             <div style="margin-top:10px"><button class="btn ghost tiny" data-go="activity">View all activity ${icon("arrow")}</button></div>
           </div>
         </div>
@@ -2936,7 +3067,7 @@ table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-
     const aging = t.col !== "done" && t.age >= 4;
     const isBug = t.labels.includes("security") && t.col === "blocked";
     return `<div class="kcard ${ageClass(t.col==='done'?0:t.age)} ${t.col==='blocked'&&false?'bug-card':''}" data-link="${t.id}">
-      <div class="kc-top"><span class="kc-id">${t.ref}</span><span class="kc-spacer"></span>${P[t.owner].kind==='agent'?agentChip(t.owner):avatar(t.owner,"sm")}</div>
+      <div class="kc-top"><span class="kc-id">${t.ref}</span><span class="kc-spacer"></span>${P[t.owner]?(P[t.owner].kind==='agent'?agentChip(t.owner):avatar(t.owner,"sm")):'<span class="av sm unassigned" title="Unassigned">·</span>'}</div>
       <div class="kc-summary">${links(t.summary)}</div>
       ${t.blockedReason?`<div class="blocked-reason">${icon("block")}${t.blockedReason}</div>`:""}
       ${t.labels.length?`<div class="kc-labels">${t.labels.map(labelChip).join("")}</div>`:""}
@@ -3039,8 +3170,13 @@ table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-
   };
 
   /* ── Debug (signature view) ── */
-  let openInv = D.debug[0].id;
+  let openInv = (D.debug[0] || {}).id;
   V.debug = () => {
+    if (!D.debug.length) return `
+    <div class="view view-wide">
+      <div class="ph"><div><h1>Debug log</h1><p class="sub">Investigations as timelines · Symptom → Hypotheses → Root cause → Fix → Guard</p></div></div>
+      <div class="empty"><div class="e-mark">${icon("beaker")}</div>No investigations yet. Log one with <code>/rm-debug</code> — it records the symptom, hypotheses, root cause, fix, and a regression guard.</div>
+    </div>`;
     const inv = D.debug.find(d => d.id === openInv) || D.debug[0];
     const tabs = D.debug.map(d => `<button class="debug-tab ${d.id===inv.id?'active':''}" data-inv="${d.id}">
       <div class="dt-id">${d.ref} <span class="dt-state ${d.state}">${d.state}</span></div>
@@ -3071,7 +3207,7 @@ table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-
           <div class="ib-main">
             <div class="ib-id">${inv.ref} <span class="dt-state ${inv.state}">${inv.state}</span></div>
             <h2>${inv.title}</h2>
-            <div class="ib-sub">${links(inv.summary)} <span class="ref-chip" data-link="${inv.task}"><span class="tt">task</span> ${REG[inv.task].label}</span></div>
+            <div class="ib-sub">${links(inv.summary)} ${inv.task && REG[inv.task] ? `${inv.task && REG[inv.task] ? `<span class="ref-chip" data-link="${inv.task}"><span class="tt">task</span> ${REG[inv.task].label}</span>` : ""}` : ""}</div>
           </div>
           <div class="inv-stat"><div class="v">${inv.elapsed}</div><div class="k">to resolve</div></div>
         </div>
@@ -3118,6 +3254,80 @@ table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-
       </div>
     </div>`;
   };
+  /* ── Dependencies (what's waiting, and what needs a human) ── */
+  V.depends = () => {
+    const tasks = D.tasks || [];
+    const adrs = D.adrs || [];
+    const debug = D.debug || [];
+    const comms = D.comms || { agents: [], messages: [], acks: [] };
+    const isHuman = (id) => !!(P[id] && P[id].kind === "human");
+    const byId = {}; tasks.forEach(t => byId[t.id] = t);
+    const isDone = (id) => byId[id] && byId[id].col === "done";
+
+    // 1) Human-gated — flagged. These block the autopilot until a person acts.
+    const gated = [];
+    tasks.filter(t => t.col === "blocked").forEach(t => gated.push({
+      ref: t.ref, id: t.id, title: t.summary || t.title,
+      reason: t.blockedReason || "Blocked", who: t.owner, tag: "blocked"
+    }));
+    adrs.filter(a => a.status === "proposed").forEach(a => gated.push({
+      ref: a.ref, id: a.id, title: a.title,
+      reason: "Awaiting a decision", who: a.author, tag: "decision"
+    }));
+    tasks.filter(t => t.col === "review" && isHuman(t.owner)).forEach(t => gated.push({
+      ref: t.ref, id: t.id, title: t.summary || t.title,
+      reason: "In review — needs a human", who: t.owner, tag: "review"
+    }));
+    const acks = comms.acks || [];
+    (comms.messages || []).filter(m => m.kind === "handoff" && isHuman(m.to)
+      && !acks.some(a => a.msg === m.id && (a.kind === "accept" || a.kind === "complete")))
+      .forEach(m => gated.push({
+        ref: m.task && REG[m.task] ? REG[m.task].label : "handoff", id: m.task || "",
+        title: m.subject || "Handoff", reason: "Handoff waiting for you", who: m.to, tag: "handoff"
+      }));
+
+    // 2) Work dependencies — blocked on other tasks; an agent can proceed once they land.
+    const work = [];
+    tasks.filter(t => t.col !== "done").forEach(t => {
+      const deps = (t.backlinks || []).filter(b => byId[b] && !isDone(b));
+      if (deps.length) work.push({ ref: t.ref, id: t.id, title: t.summary || t.title, deps });
+    });
+
+    const readyCount = tasks.filter(t => (t.col === "backlog" || t.col === "todo")
+      && !(t.backlinks || []).some(b => byId[b] && !isDone(b))).length;
+
+    const gatedHtml = gated.length ? gated.map(g => `
+      <div class="dep-row gated">
+        <span class="dep-flag" title="Needs a human">${icon("alert")}</span>
+        <div class="dep-body">
+          <div class="dep-title" ${g.id ? `data-link="${g.id}"` : ""}>${g.ref ? `<span class="dep-ref mono">${g.ref}</span> ` : ""}${links(g.title || "")}</div>
+          <div class="dep-reason">${links(g.reason)}</div>
+        </div>
+        <div class="dep-who">${g.who && P[g.who] ? `${actorMark(g.who, "sm")} <span class="dep-who-name">${P[g.who].name}</span>` : `<span class="dep-tag ${g.tag}">${g.tag}</span>`}</div>
+      </div>`).join("") : `<div class="empty"><div class="e-mark">${icon("check")}</div>Nothing is waiting on a human right now. The fleet can run.</div>`;
+
+    const workHtml = work.length ? work.map(w => `
+      <div class="dep-row">
+        <div class="dep-body">
+          <div class="dep-title" data-link="${w.id}"><span class="dep-ref mono">${w.ref}</span> ${links(w.title || "")}</div>
+          <div class="dep-deps">waiting on ${w.deps.map(d => `<span class="ref-chip" data-link="${d}">${REG[d] ? REG[d].label : d}</span>`).join(" ")}</div>
+        </div>
+      </div>`).join("") : `<div class="empty-sm">No task is blocked on unfinished work.</div>`;
+
+    return `
+    <div class="view view-wide">
+      <div class="ph"><div><h1>Dependencies</h1><p class="sub">What's waiting — and what needs a human before the fleet can move</p></div>
+        <span class="spacer"></span>
+        <div class="dep-counts mono"><span class="flagged">${gated.length} need a human</span><span>${work.length} blocked on work</span><span>${readyCount} ready</span></div>
+      </div>
+      <div class="sec-head"><h2>${icon("alert","sh-ic")} Waiting on a human</h2><span class="desc">flagged — these gate the autopilot</span></div>
+      <div class="dep-list">${gatedHtml}</div>
+      <div class="sec-head" style="margin-top:22px"><h2>Blocked on other work</h2><span class="desc">an agent can pick these up once their dependencies land</span></div>
+      <div class="dep-list">${workHtml}</div>
+    </div>`;
+  };
+
+
 
   /* ── Fleet (multi-agent relay: presence + conversations + handoffs) ── */
   V.fleet = () => {
@@ -3327,6 +3537,7 @@ table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-
     { id:"debug", label:"Debug", icon:"debug", count:D.debug.length, dot:"var(--s-bug)" },
     { id:"docs", label:"Docs", icon:"docs" },
     { id:"activity", label:"Activity", icon:"activity" },
+    { id:"depends", label:"Dependencies", icon:"link", count: (((D.tasks||[]).filter(t=>t.col==="blocked").length)+((D.adrs||[]).filter(a=>a.status==="proposed").length))||undefined },
     { id:"fleet", label:"Fleet", icon:"blocks", count:((D.comms&&D.comms.agents)||[]).length||undefined }
   ];
   let current = "dashboard";
@@ -3431,7 +3642,7 @@ table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-
       else if (e.key==="ArrowUp"){e.preventDefault();cmdSel=Math.max(cmdSel-1,0);renderCmd();}
       else if (e.key==="Enter"){e.preventDefault();if(cmdResults[cmdSel])execCmd(cmdResults[cmdSel].id);}
     } else if (!/input|textarea/i.test((e.target.tagName||""))) {
-      const map={d:"dashboard",b:"board",s:"spec",r:"roadmap",c:"decisions",g:"debug",o:"docs",a:"activity",f:"fleet"};
+      const map={d:"dashboard",b:"board",s:"spec",r:"roadmap",c:"decisions",g:"debug",o:"docs",a:"activity",f:"fleet",y:"depends"};
       if(map[e.key.toLowerCase()] && !e.metaKey && !e.ctrlKey) go(map[e.key.toLowerCase()]);
     }
   });

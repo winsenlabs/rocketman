@@ -1,173 +1,519 @@
 {
   "tasks": [
     {
-      "id": "rm-14", "ref": "RM-14", "col": "done", "epic": "track", "owner": "opus", "author": "tejas",
+      "id": "rm-15",
+      "ref": "RM-15",
+      "col": "done",
+      "epic": "engine",
+      "owner": "opus",
+      "author": "tejas",
+      "title": "Dependencies view + boot-crash guards",
+      "summary": "A 10th view surfacing what is blocked and flagging anything that needs a human; plus renderer guards so empty data can never blank the hub.",
+      "labels": [
+        "engine",
+        "design"
+      ],
+      "points": 5,
+      "age": 0,
+      "pr": {
+        "num": 22,
+        "status": "merged"
+      },
+      "body": "<p>The <b>Dependencies</b> view answers two questions at a glance: what is blocked on other work (an agent can take it once deps land), and what is <b>waiting on a human</b> — blocked tasks, proposed ADRs, human-owned reviews, and unaccepted handoffs are flagged at the top so the autopilot’s human-gated items never get lost. Shipped alongside four renderer guards from [[bug-04|BUG-4]] so empty debug/activity/owner data can never blank the hub again.</p>",
+      "backlinks": [
+        "bug-04",
+        "rm-11"
+      ],
+      "comments": [],
+      "activity": [
+        {
+          "when": "just now",
+          "who": "opus",
+          "line": "shipped the <b>Dependencies</b> view + boot-crash guards"
+        }
+      ]
+    },
+    {
+      "id": "rm-14",
+      "ref": "RM-14",
+      "col": "done",
+      "epic": "track",
+      "owner": "opus",
+      "author": "tejas",
       "title": "/rm-research — verify the current stack",
       "summary": "A skill that researches the current, correct tech stack before building — counters agents reaching for a stale stack from memory.",
-      "labels": ["skills"], "points": 3, "age": 0, "pr": { "num": 21, "status": "merged" },
+      "labels": [
+        "skills"
+      ],
+      "points": 3,
+      "age": 0,
+      "pr": {
+        "num": 21,
+        "status": "merged"
+      },
       "body": "<p>The #1 agent failure is confidently using a deprecated API, a renamed package, or last year's idiom from training data. <code>/rm-research</code> forces a present-day check (WebSearch/WebFetch, current year, official docs) and records the choice as an ADR with its version and the date verified. Wired into the conventions and run before any stack call in [[rm-07|/rm-plan]] and [[rm-08|/rm-build]].</p>",
-      "backlinks": ["rm-07", "rm-08"],
+      "backlinks": [
+        "rm-07",
+        "rm-08"
+      ],
       "comments": [],
-      "activity": [{ "when": "just now", "who": "opus", "line": "shipped <b>/rm-research</b> and wired it across the track" }]
+      "activity": [
+        {
+          "when": "just now",
+          "who": "opus",
+          "line": "shipped <b>/rm-research</b> and wired it across the track"
+        }
+      ]
     },
     {
-      "id": "rm-01", "ref": "RM-1", "col": "done", "epic": "engine", "owner": "opus", "author": "tejas",
+      "id": "rm-01",
+      "ref": "RM-1",
+      "col": "done",
+      "epic": "engine",
+      "owner": "opus",
+      "author": "tejas",
       "title": "Data → HTML bundler (build.mjs)",
       "summary": "Inlines hub.css, app.js, and the merged data island into one self-contained PM/index.html.",
-      "labels": ["engine"], "points": 5, "age": 0, "pr": { "num": 1, "status": "merged" },
+      "labels": [
+        "engine"
+      ],
+      "points": 5,
+      "age": 0,
+      "pr": {
+        "num": 1,
+        "status": "merged"
+      },
       "body": "<p>The content pipeline. <code>build.mjs</code> reads the four <code>PM/data/*.json</code> files, flat-merges them into one <code>#pm-data</code> island, and inlines the engine CSS and JS into a single offline HTML file (ADR-2, ADR-4).</p><p>It escapes <code>&lt;</code> in the data island so embedded markup can't close the script early ([[bug-02|BUG-2]]), and refuses to ship if <code>app.js</code> looks stubbed ([[bug-01|BUG-1]]).</p>",
-      "backlinks": ["adr-02", "adr-04", "bug-01", "bug-02"],
+      "backlinks": [
+        "adr-02",
+        "adr-04",
+        "bug-01",
+        "bug-02"
+      ],
       "comments": [
-        { "author": "opus", "when": "1h ago", "text": "Build is deterministic — same data in, byte-identical hub out. That makes the CI staleness check trivial." }
+        {
+          "author": "opus",
+          "when": "1h ago",
+          "text": "Build is deterministic — same data in, byte-identical hub out. That makes the CI staleness check trivial."
+        }
       ],
       "activity": [
-        { "when": "1h ago", "who": "opus", "line": "merged <b>PR #1</b>" },
-        { "when": "2h ago", "who": "tejas", "line": "created the task" }
+        {
+          "when": "1h ago",
+          "who": "opus",
+          "line": "merged <b>PR #1</b>"
+        },
+        {
+          "when": "2h ago",
+          "who": "tejas",
+          "line": "created the task"
+        }
       ]
     },
     {
-      "id": "rm-02", "ref": "RM-2", "col": "done", "epic": "engine", "owner": "opus", "author": "tejas",
+      "id": "rm-02",
+      "ref": "RM-2",
+      "col": "done",
+      "epic": "engine",
+      "owner": "opus",
+      "author": "tejas",
       "title": "Calm command center hub (8 views)",
       "summary": "Dashboard, Board, Spec, Roadmap, Decisions, Debug, Docs, Activity — system fonts, zero deps, light + dark.",
-      "labels": ["design", "engine"], "points": 8, "age": 0, "pr": { "num": 2, "status": "merged" },
+      "labels": [
+        "design",
+        "engine"
+      ],
+      "points": 8,
+      "age": 0,
+      "pr": {
+        "num": 2,
+        "status": "merged"
+      },
       "body": "<p>The reading surface: a single-page hub with eight views over one flat data island. Cool-neutral oklch palette, one blue accent, semantic status colors, system fonts only (ADR-6). Keyboard nav, ⌘K search, and an entity drawer that overlays any view.</p>",
-      "backlinks": ["adr-06"],
+      "backlinks": [
+        "adr-06"
+      ],
       "comments": [],
       "activity": [
-        { "when": "12m ago", "who": "opus", "line": "merged <b>PR #2</b>" },
-        { "when": "yesterday", "who": "tejas", "line": "approved the design direction" }
+        {
+          "when": "12m ago",
+          "who": "opus",
+          "line": "merged <b>PR #2</b>"
+        },
+        {
+          "when": "yesterday",
+          "who": "tejas",
+          "line": "approved the design direction"
+        }
       ]
     },
     {
-      "id": "rm-03", "ref": "RM-3", "col": "review", "epic": "engine", "owner": "sonnet", "author": "opus",
+      "id": "rm-03",
+      "ref": "RM-3",
+      "col": "review",
+      "epic": "engine",
+      "owner": "sonnet",
+      "author": "opus",
       "title": "Schema + doctor validator",
       "summary": "Validates the data island and flags broken backlinks, unknown owners, and stale links before build.",
-      "labels": ["engine", "dx"], "points": 3, "age": 1, "pr": { "num": 7, "status": "review" },
+      "labels": [
+        "engine",
+        "dx"
+      ],
+      "points": 3,
+      "age": 1,
+      "pr": {
+        "num": 7,
+        "status": "review"
+      },
       "body": "<p>A pre-build validation pass folded into <code>build.mjs</code> and exposed as <code>rocketman doctor</code>. Every cross-reference (backlinks, owner, epic, debug→task) must resolve to a known id, or the build warns (and fails in <code>--strict</code>).</p>",
-      "backlinks": ["adr-04", "rm-01"],
+      "backlinks": [
+        "adr-04",
+        "rm-01"
+      ],
       "comments": [
-        { "author": "sonnet", "when": "30m ago", "text": "Doctor now resolves backlinks against tasks, ADRs, debug, and spec sections. PR up for review." }
+        {
+          "author": "sonnet",
+          "when": "30m ago",
+          "text": "Doctor now resolves backlinks against tasks, ADRs, debug, and spec sections. PR up for review."
+        }
       ],
       "activity": [
-        { "when": "30m ago", "who": "sonnet", "line": "moved to <b>Review</b>" },
-        { "when": "3h ago", "who": "sonnet", "line": "picked up the task" }
+        {
+          "when": "30m ago",
+          "who": "sonnet",
+          "line": "moved to <b>Review</b>"
+        },
+        {
+          "when": "3h ago",
+          "who": "sonnet",
+          "line": "picked up the task"
+        }
       ]
     },
     {
-      "id": "rm-04", "ref": "RM-4", "col": "progress", "epic": "platform", "owner": "opus", "author": "tejas",
+      "id": "rm-04",
+      "ref": "RM-4",
+      "col": "progress",
+      "epic": "platform",
+      "owner": "opus",
+      "author": "tejas",
       "title": "rocketman CLI (init · build · new · doctor)",
       "summary": "One binary scaffolds PM/ into any repo, regenerates the hub, creates entities, and validates links.",
-      "labels": ["dx", "ci"], "points": 5, "age": 1, "pr": { "num": 12, "status": "open" },
+      "labels": [
+        "dx",
+        "ci"
+      ],
+      "points": 5,
+      "age": 1,
+      "pr": {
+        "num": 12,
+        "status": "open"
+      },
       "body": "<p>The front door. <code>rocketman init</code> copies the PM/ template + CLAUDE.md into a repo; <code>build</code> regenerates the hub; <code>new task|adr|debug</code> appends a correctly-shaped entity; <code>doctor</code> validates. Zero dependencies — pure Node.</p>",
-      "backlinks": ["rm-01"],
+      "backlinks": [
+        "rm-01"
+      ],
       "comments": [],
       "activity": [
-        { "when": "1h ago", "who": "opus", "line": "opened <b>PR #12</b>" },
-        { "when": "1d ago", "who": "tejas", "line": "created the task" }
+        {
+          "when": "1h ago",
+          "who": "opus",
+          "line": "opened <b>PR #12</b>"
+        },
+        {
+          "when": "1d ago",
+          "who": "tejas",
+          "line": "created the task"
+        }
       ]
     },
     {
-      "id": "rm-05", "ref": "RM-5", "col": "done", "epic": "track", "owner": "opus", "author": "tejas",
+      "id": "rm-05",
+      "ref": "RM-5",
+      "col": "done",
+      "epic": "track",
+      "owner": "opus",
+      "author": "tejas",
       "title": "/rm-ideate — forced product thinking",
       "summary": "Six forcing questions (demand, status quo, wedge, why-now) that must be answered before any code.",
-      "labels": ["skills"], "points": 3, "age": 0, "pr": { "num": 3, "status": "merged" },
+      "labels": [
+        "skills"
+      ],
+      "points": 3,
+      "age": 0,
+      "pr": {
+        "num": 3,
+        "status": "merged"
+      },
       "body": "<p>Stage one of the track. Refuses to let an idea proceed until it survives six questions about real demand and the narrowest wedge. Writes an idea brief that <code>/rm-prd</code> turns into a spec.</p>",
-      "backlinks": ["rm-06"],
+      "backlinks": [
+        "rm-06"
+      ],
       "comments": [],
-      "activity": [{ "when": "yesterday", "who": "opus", "line": "merged <b>PR #3</b>" }]
+      "activity": [
+        {
+          "when": "yesterday",
+          "who": "opus",
+          "line": "merged <b>PR #3</b>"
+        }
+      ]
     },
     {
-      "id": "rm-06", "ref": "RM-6", "col": "done", "epic": "track", "owner": "opus", "author": "tejas",
+      "id": "rm-06",
+      "ref": "RM-6",
+      "col": "done",
+      "epic": "track",
+      "owner": "opus",
+      "author": "tejas",
       "title": "/rm-prd — generate the PRD",
       "summary": "Turns an idea brief into spec sections (vision, personas, requirements) written into PM/data/spec.json.",
-      "labels": ["skills"], "points": 3, "age": 0, "pr": { "num": 4, "status": "merged" },
+      "labels": [
+        "skills"
+      ],
+      "points": 3,
+      "age": 0,
+      "pr": {
+        "num": 4,
+        "status": "merged"
+      },
       "body": "<p>Stage two. Reads the idea brief and produces a structured PRD — vision, problem, personas + JTBD, user stories with acceptance criteria, non-functional budgets, non-goals, risks — straight into the spec data.</p>",
-      "backlinks": ["rm-05"],
+      "backlinks": [
+        "rm-05"
+      ],
       "comments": [],
-      "activity": [{ "when": "yesterday", "who": "opus", "line": "merged <b>PR #4</b>" }]
+      "activity": [
+        {
+          "when": "yesterday",
+          "who": "opus",
+          "line": "merged <b>PR #4</b>"
+        }
+      ]
     },
     {
-      "id": "rm-07", "ref": "RM-7", "col": "progress", "epic": "track", "owner": "sonnet", "author": "tejas",
+      "id": "rm-07",
+      "ref": "RM-7",
+      "col": "progress",
+      "epic": "track",
+      "owner": "sonnet",
+      "author": "tejas",
       "title": "/rm-plan + /rm-build",
       "summary": "Plan lays the launch track into milestones + ready tasks; build allocates them to a sub-agent fleet.",
-      "labels": ["skills"], "points": 8, "age": 2, "pr": { "num": 9, "status": "open" },
+      "labels": [
+        "skills"
+      ],
+      "points": 8,
+      "age": 2,
+      "pr": {
+        "num": 9,
+        "status": "open"
+      },
       "body": "<p>Stages three and four. <code>/rm-plan</code> decomposes the PRD into epics, milestones, and a board of ready tasks. <code>/rm-build</code> turns the board into a work queue: it allocates ready tasks to sub-agents on demand, and — per the single-writer rule ([[adr-05|ADR-5]]) — is the sole writer back to PM/ data.</p>",
-      "backlinks": ["rm-06", "adr-05", "rm-08"],
+      "backlinks": [
+        "rm-06",
+        "adr-05",
+        "rm-08"
+      ],
       "comments": [
-        { "author": "sonnet", "when": "2h ago", "text": "Allocator picks ready tasks (deps satisfied, unassigned) and fans out. Parent serializes all writes back to the hub." },
-        { "author": "tejas", "when": "1h ago", "text": "Make sure the activity feed records which agent touched which task — provenance is the point.", "reply": true }
+        {
+          "author": "sonnet",
+          "when": "2h ago",
+          "text": "Allocator picks ready tasks (deps satisfied, unassigned) and fans out. Parent serializes all writes back to the hub."
+        },
+        {
+          "author": "tejas",
+          "when": "1h ago",
+          "text": "Make sure the activity feed records which agent touched which task — provenance is the point.",
+          "reply": true
+        }
       ],
       "activity": [
-        { "when": "1h ago", "who": "sonnet", "line": "pushed to <b>PR #9</b>" },
-        { "when": "2d ago", "who": "tejas", "line": "created the task" }
+        {
+          "when": "1h ago",
+          "who": "sonnet",
+          "line": "pushed to <b>PR #9</b>"
+        },
+        {
+          "when": "2d ago",
+          "who": "tejas",
+          "line": "created the task"
+        }
       ]
     },
     {
-      "id": "rm-08", "ref": "RM-8", "col": "progress", "epic": "track", "owner": "opus", "author": "tejas",
+      "id": "rm-08",
+      "ref": "RM-8",
+      "col": "progress",
+      "epic": "track",
+      "owner": "opus",
+      "author": "tejas",
       "title": "/rm-verify + /rm-test",
       "summary": "Verify runs the automated gate; test generates a crisp human test script and records pass/fail.",
-      "labels": ["skills"], "points": 5, "age": 1, "pr": { "num": 11, "status": "open" },
-      "body": "<p>Stages five and six. <code>/rm-verify</code> runs the project's checks (build, lint, tests, the hub doctor) as a gate before review. <code>/rm-test</code> produces a short manual test script for a human and writes the result back onto the task.</p>",
-      "backlinks": ["rm-07", "rm-09"],
-      "comments": [],
-      "activity": [{ "when": "1h ago", "who": "opus", "line": "opened <b>PR #11</b>" }]
-    },
-    {
-      "id": "rm-09", "ref": "RM-9", "col": "blocked", "epic": "track", "owner": "opus", "author": "tejas",
-      "title": "/rm-launch + /rm-iterate",
-      "summary": "Ship to production, then capture every post-launch change into the changelog and activity feed.",
-      "labels": ["skills"], "points": 5, "age": 1, "blockedReason": "Waiting on the CLI ship hooks in RM-4",
-      "body": "<p>Stages seven and eight. <code>/rm-launch</code> ships (tag, changelog, release) and <code>/rm-iterate</code> captures modifications as new tasks + changelog entries. Parked until the [[rm-04|CLI]] exposes the ship hooks it calls.</p>",
-      "backlinks": ["rm-04", "rm-08"],
-      "comments": [
-        { "author": "opus", "when": "40m ago", "text": "Stubbed the skill so it's ready the moment RM-4 lands the ship API." }
+      "labels": [
+        "skills"
       ],
+      "points": 5,
+      "age": 1,
+      "pr": {
+        "num": 11,
+        "status": "open"
+      },
+      "body": "<p>Stages five and six. <code>/rm-verify</code> runs the project's checks (build, lint, tests, the hub doctor) as a gate before review. <code>/rm-test</code> produces a short manual test script for a human and writes the result back onto the task.</p>",
+      "backlinks": [
+        "rm-07",
+        "rm-09"
+      ],
+      "comments": [],
       "activity": [
-        { "when": "40m ago", "who": "opus", "line": "moved to <b>Blocked</b> — reason: CLI ship hooks" }
+        {
+          "when": "1h ago",
+          "who": "opus",
+          "line": "opened <b>PR #11</b>"
+        }
       ]
     },
     {
-      "id": "rm-10", "ref": "RM-10", "col": "progress", "epic": "docs", "owner": "haiku", "author": "tejas",
+      "id": "rm-09",
+      "ref": "RM-9",
+      "col": "blocked",
+      "epic": "track",
+      "owner": "opus",
+      "author": "tejas",
+      "title": "/rm-launch + /rm-iterate",
+      "summary": "Ship to production, then capture every post-launch change into the changelog and activity feed.",
+      "labels": [
+        "skills"
+      ],
+      "points": 5,
+      "age": 1,
+      "blockedReason": "Waiting on the CLI ship hooks in RM-4",
+      "body": "<p>Stages seven and eight. <code>/rm-launch</code> ships (tag, changelog, release) and <code>/rm-iterate</code> captures modifications as new tasks + changelog entries. Parked until the [[rm-04|CLI]] exposes the ship hooks it calls.</p>",
+      "backlinks": [
+        "rm-04",
+        "rm-08"
+      ],
+      "comments": [
+        {
+          "author": "opus",
+          "when": "40m ago",
+          "text": "Stubbed the skill so it's ready the moment RM-4 lands the ship API."
+        }
+      ],
+      "activity": [
+        {
+          "when": "40m ago",
+          "who": "opus",
+          "line": "moved to <b>Blocked</b> — reason: CLI ship hooks"
+        }
+      ]
+    },
+    {
+      "id": "rm-10",
+      "ref": "RM-10",
+      "col": "progress",
+      "epic": "docs",
+      "owner": "haiku",
+      "author": "tejas",
       "title": "Diátaxis docs + README",
       "summary": "Tutorial, how-tos, reference, and explanation — plus the OSS landing README for launch.",
-      "labels": ["docs"], "points": 5, "age": 1, "pr": { "num": 14, "status": "open" },
+      "labels": [
+        "docs"
+      ],
+      "points": 5,
+      "age": 1,
+      "pr": {
+        "num": 14,
+        "status": "open"
+      },
       "body": "<p>The docs set, structured by Diátaxis and also rendered inside the hub's Docs view. Plus the landing README with a one-command quickstart, badges, and the MIT license for the public launch.</p>",
       "backlinks": [],
       "comments": [],
-      "activity": [{ "when": "2h ago", "who": "haiku", "line": "opened <b>PR #14</b>" }]
+      "activity": [
+        {
+          "when": "2h ago",
+          "who": "haiku",
+          "line": "opened <b>PR #14</b>"
+        }
+      ]
     },
     {
-      "id": "rm-11", "ref": "RM-11", "col": "backlog", "epic": "engine", "owner": "opus", "author": "tejas",
+      "id": "rm-11",
+      "ref": "RM-11",
+      "col": "backlog",
+      "epic": "engine",
+      "owner": "opus",
+      "author": "tejas",
       "title": "Fleet view — multi-agent runs",
       "summary": "A ninth view: a parent → sub-agent tree per run, so a fleet's work is skimmable at a glance.",
-      "labels": ["engine", "design"], "points": 8, "age": 0,
+      "labels": [
+        "engine",
+        "design"
+      ],
+      "points": 8,
+      "age": 0,
       "body": "<p>Post-launch. Render orchestration runs as a tree: the parent agent, the sub-agents it allocated, the task each touched, status, and token spend — turning a fleet's work into something a human can skim. Builds on the provenance already in the data ([[adr-05|ADR-5]]).</p>",
-      "backlinks": ["adr-05"],
+      "backlinks": [
+        "adr-05"
+      ],
       "comments": [],
       "activity": []
     },
     {
-      "id": "rm-12", "ref": "RM-12", "col": "backlog", "epic": "engine", "owner": "sonnet", "author": "tejas",
+      "id": "rm-12",
+      "ref": "RM-12",
+      "col": "backlog",
+      "epic": "engine",
+      "owner": "sonnet",
+      "author": "tejas",
       "title": "Cross-repo rollup",
       "summary": "Aggregate many repos' PM/ data into one read-only org dashboard.",
-      "labels": ["engine"], "points": 8, "age": 0,
+      "labels": [
+        "engine"
+      ],
+      "points": 8,
+      "age": 0,
       "body": "<p>Post-launch. A read-only aggregator that reads multiple repos' <code>PM/data</code> and renders one org-wide hub — every in-flight task across every repo, in one place.</p>",
       "backlinks": [],
       "comments": [],
       "activity": []
     },
     {
-      "id": "rm-13", "ref": "RM-13", "col": "review", "epic": "engine", "owner": "opus", "author": "tejas",
+      "id": "rm-13",
+      "ref": "RM-13",
+      "col": "review",
+      "epic": "engine",
+      "owner": "opus",
+      "author": "tejas",
       "title": "Inter-agent relay (agent bus)",
       "summary": "A conflict-free file bus in PM/comms so agents in separate terminals send messages and hand off tasks.",
-      "labels": ["engine", "dx"], "points": 8, "age": 0, "pr": { "num": 18, "status": "review" },
+      "labels": [
+        "engine",
+        "dx"
+      ],
+      "points": 8,
+      "age": 0,
+      "pr": {
+        "num": 18,
+        "status": "review"
+      },
       "body": "<p>Multiple agents in separate terminals couldn't talk, so coordinating meant copy-pasting between them. The relay — <code>PM/comms/</code> + the <code>rocketman relay</code> CLI + the <code>/rm-relay</code> skill — gives them a shared nervous system: presence, free-form messages, and explicit task handoffs (offer → accept → complete). Each agent writes only its own files, so no terminal stomps another ([[adr-08|ADR-8]]). Polled on an interval via <code>/loop</code>.</p>",
-      "backlinks": ["adr-08", "rm-11"],
+      "backlinks": [
+        "adr-08",
+        "rm-11"
+      ],
       "comments": [
-        { "author": "opus", "when": "10m ago", "text": "Handed RM-8 off to the skills session over the bus — it accepted and is wiring /rm-verify now. Zero copy-paste." }
+        {
+          "author": "opus",
+          "when": "10m ago",
+          "text": "Handed RM-8 off to the skills session over the bus — it accepted and is wiring /rm-verify now. Zero copy-paste."
+        }
       ],
       "activity": [
-        { "when": "10m ago", "who": "opus", "line": "moved to <b>Review</b> — opened <b>PR #18</b>" }
+        {
+          "when": "10m ago",
+          "who": "opus",
+          "line": "moved to <b>Review</b> — opened <b>PR #18</b>"
+        }
       ]
     }
   ]

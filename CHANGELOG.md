@@ -7,7 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] — 2026-05-30
+
 ### Added
+- **Dependencies view** — a 10th view that surfaces what is blocked and **flags anything waiting
+  on a human** (blocked tasks, proposed ADRs, human-owned reviews, unaccepted handoffs) at the top,
+  so the autopilot's human-gated items never get lost. Plus a "blocked on other work" section for
+  agent-resolvable dependencies. Keyboard `y`.
+
+### Fixed
+- **Boot crash on empty debug** — a project with no debug entries (including a stock
+  `rocketman init`, whose template ships `debug: []`) crashed at boot and rendered a blank hub
+  (`D.debug[0].id` dereferenced an empty array at module load). Guarded the boot read, added a
+  Debug empty-state, and guarded the dashboard activity read and `REG[inv.task]`; unassigned
+  owners now render a "ready for the fleet" chip. The renderer now tolerates empty
+  debug/activity/owner data — verified by headless-booting a fresh `init` hub. Recorded as BUG-4.
+- **Edit mode gated on the serve backend, not the URL** — the comment composer appeared on the
+  static GitHub Pages site (https) but its POST hit a nonexistent API → 405. Edit affordances now
+  mount only when `rocketman serve` is behind the page; `file://` and static hosts are read-only.
+
+### Added (carried from 0.1.0 dev)
 - **`/rm-research` skill** — verifies the current, correct tech stack / library / API / version
   before building on it (WebSearch/WebFetch against present-day official docs), and records the
   choice as a dated ADR. Counters the #1 agent failure: reaching for a stale or wrong stack from
