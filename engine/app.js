@@ -20,6 +20,7 @@
 
   /* ───────────────────────── icons ───────────────────────── */
   const I = {
+    list:'<path d="M7 5h10M7 10h10M7 15h10"/><circle cx="3.5" cy="5" r="1.1"/><circle cx="3.5" cy="10" r="1.1"/><circle cx="3.5" cy="15" r="1.1"/>',
     dashboard:'<path d="M3 9l7-5 7 5v8a1 1 0 01-1 1h-3v-5H7v5H4a1 1 0 01-1-1z"/>',
     board:'<rect x="3" y="3" width="14" height="14" rx="1.5"/><path d="M8 3v14M13 3v14"/>',
     spec:'<path d="M5 3h7l3 3v11a1 1 0 01-1 1H5a1 1 0 01-1-1V4a1 1 0 011-1z"/><path d="M11 3v4h4M7 11h6M7 14h4"/>',
@@ -418,6 +419,48 @@
       </div>
     </div>`;
   };
+  /* ── List (flat, sortable micro-view of every task) ── */
+  let listSort = "status";
+  V.list = () => {
+    const tasks = (D.tasks || []).slice();
+    const order = {}; (D.columns || []).forEach((c, i) => order[c.id] = i);
+    const sorters = {
+      status: (a, b) => (order[a.col] ?? 99) - (order[b.col] ?? 99) || (b.points || 0) - (a.points || 0),
+      id: (a, b) => String(a.ref).localeCompare(String(b.ref), undefined, { numeric: true }),
+      owner: (a, b) => String((P[a.owner] || {}).name || "~").localeCompare(String((P[b.owner] || {}).name || "~")),
+      epic: (a, b) => String((D.epics[a.epic] || {}).name || "~").localeCompare(String((D.epics[b.epic] || {}).name || "~")),
+      points: (a, b) => (b.points || 0) - (a.points || 0),
+    };
+    tasks.sort(sorters[listSort] || sorters.status);
+    const ownerCell = (t) => t.owner && P[t.owner]
+      ? (P[t.owner].kind === "agent" ? agentChip(t.owner) : `<span class="byline">${avatar(t.owner, "sm")}<span class="name">${P[t.owner].name}</span></span>`)
+      : '<span class="li-unassigned">unassigned</span>';
+    const epicCell = (t) => D.epics[t.epic]
+      ? `<span class="li-epic"><span class="epic-dot" style="background:${D.epics[t.epic].color}"></span>${D.epics[t.epic].name}</span>` : "";
+    const cols = [
+      ["id", "ID"], ["", "Summary"], ["status", "Status"], ["owner", "Owner"], ["epic", "Epic"], ["points", "Pts"], ["", "PR"],
+    ];
+    const head = cols.map(([key, label]) =>
+      key ? `<th class="li-sortable ${listSort === key ? 'on' : ''}" data-listsort="${key}">${label}${listSort === key ? ` ${icon("chev", "li-chev")}` : ""}</th>` : `<th>${label}</th>`).join("");
+    const body = tasks.map((t) => `<tr class="li-row" data-link="${t.id}">
+      <td class="li-id mono">${t.ref}</td>
+      <td class="li-sum"><div class="li-sum-t">${links(t.summary || t.title || "")}</div></td>
+      <td>${statusPill(t.col)}</td>
+      <td class="li-owner">${ownerCell(t)}</td>
+      <td>${epicCell(t)}</td>
+      <td class="li-pts mono">${t.points || ""}</td>
+      <td>${t.pr ? prChip(t.pr) : ""}</td>
+    </tr>`).join("");
+    return `
+    <div class="view view-wide">
+      <div class="ph"><div><h1>List<span class="count-badge">${tasks.length}</span></h1><p class="sub">Every task, flat — click a header to sort, a row to open it</p></div></div>
+      <div class="li-wrap"><table class="li-table">
+        <thead><tr>${head}</tr></thead>
+        <tbody>${body || '<tr><td colspan="7" class="li-empty">No tasks yet. Add one with <code>rocketman new task</code>.</td></tr>'}</tbody>
+      </table></div>
+    </div>`;
+  };
+
   /* ── Dependencies (what's waiting, and what needs a human) ── */
   V.depends = () => {
     const tasks = D.tasks || [];
@@ -695,6 +738,7 @@
   const NAV = [
     { id:"dashboard", label:"Dashboard", icon:"dashboard" },
     { id:"board", label:"Board", icon:"board", count:D.tasks.filter(t=>t.col!=='done').length },
+    { id:"list", label:"List", icon:"list", count:(D.tasks||[]).length },
     { id:"spec", label:"Product Spec", icon:"spec" },
     { id:"roadmap", label:"Roadmap", icon:"roadmap" },
     { id:"decisions", label:"Decisions", icon:"decision", count:D.adrs.length },
@@ -745,6 +789,7 @@
   document.addEventListener("click", e => {
     const view = e.target.closest("[data-view]"); if (view) { go(view.dataset.view); return; }
     const go2 = e.target.closest("[data-go]"); if (go2) { go(go2.dataset.go); return; }
+    const ls = e.target.closest("[data-listsort]"); if (ls) { listSort = ls.dataset.listsort; document.getElementById("main").innerHTML = V.list(); return; }
     const lane = e.target.closest("[data-lane]"); if (lane) { boardLane = lane.dataset.lane; document.getElementById("main").innerHTML = V.board(); return; }
     const adr = e.target.closest("[data-adr]"); if (adr) { openAdr = openAdr===adr.dataset.adr?null:adr.dataset.adr; document.getElementById("main").innerHTML = V.decisions(); return; }
     const invTab = e.target.closest("[data-inv]"); if (invTab) { openInv = invTab.dataset.inv; document.getElementById("main").innerHTML = V.debug(); return; }
@@ -806,7 +851,7 @@
       else if (e.key==="ArrowUp"){e.preventDefault();cmdSel=Math.max(cmdSel-1,0);renderCmd();}
       else if (e.key==="Enter"){e.preventDefault();if(cmdResults[cmdSel])execCmd(cmdResults[cmdSel].id);}
     } else if (!/input|textarea/i.test((e.target.tagName||""))) {
-      const map={d:"dashboard",b:"board",s:"spec",r:"roadmap",c:"decisions",g:"debug",o:"docs",a:"activity",f:"fleet",y:"depends"};
+      const map={d:"dashboard",b:"board",s:"spec",r:"roadmap",c:"decisions",g:"debug",o:"docs",a:"activity",f:"fleet",y:"depends",l:"list"};
       if(map[e.key.toLowerCase()] && !e.metaKey && !e.ctrlKey) go(map[e.key.toLowerCase()]);
     }
   });

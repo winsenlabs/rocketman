@@ -10,10 +10,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.1] — 2026-05-30
 
 ### Added
-- **Dependencies view** — a 10th view that surfaces what is blocked and **flags anything waiting
-  on a human** (blocked tasks, proposed ADRs, human-owned reviews, unaccepted handoffs) at the top,
-  so the autopilot's human-gated items never get lost. Plus a "blocked on other work" section for
+- **List view** — a flat, sortable micro-view of every task (ID · summary · status · owner · epic ·
+  points · PR). Click a column header to sort, a row to open it. The Board shows epic-level
+  swimlanes; the List is the granular counterpart for scanning every task at once. Keyboard `l`.
+- **Dependencies view** — surfaces what is blocked and **flags anything waiting on a human**
+  (blocked tasks, proposed ADRs, human-owned reviews, unaccepted handoffs) at the top, so the
+  autopilot's human-gated items never get lost. Plus a "blocked on other work" section for
   agent-resolvable dependencies. Keyboard `y`.
+
+### Changed
+- **`/rm-plan` now teaches granular decomposition** — phases ARE epics, and each phase must be
+  broken into executable micro-tasks (one shippable change each), not phase-level roadmap cards.
+  Added a "review the plan in the hub" step (Board / List / Dependencies) to catch coarse cards
+  before `/rm-build`.
+
+### Fixed
+- **Content overflow** — long titles, summaries, and code no longer spill out of cards, drawers,
+  doc bodies, or the dependency/fleet rows; everything wraps or scrolls within its container.
 
 ### Fixed
 - **Boot crash on empty debug** — a project with no debug entries (including a stock
