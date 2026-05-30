@@ -120,10 +120,7 @@
     };
     const pct = n => (n / b.total * 100).toFixed(1) + "%";
     const blockers = D.tasks.filter(t => t.col === "blocked" || t.labels.includes("security") && false);
-    const blockItems = [
-      { t: D.tasks.find(x=>x.id==="t-108"), reason: "Awaiting vendor decision (ADR-003)", wait: "1d" },
-      { t: D.tasks.find(x=>x.id==="t-105"), reason: "Blocked by webhook retry race (INV-201)", wait: "5h", bug: true }
-    ];
+    const blockItems = D.tasks.filter(t => t.col === "blocked").map(t => ({ t, reason: t.blockedReason || "", wait: (t.age != null ? t.age + "d" : ""), bug: (t.labels||[]).includes("bug") }));
     return `
     <div class="view view-wide">
       <div class="ph"><div><h1>${pr.name}</h1><p class="sub">${pr.tagline} · <span class="mono">${pr.repo}</span></p></div></div>
@@ -265,23 +262,9 @@
   function gherkin(s) { return s.replace(/\b(Given|When|Then|And)\b/g, '<span class="kw">$1</span>'); }
 
   /* ── Roadmap ── */
-  const MONTHS = ["Mar","Apr","May","Jun","Jul","Aug"];
-  const TODAY = 2.92;
-  const ROAD = [
-    { phase: "Phase 1 — Foundations" },
-    { name: "Auth & scoped tokens", sub: "WIN-130 · shipped", s: 0.1, e: 1.0, kind: "done", pct: 100 },
-    { name: "Event ingestion API", sub: "WIN-131 · shipped", s: 0.6, e: 1.5, kind: "done", pct: 100 },
-    { name: "Invoice PDF service", sub: "WIN-132 · shipped", s: 1.2, e: 1.9, kind: "done", pct: 100 },
-    { phase: "Phase 2 — Metering & Invoicing (Beta)" },
-    { name: "Rollup pipeline", sub: "WIN-103 · in review", s: 1.7, e: 3.1, kind: "prog", pct: 80 },
-    { name: "Stripe webhook sync", sub: "WIN-105 · in progress", s: 2.1, e: 3.3, kind: "prog", pct: 55 },
-    { name: "Idempotency keys", sub: "WIN-116 · in progress", s: 2.4, e: 3.2, kind: "prog", pct: 45 },
-    { name: "Tax engine", sub: "WIN-108 · blocked", s: 2.8, e: 3.6, kind: "future", pct: 5 },
-    { phase: "Phase 3 — Dunning & Tax (GA)" },
-    { name: "Proration", sub: "WIN-120 · planned", s: 3.4, e: 4.2, kind: "future", pct: 0 },
-    { name: "Dunning workflow", sub: "planned", s: 4.0, e: 5.2, kind: "future", pct: 0 },
-    { name: "GA hardening", sub: "planned", s: 4.8, e: 5.7, kind: "future", pct: 0 }
-  ];
+  const MONTHS = (D.burn.milestones||[]).map(m=>{ const x=String(m.name).split("·"); return (x[0]||m.name).trim(); });
+  const TODAY = Math.max(0,(D.burn.milestones||[]).findIndex(m=>!m.done)) + 0.5;
+  const ROAD = (D.burn.milestones||[]).map((m,i)=>({ name: String(m.name).replace(/^M\d+\s*·\s*/,""), sub: m.sub || (m.pct + "%"), s: i + 0.06, e: i + 0.94, kind: m.done ? "done" : (m.pct > 0 ? "prog" : "future"), pct: m.pct }));
   V.roadmap = () => {
     const W = 100 / MONTHS.length;
     const months = MONTHS.map((m,i)=>`<div class="m" style="border-left:${i?'1px solid var(--border)':'none'}">${m}</div>`).join("");
