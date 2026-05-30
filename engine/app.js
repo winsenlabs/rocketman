@@ -617,7 +617,8 @@
     { id:"decisions", label:"Decisions", icon:"decision", count:D.adrs.length },
     { id:"debug", label:"Debug", icon:"debug", count:D.debug.length, dot:"var(--s-bug)" },
     { id:"docs", label:"Docs", icon:"docs" },
-    { id:"activity", label:"Activity", icon:"activity" }
+    { id:"activity", label:"Activity", icon:"activity" },
+    { id:"fleet", label:"Fleet", icon:"blocks", count:((D.comms&&D.comms.agents)||[]).length||undefined }
   ];
   let current = "dashboard";
   function go(view) {
