@@ -15,6 +15,7 @@ import { readFileSync, writeFileSync, existsSync, readdirSync, cpSync, mkdirSync
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { build, loadData, validate } from '../engine/build.mjs';
+import { serve } from './serve.mjs';
 
 const PKG = join(dirname(fileURLToPath(import.meta.url)), '..');
 const C = { dim: '\x1b[2m', red: '\x1b[31m', grn: '\x1b[32m', yel: '\x1b[33m', cyn: '\x1b[36m', b: '\x1b[1m', rst: '\x1b[0m' };
@@ -186,6 +187,7 @@ switch (cmd) {
   case 'check': doBuild(dirArg(), { check: true }); break;
   case 'new': doNew(process.cwd(), rest[0], rest.slice(1).join(' ').replace(/^["']|["']$/g, '')); break;
   case 'doctor': doDoctor(dirArg()); break;
+  case 'serve': { const { flags } = parseArgs(rest); serve(dirArg(), flags.port ? parseInt(flags.port, 10) : 4317); break; }
   case 'relay': doRelay(rest); break;
   default:
     log(`${C.b}rocketman${C.rst} — idea to production, managed in the repo\n`);
@@ -194,6 +196,7 @@ switch (cmd) {
     log('  rocketman check [dir]           fail if the committed hub is stale (CI)');
     log('  rocketman new <type> "Title"    create a task | adr | debug');
     log('  rocketman doctor [dir]          validate data + cross-references');
+    log('  rocketman serve [dir] [--port]  serve an editable hub on localhost (comments, docs, moves)');
     log('  rocketman relay <sub>           agent bus: register · send · inbox · poll · accept · agents');
     if (cmd && !['help', '--help', '-h'].includes(cmd)) process.exit(1);
 }
