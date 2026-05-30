@@ -1,0 +1,54 @@
+name: Deploy hub to GitHub Pages
+
+# Publishes the live Rocketman hub (PM/index.html) as the site root, so anyone
+# can see Rocketman managing its own development at the Pages URL. Rebuilds the
+# hub from data first, so the deployed page is always current.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deploy at a time; let an in-progress run finish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Rebuild the hub from data
+        run: node engine/build.mjs
+
+      - name: Assemble the site (hub as index.html)
+        run: |
+          mkdir -p _site
+          cp PM/index.html _site/index.html
+          # 404 falls back to the hub too (it's a single-page app)
+          cp PM/index.html _site/404.html
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
