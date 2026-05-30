@@ -200,6 +200,7 @@ export function render(D, { css, app }) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="generator" content="Rocketman by Winsen Labs"/>
 <title>${title}</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,${Buffer.from(THUMB).toString('base64')}"/>
 <template id="__bundler_thumbnail">${THUMB}</template>
 <style>
 ${css}

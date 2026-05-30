@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Favicon** — every built hub now embeds the Rocketman rocket as an SVG-data-URI favicon, so
+  the browser tab shows the logo (no external file, stays single-file/offline).
+
+### Fixed
+- **`npx rocketman init` reliability** — `bin/rocketman.mjs` is now marked executable, and the
+  packaged tarball was verified end-to-end (`npm pack` + a fresh-dir init): it scaffolds
+  `PM/` + `.claude/` (skills, hooks, settings) + starter docs/files and builds the hub. Re-running
+  `init` safely refuses with "PM/ already exists" unless `--force`.
+- Removed four dead `engine/data-*.json` demo files that were being included in the published
+  package (the engine reads `PM/data/`, never `engine/data-*`).
+
+### Added (docs)
 - **Markdown docs** — drop `.md` files in `PM/docs/` and they render in the hub's **Docs** view.
   Folders become the nested tree (numeric prefixes order them; names are title-cased). A
   zero-dependency Markdown converter (`engine/md.mjs`) handles headings, lists, tables, code
