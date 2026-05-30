@@ -12,3 +12,4 @@ Thumbs.db
 # Local scratch
 *.local
 /tmp/
+.gstack/

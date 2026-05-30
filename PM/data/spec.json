@@ -23,7 +23,7 @@
       { "id": "problem", "n": "02", "kicker": "Problem", "title": "Project context is scattered and stale",
         "blocks": [
           { "type": "p", "html": "Teams hit three failure modes. <b>Unread:</b> specs rot in markdown nobody opens. <b>Disconnected:</b> the board lives in a SaaS tool, a context-switch away from the code. <b>Amnesiac:</b> every new agent session re-derives the same context, and decisions and debugging trails vanish into chat history." },
-          { "type": "p", "html": "Rocketman addresses all three by putting the whole project — [[requirements|spec]], board, [[adr-05|decisions]], and [[bug-01|debugging trails]] — in the repo as structured data, rendered into a hub that's actually pleasant to read." }
+          { "type": "p", "html": "Rocketman addresses all three by putting the whole project — [[spec-requirements|spec]], board, [[adr-05|decisions]], and [[bug-01|debugging trails]] — in the repo as structured data, rendered into a hub that's actually pleasant to read." }
         ]
       },
       { "id": "personas", "n": "03", "kicker": "Personas & Jobs-to-be-Done", "title": "Who Rocketman serves",

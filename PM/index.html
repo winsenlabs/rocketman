@@ -818,6 +818,7 @@ table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-
 <style>.hljs{color:var(--ink-2)} [data-theme="dark"] .hljs{color:#c9d1d9}</style>
 </head>
 <body>
+<div id="app"></div>
 <script id="pm-data" type="application/json">
 {
  "project": {
@@ -1531,7 +1532,7 @@ table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-
      },
      {
       "type": "p",
-      "html": "Rocketman addresses all three by putting the whole project — [[requirements|spec]], board, [[adr-05|decisions]], and [[bug-01|debugging trails]] — in the repo as structured data, rendered into a hub that's actually pleasant to read."
+      "html": "Rocketman addresses all three by putting the whole project — [[spec-requirements|spec]], board, [[adr-05|decisions]], and [[bug-01|debugging trails]] — in the repo as structured data, rendered into a hub that's actually pleasant to read."
      }
     ]
    },
@@ -2430,7 +2431,7 @@ table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-
      "who": "tejas",
      "icon": "task",
      "line": "created the project from the locked spec",
-     "detail": "One version, final · [[vision|Spec]]"
+     "detail": "One version, final · [[spec-vision|Spec]]"
     }
    ]
   }
@@ -2481,6 +2482,7 @@ table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-
  }
 }
 </script>
+<script>window.addEventListener('error',function(e){try{document.documentElement.setAttribute('data-rm-error',((e.error&&e.error.stack)||e.message||'error'));}catch(_){}},true);</script>
 <script>
 /* ════════════════════════════════════════════════════════════════
    Winsen Project Hub — vanilla render engine. Read-first, zero deps.

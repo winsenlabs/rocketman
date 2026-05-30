@@ -205,7 +205,7 @@
     ]},
     { "day": "Earlier", "events": [
       { "when": "2d ago", "who": "opus", "icon": "commit", "line": "fixed <b>BUG-2</b> — script-close in the island", "detail": "Escape the markup in the data island · [[bug-02|BUG-2]]" },
-      { "when": "3d ago", "who": "tejas", "icon": "task", "line": "created the project from the locked spec", "detail": "One version, final · [[vision|Spec]]" }
+      { "when": "3d ago", "who": "tejas", "icon": "task", "line": "created the project from the locked spec", "detail": "One version, final · [[spec-vision|Spec]]" }
     ]}
   ]
 }

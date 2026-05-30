@@ -119,9 +119,11 @@ ${css}
 <style>${HLJS}</style>
 </head>
 <body>
+<div id="app"></div>
 <script id="pm-data" type="application/json">
 ${island}
 </script>
+<script>window.addEventListener('error',function(e){try{document.documentElement.setAttribute('data-rm-error',((e.error&&e.error.stack)||e.message||'error'));}catch(_){}},true);</script>
 <script>
 ${app}
 </script>

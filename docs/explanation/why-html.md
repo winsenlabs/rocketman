@@ -32,6 +32,5 @@ shape. An in-repo HTML hub is:
 - **Offline and portable** — one double-clickable file that outlives any vendor.
 
 None of this means abandoning the tools your team likes. Rocketman is **local-first, sync-optional**:
-the [`/rm-mirror`](../../.claude/skills/rm-mirror/SKILL.md) skill pushes the hub into Linear,
-FanDesk, Cheetah, or Winsen on demand. The repo stays the source of truth; the SaaS board becomes a
+the [`/rm-mirror`](../../.claude/skills/rm-mirror/SKILL.md) skill pushes the hub into Linear, Jira, Asana or Winsen on demand. The repo stays the source of truth; the SaaS board becomes a
 read-out.
