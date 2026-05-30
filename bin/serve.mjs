@@ -56,7 +56,11 @@ export function serve(root, port = 4317) {
       const url = new URL(req.url, 'http://localhost');
       if (req.method === 'GET' && (url.pathname === '/' || url.pathname === '/PM/index.html' || url.pathname === '/index.html')) {
         if (!existsSync(outFile)) rebuild();
-        return send(res, 200, readFileSync(outFile, 'utf8'), 'text/html; charset=utf-8');
+        // Mark the page as served by the edit server, so RM_EDIT turns on (and
+        // ONLY here — file:// and static hosts stay read-only).
+        const served = readFileSync(outFile, 'utf8')
+          .replace('<body>', '<body>\n<script>window.__ROCKETMAN_SERVE__=true;</script>');
+        return send(res, 200, served, 'text/html; charset=utf-8');
       }
       if (req.method === 'GET' && url.pathname === '/api/ping') {
         const core = readJSON('core');

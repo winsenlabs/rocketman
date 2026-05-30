@@ -4,7 +4,11 @@
 (function () {
   "use strict";
   const D = JSON.parse(document.getElementById("pm-data").textContent);
-  const RM_EDIT = (location.protocol === "http:" || location.protocol === "https:");
+  // Edit mode is ON only when the local edit server (rocketman serve) is behind
+  // the page — it injects window.__ROCKETMAN_SERVE__. A plain file:// open or a
+  // static host (GitHub Pages, etc.) has no write backend, so the hub stays
+  // read-only there (no composer, no doomed POSTs).
+  const RM_EDIT = (typeof window !== "undefined" && window.__ROCKETMAN_SERVE__ === true);
   const RM_ME = (Object.keys(D.people||{}).find(k => D.people[k].kind === "human")) || "you";
   async function rmApi(path, body) {
     const r = await fetch(path, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
@@ -177,7 +181,7 @@
           </div>
           <div class="rail-card">
             <h3>Recent activity <span class="c">live</span></h3>
-            ${D.activity[0].events.slice(0,5).map(e=>`<div class="feed-row"><span>${actorMark(e.who,"sm")}</span><div class="feed-body"><div class="feed-line">${links(e.line)}</div><div class="feed-when">${e.when}</div></div></div>`).join("")}
+            ${((D.activity[0]||{events:[]}).events||[]).slice(0,5).map(e=>`<div class="feed-row"><span>${actorMark(e.who,"sm")}</span><div class="feed-body"><div class="feed-line">${links(e.line)}</div><div class="feed-when">${e.when}</div></div></div>`).join("")}
             <div style="margin-top:10px"><button class="btn ghost tiny" data-go="activity">View all activity ${icon("arrow")}</button></div>
           </div>
         </div>
@@ -227,7 +231,7 @@
     const aging = t.col !== "done" && t.age >= 4;
     const isBug = t.labels.includes("security") && t.col === "blocked";
     return `<div class="kcard ${ageClass(t.col==='done'?0:t.age)} ${t.col==='blocked'&&false?'bug-card':''}" data-link="${t.id}">
-      <div class="kc-top"><span class="kc-id">${t.ref}</span><span class="kc-spacer"></span>${P[t.owner].kind==='agent'?agentChip(t.owner):avatar(t.owner,"sm")}</div>
+      <div class="kc-top"><span class="kc-id">${t.ref}</span><span class="kc-spacer"></span>${P[t.owner]?(P[t.owner].kind==='agent'?agentChip(t.owner):avatar(t.owner,"sm")):'<span class="av sm unassigned" title="Unassigned">·</span>'}</div>
       <div class="kc-summary">${links(t.summary)}</div>
       ${t.blockedReason?`<div class="blocked-reason">${icon("block")}${t.blockedReason}</div>`:""}
       ${t.labels.length?`<div class="kc-labels">${t.labels.map(labelChip).join("")}</div>`:""}
@@ -330,8 +334,13 @@
   };
 
   /* ── Debug (signature view) ── */
-  let openInv = D.debug[0].id;
+  let openInv = (D.debug[0] || {}).id;
   V.debug = () => {
+    if (!D.debug.length) return `
+    <div class="view view-wide">
+      <div class="ph"><div><h1>Debug log</h1><p class="sub">Investigations as timelines · Symptom → Hypotheses → Root cause → Fix → Guard</p></div></div>
+      <div class="empty"><div class="e-mark">${icon("beaker")}</div>No investigations yet. Log one with <code>/rm-debug</code> — it records the symptom, hypotheses, root cause, fix, and a regression guard.</div>
+    </div>`;
     const inv = D.debug.find(d => d.id === openInv) || D.debug[0];
     const tabs = D.debug.map(d => `<button class="debug-tab ${d.id===inv.id?'active':''}" data-inv="${d.id}">
       <div class="dt-id">${d.ref} <span class="dt-state ${d.state}">${d.state}</span></div>
@@ -362,7 +371,7 @@
           <div class="ib-main">
             <div class="ib-id">${inv.ref} <span class="dt-state ${inv.state}">${inv.state}</span></div>
             <h2>${inv.title}</h2>
-            <div class="ib-sub">${links(inv.summary)} <span class="ref-chip" data-link="${inv.task}"><span class="tt">task</span> ${REG[inv.task].label}</span></div>
+            <div class="ib-sub">${links(inv.summary)} ${inv.task && REG[inv.task] ? `${inv.task && REG[inv.task] ? `<span class="ref-chip" data-link="${inv.task}"><span class="tt">task</span> ${REG[inv.task].label}</span>` : ""}` : ""}</div>
           </div>
           <div class="inv-stat"><div class="v">${inv.elapsed}</div><div class="k">to resolve</div></div>
         </div>
@@ -409,6 +418,80 @@
       </div>
     </div>`;
   };
+  /* ── Dependencies (what's waiting, and what needs a human) ── */
+  V.depends = () => {
+    const tasks = D.tasks || [];
+    const adrs = D.adrs || [];
+    const debug = D.debug || [];
+    const comms = D.comms || { agents: [], messages: [], acks: [] };
+    const isHuman = (id) => !!(P[id] && P[id].kind === "human");
+    const byId = {}; tasks.forEach(t => byId[t.id] = t);
+    const isDone = (id) => byId[id] && byId[id].col === "done";
+
+    // 1) Human-gated — flagged. These block the autopilot until a person acts.
+    const gated = [];
+    tasks.filter(t => t.col === "blocked").forEach(t => gated.push({
+      ref: t.ref, id: t.id, title: t.summary || t.title,
+      reason: t.blockedReason || "Blocked", who: t.owner, tag: "blocked"
+    }));
+    adrs.filter(a => a.status === "proposed").forEach(a => gated.push({
+      ref: a.ref, id: a.id, title: a.title,
+      reason: "Awaiting a decision", who: a.author, tag: "decision"
+    }));
+    tasks.filter(t => t.col === "review" && isHuman(t.owner)).forEach(t => gated.push({
+      ref: t.ref, id: t.id, title: t.summary || t.title,
+      reason: "In review — needs a human", who: t.owner, tag: "review"
+    }));
+    const acks = comms.acks || [];
+    (comms.messages || []).filter(m => m.kind === "handoff" && isHuman(m.to)
+      && !acks.some(a => a.msg === m.id && (a.kind === "accept" || a.kind === "complete")))
+      .forEach(m => gated.push({
+        ref: m.task && REG[m.task] ? REG[m.task].label : "handoff", id: m.task || "",
+        title: m.subject || "Handoff", reason: "Handoff waiting for you", who: m.to, tag: "handoff"
+      }));
+
+    // 2) Work dependencies — blocked on other tasks; an agent can proceed once they land.
+    const work = [];
+    tasks.filter(t => t.col !== "done").forEach(t => {
+      const deps = (t.backlinks || []).filter(b => byId[b] && !isDone(b));
+      if (deps.length) work.push({ ref: t.ref, id: t.id, title: t.summary || t.title, deps });
+    });
+
+    const readyCount = tasks.filter(t => (t.col === "backlog" || t.col === "todo")
+      && !(t.backlinks || []).some(b => byId[b] && !isDone(b))).length;
+
+    const gatedHtml = gated.length ? gated.map(g => `
+      <div class="dep-row gated">
+        <span class="dep-flag" title="Needs a human">${icon("alert")}</span>
+        <div class="dep-body">
+          <div class="dep-title" ${g.id ? `data-link="${g.id}"` : ""}>${g.ref ? `<span class="dep-ref mono">${g.ref}</span> ` : ""}${links(g.title || "")}</div>
+          <div class="dep-reason">${links(g.reason)}</div>
+        </div>
+        <div class="dep-who">${g.who && P[g.who] ? `${actorMark(g.who, "sm")} <span class="dep-who-name">${P[g.who].name}</span>` : `<span class="dep-tag ${g.tag}">${g.tag}</span>`}</div>
+      </div>`).join("") : `<div class="empty"><div class="e-mark">${icon("check")}</div>Nothing is waiting on a human right now. The fleet can run.</div>`;
+
+    const workHtml = work.length ? work.map(w => `
+      <div class="dep-row">
+        <div class="dep-body">
+          <div class="dep-title" data-link="${w.id}"><span class="dep-ref mono">${w.ref}</span> ${links(w.title || "")}</div>
+          <div class="dep-deps">waiting on ${w.deps.map(d => `<span class="ref-chip" data-link="${d}">${REG[d] ? REG[d].label : d}</span>`).join(" ")}</div>
+        </div>
+      </div>`).join("") : `<div class="empty-sm">No task is blocked on unfinished work.</div>`;
+
+    return `
+    <div class="view view-wide">
+      <div class="ph"><div><h1>Dependencies</h1><p class="sub">What's waiting — and what needs a human before the fleet can move</p></div>
+        <span class="spacer"></span>
+        <div class="dep-counts mono"><span class="flagged">${gated.length} need a human</span><span>${work.length} blocked on work</span><span>${readyCount} ready</span></div>
+      </div>
+      <div class="sec-head"><h2>${icon("alert","sh-ic")} Waiting on a human</h2><span class="desc">flagged — these gate the autopilot</span></div>
+      <div class="dep-list">${gatedHtml}</div>
+      <div class="sec-head" style="margin-top:22px"><h2>Blocked on other work</h2><span class="desc">an agent can pick these up once their dependencies land</span></div>
+      <div class="dep-list">${workHtml}</div>
+    </div>`;
+  };
+
+
 
   /* ── Fleet (multi-agent relay: presence + conversations + handoffs) ── */
   V.fleet = () => {
@@ -618,6 +701,7 @@
     { id:"debug", label:"Debug", icon:"debug", count:D.debug.length, dot:"var(--s-bug)" },
     { id:"docs", label:"Docs", icon:"docs" },
     { id:"activity", label:"Activity", icon:"activity" },
+    { id:"depends", label:"Dependencies", icon:"link", count: (((D.tasks||[]).filter(t=>t.col==="blocked").length)+((D.adrs||[]).filter(a=>a.status==="proposed").length))||undefined },
     { id:"fleet", label:"Fleet", icon:"blocks", count:((D.comms&&D.comms.agents)||[]).length||undefined }
   ];
   let current = "dashboard";
@@ -722,7 +806,7 @@
       else if (e.key==="ArrowUp"){e.preventDefault();cmdSel=Math.max(cmdSel-1,0);renderCmd();}
       else if (e.key==="Enter"){e.preventDefault();if(cmdResults[cmdSel])execCmd(cmdResults[cmdSel].id);}
     } else if (!/input|textarea/i.test((e.target.tagName||""))) {
-      const map={d:"dashboard",b:"board",s:"spec",r:"roadmap",c:"decisions",g:"debug",o:"docs",a:"activity",f:"fleet"};
+      const map={d:"dashboard",b:"board",s:"spec",r:"roadmap",c:"decisions",g:"debug",o:"docs",a:"activity",f:"fleet",y:"depends"};
       if(map[e.key.toLowerCase()] && !e.metaKey && !e.ctrlKey) go(map[e.key.toLowerCase()]);
     }
   });
