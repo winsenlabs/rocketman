@@ -1,0 +1,49 @@
+{
+  "name": "rocketman",
+  "version": "0.1.0",
+  "description": "Idea to production, managed in the repo. An in-repo HTML project hub + a Claude skill track for AI coding agents.",
+  "type": "module",
+  "bin": {
+    "rocketman": "bin/rocketman.mjs"
+  },
+  "scripts": {
+    "build": "node engine/build.mjs",
+    "check": "node engine/build.mjs --check",
+    "doctor": "node bin/rocketman.mjs doctor"
+  },
+  "files": [
+    "engine",
+    "templates",
+    "bin",
+    ".claude",
+    "docs",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "keywords": [
+    "project-management",
+    "product-management",
+    "prd",
+    "kanban",
+    "ai-agents",
+    "claude",
+    "claude-code",
+    "local-first",
+    "html",
+    "single-file"
+  ],
+  "author": "Winsen Labs",
+  "license": "MIT",
+  "homepage": "https://github.com/winsenlabs/rocketman#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/winsenlabs/rocketman.git"
+  },
+  "bugs": {
+    "url": "https://github.com/winsenlabs/rocketman/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

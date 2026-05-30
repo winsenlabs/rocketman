@@ -1,0 +1,25 @@
+name: PM hub
+
+# Rebuild the hub and fail the PR if it's stale or any cross-reference is broken.
+# Because PM/ is committed alongside the code, project state can never silently drift.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate data + references (doctor)
+        run: node bin/rocketman.mjs doctor
+
+      - name: Verify PM/index.html is up to date
+        run: node engine/build.mjs --check

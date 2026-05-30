@@ -1,0 +1,11 @@
+{
+  "id": "m-h1a2b3",
+  "ts": "2026-05-30T09:05:00Z",
+  "from": "engine",
+  "to": "skills",
+  "kind": "handoff",
+  "subject": "Build pipeline is ready — wire /rm-verify to it",
+  "body": "build.mjs now exposes build()/validate()/loadComms() and the CLI has `rocketman check` + `rocketman doctor`. RM-8's /rm-verify can call those directly as its gate. Doctor output format is {issues:[]}. Over to you for the skill wiring.",
+  "task": "rm-08",
+  "status": "open"
+}

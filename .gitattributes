@@ -1,0 +1,6 @@
+# The hub is a generated artifact — collapse it in diffs and exclude from language stats.
+PM/index.html linguist-generated=true -diff
+
+# The engine renderer is a vendored prototype; don't let it skew language stats.
+engine/app.js linguist-vendored=true
+engine/hub.css linguist-vendored=true

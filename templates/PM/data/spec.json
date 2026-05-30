@@ -1,0 +1,32 @@
+{
+  "spec": {
+    "title": "My Project — Product Spec",
+    "lede": "Replace this with your product's PRD. Run /rm-prd to generate it from an idea brief, or edit PM/data/spec.json directly.",
+    "nav": [
+      { "id": "vision", "label": "Vision", "group": "Why" },
+      { "id": "nongoals", "label": "Non-Goals", "group": "Outcomes" }
+    ],
+    "sections": [
+      { "id": "vision", "n": "01", "kicker": "Vision", "title": "What we're building and why",
+        "blocks": [
+          { "type": "p", "html": "Describe the product in a paragraph: who it's for, the pain it removes, and the north star. Then expand with personas, requirements, and metrics — <code>/rm-prd</code> can do this for you." }
+        ]
+      },
+      { "id": "nongoals", "n": "02", "kicker": "Non-Goals", "title": "What this is deliberately not",
+        "blocks": [
+          { "type": "p", "html": "List what you are explicitly <b>not</b> doing in this version. The most-skipped section is the most valuable one." }
+        ]
+      }
+    ]
+  },
+  "docs": {
+    "groups": [
+      { "id": "tutorial", "q": "T", "name": "Tutorial", "sub": "Learn by doing",
+        "items": [ { "id": "doc-t1", "title": "Editing the hub", "active": true } ] }
+    ],
+    "content": {
+      "doc-t1": { "kind": "Tutorial", "title": "Editing the hub", "meta": "~1 min",
+        "html": "<p>Edit the four files in <code>PM/data/</code>, then run <code>rocketman build</code>. Never edit <code>PM/index.html</code> directly — it's generated. See <code>PM/CLAUDE.md</code> for the conventions.</p>" }
+    }
+  }
+}

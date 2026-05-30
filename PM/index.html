@@ -1,0 +1,3110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="generator" content="Rocketman by Winsen Labs"/>
+<title>Rocketman — Project Hub</title>
+<template id="__bundler_thumbnail"><svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" rx="22" fill="#2b3a8c"/><path d="M50 18c10 6 15 18 15 30 0 6-2 11-5 15l-10-6-10 6c-3-4-5-9-5-15 0-12 5-24 15-30z" fill="#fff"/><circle cx="50" cy="40" r="5" fill="#2b3a8c"/><path d="M40 64l-6 12 10-4M60 64l6 12-10-4" fill="#9fb4ff"/></svg></template>
+<style>
+/* ════════════════════════════════════════════════════════════════
+   Winsen — Project Hub.  "Calm Command Center".
+   Tokens remixed from the Winsen Bridge design system:
+   cool-neutral oklch grays, single blue accent, semantic status colors.
+   System fonts only. Zero external deps.
+   ════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Neutrals — cool, near-white / near-black (from Winsen) */
+  --bg:        oklch(99% 0.004 250);
+  --bg-2:      oklch(97.6% 0.005 250);
+  --bg-3:      oklch(95.4% 0.006 250);
+  --surface:   oklch(100% 0 0);
+  --surface-2: oklch(98.6% 0.004 250);
+  --border:    oklch(91% 0.008 250);
+  --border-2:  oklch(85.5% 0.011 250);
+  --ink:       oklch(21% 0.016 255);
+  --ink-2:     oklch(38% 0.013 255);
+  --ink-3:     oklch(55% 0.012 255);
+  --ink-4:     oklch(70% 0.010 250);
+
+  /* Accent — single blue (Winsen indigo nudged to a true blue) */
+  --accent-h: 252;
+  --accent:        oklch(52% 0.17 var(--accent-h));
+  --accent-2:      oklch(62% 0.15 var(--accent-h));
+  --accent-soft:   oklch(96% 0.035 var(--accent-h));
+  --accent-soft-2: oklch(91% 0.06 var(--accent-h));
+  --accent-ring:   oklch(52% 0.17 var(--accent-h) / 0.30);
+
+  /* Status semantics — gray backlog · blue progress · amber review/blocked · green done · red bug */
+  --s-backlog:  var(--ink-4);
+  --s-backlog-soft: var(--bg-3);
+  --s-progress: var(--accent);
+  --s-progress-soft: var(--accent-soft);
+  --s-review:   oklch(68% 0.15 70);
+  --s-review-soft: oklch(96% 0.04 70);
+  --s-done:     oklch(57% 0.13 155);
+  --s-done-soft: oklch(96% 0.035 155);
+  --s-bug:      oklch(57% 0.20 25);
+  --s-bug-soft: oklch(96% 0.03 25);
+
+  /* Type — system stack only */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Menlo", "Cascadia Code", "Roboto Mono", monospace;
+
+  /* Dense / pro-tool spacing */
+  --pad-card: 14px;
+  --pad-row: 9px;
+  --gap: 12px;
+
+  --radius: 8px;
+  --radius-sm: 6px;
+  --radius-lg: 12px;
+
+  --drawer-shadow: -24px 0 60px -20px oklch(20% 0.03 255 / 0.28);
+  --pop-shadow: 0 16px 48px -12px oklch(20% 0.03 255 / 0.32);
+
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --bg:        oklch(16% 0.012 258);
+  --bg-2:      oklch(18.5% 0.014 258);
+  --bg-3:      oklch(22% 0.015 258);
+  --surface:   oklch(20% 0.014 258);
+  --surface-2: oklch(23% 0.015 258);
+  --border:    oklch(28% 0.014 258);
+  --border-2:  oklch(35% 0.015 258);
+  --ink:       oklch(96% 0.005 250);
+  --ink-2:     oklch(81% 0.009 250);
+  --ink-3:     oklch(63% 0.012 250);
+  --ink-4:     oklch(47% 0.012 255);
+
+  --accent:        oklch(66% 0.15 var(--accent-h));
+  --accent-2:      oklch(72% 0.13 var(--accent-h));
+  --accent-soft:   oklch(30% 0.06 var(--accent-h));
+  --accent-soft-2: oklch(36% 0.08 var(--accent-h));
+
+  --s-progress-soft: oklch(30% 0.06 var(--accent-h));
+  --s-review:   oklch(74% 0.13 75);
+  --s-review-soft: oklch(30% 0.05 70);
+  --s-done:     oklch(68% 0.13 158);
+  --s-done-soft: oklch(29% 0.05 155);
+  --s-bug:      oklch(67% 0.17 28);
+  --s-bug-soft: oklch(30% 0.06 25);
+  --s-backlog-soft: oklch(26% 0.012 258);
+
+  --drawer-shadow: -24px 0 70px -18px oklch(0% 0 0 / 0.55);
+  --pop-shadow: 0 18px 54px -10px oklch(0% 0 0 / 0.6);
+
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow: hidden;
+}
+.mono, .num { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+button { font: inherit; color: inherit; cursor: pointer; background: none; border: none; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--accent-soft-2); }
+
+/* scrollbars */
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 999px; border: 3px solid transparent; background-clip: padding-box; }
+*::-webkit-scrollbar-thumb:hover { background: var(--ink-4); background-clip: padding-box; }
+
+/* ─────────────────────────────  Shell  ───────────────────────────── */
+.app { display: grid; grid-template-columns: 232px minmax(0,1fr); height: 100vh; }
+
+.sidebar {
+  background: var(--bg-2);
+  border-right: 1px solid var(--border);
+  padding: 14px 10px 10px;
+  display: flex; flex-direction: column; gap: 2px;
+  height: 100vh; overflow-y: auto;
+}
+.sb-brand { display: flex; align-items: center; gap: 9px; padding: 4px 8px 12px; }
+.sb-mark {
+  width: 26px; height: 26px; border-radius: 7px; flex: none;
+  background: var(--accent); display: grid; place-items: center;
+  color: white; position: relative;
+}
+.sb-mark svg { width: 15px; height: 15px; }
+.sb-brand-name { font-weight: 600; letter-spacing: -0.01em; font-size: 13.5px; line-height: 1.1; }
+.sb-brand-sub { font-size: 10.5px; color: var(--ink-3); font-family: var(--font-mono); letter-spacing: 0.02em; }
+
+.sb-group { padding: 7px 0 1px; }
+.sb-group-label {
+  font-family: var(--font-mono); font-size: 9.5px; letter-spacing: 0.09em;
+  text-transform: uppercase; color: var(--ink-4); padding: 4px 10px 5px;
+}
+.sb-item {
+  display: flex; align-items: center; gap: 9px; padding: 6px 10px;
+  border-radius: var(--radius-sm); color: var(--ink-2); cursor: pointer;
+  font-size: 13px; position: relative; width: 100%; text-align: left;
+}
+.sb-item:hover { background: var(--bg-3); color: var(--ink); }
+.sb-item.active {
+  background: var(--surface); color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--border); font-weight: 500;
+}
+.sb-item.active::before {
+  content: ""; position: absolute; left: -10px; top: 7px; bottom: 7px; width: 2.5px;
+  background: var(--accent); border-radius: 999px;
+}
+.sb-icon { width: 16px; height: 16px; color: var(--ink-3); flex: none; }
+.sb-item.active .sb-icon { color: var(--accent); }
+.sb-name { flex: 1; }
+.sb-count { font-family: var(--font-mono); font-size: 10px; color: var(--ink-4); font-variant-numeric: tabular-nums; }
+.sb-dot { width: 6px; height: 6px; border-radius: 50%; flex: none; }
+
+.sb-foot {
+  margin-top: auto; padding: 10px 8px 4px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 9px;
+}
+.sb-foot-status {
+  font-size: 10.5px; color: var(--ink-3); font-family: var(--font-mono);
+  display: flex; align-items: center; gap: 6px;
+}
+.sb-foot-status .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--s-done); }
+
+/* ─────────────────────────────  Content frame  ───────────────────────────── */
+.content { display: flex; flex-direction: column; min-width: 0; height: 100vh; overflow: hidden; }
+
+.topbar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 22px; border-bottom: 1px solid var(--border);
+  background: var(--bg); flex: none;
+}
+.tb-crumb { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+.tb-proj { font-weight: 600; font-size: 13px; letter-spacing: -0.01em; }
+.tb-view { font-size: 12px; color: var(--ink-3); font-family: var(--font-mono); }
+.tb-search {
+  flex: 0 1 320px; min-width: 200px; display: flex; align-items: center; gap: 8px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 6px 10px; color: var(--ink-3); font-size: 12.5px; cursor: text; white-space: nowrap; overflow: hidden;
+}
+.tb-search > span:first-of-type { overflow: hidden; text-overflow: ellipsis; }
+.tb-search:hover { border-color: var(--border-2); }
+.tb-search svg { width: 14px; height: 14px; flex: none; }
+.tb-search .kbd { margin-left: auto; }
+.tb-spacer { flex: 1; }
+.tb-legend {
+  display: flex; align-items: center; gap: 10px; font-size: 11px; color: var(--ink-3);
+  padding-right: 4px; border-right: 1px solid var(--border); margin-right: 2px;
+}
+.tb-legend .lg { display: flex; align-items: center; gap: 5px; font-family: var(--font-mono); font-size: 10.5px; }
+.tb-sync {
+  font-family: var(--font-mono); font-size: 11px; color: var(--ink-3);
+  display: flex; align-items: center; gap: 6px; white-space: nowrap;
+}
+.tb-sync .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--s-done); }
+.kbd {
+  font-family: var(--font-mono); font-size: 10px; background: var(--bg-3); color: var(--ink-3);
+  padding: 1.5px 5px; border-radius: 4px; border: 1px solid var(--border); letter-spacing: 0.02em;
+}
+
+.theme-toggle { display: flex; gap: 3px; background: var(--bg-3); border-radius: 999px; padding: 3px; flex: none; }
+.theme-toggle button {
+  width: 26px; height: 24px; border-radius: 999px; color: var(--ink-3);
+  display: grid; place-items: center;
+}
+.theme-toggle button.active { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px oklch(0% 0 0 / 0.1); }
+.theme-toggle svg { width: 13px; height: 13px; }
+
+.scroll { flex: 1; overflow-y: auto; min-height: 0; }
+.view { padding: 22px 26px 60px; max-width: 1280px; }
+.view-wide { max-width: none; }
+
+/* page heads */
+.ph { margin-bottom: 18px; display: flex; align-items: flex-end; gap: 14px; }
+.ph h1 { font-size: 19px; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 2px; line-height: 1.15; }
+.ph .sub { font-size: 12.5px; color: var(--ink-3); margin: 0; }
+.ph .spacer { flex: 1; }
+.count-badge {
+  font-family: var(--font-mono); font-size: 11px; background: var(--bg-3); color: var(--ink-3);
+  padding: 2px 8px; border-radius: 999px; vertical-align: middle; margin-left: 8px; font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─────────────────────────────  Primitives  ───────────────────────────── */
+.status-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--font-mono); font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 2px 8px; border-radius: 999px; white-space: nowrap;
+}
+.status-pill .dot { width: 6px; height: 6px; border-radius: 50%; }
+.st-backlog  { background: var(--s-backlog-soft); color: var(--ink-3); }
+.st-backlog .dot  { background: var(--s-backlog); }
+.st-progress { background: var(--s-progress-soft); color: var(--accent); }
+.st-progress .dot { background: var(--s-progress); }
+.st-review   { background: var(--s-review-soft); color: var(--s-review); }
+.st-review .dot   { background: var(--s-review); }
+.st-blocked  { background: var(--s-review-soft); color: var(--s-review); }
+.st-blocked .dot  { background: var(--s-review); }
+.st-done     { background: var(--s-done-soft); color: var(--s-done); }
+.st-done .dot     { background: var(--s-done); }
+.st-bug      { background: var(--s-bug-soft); color: var(--s-bug); }
+.st-bug .dot      { background: var(--s-bug); }
+
+.label-chip {
+  font-family: var(--font-mono); font-size: 10px; padding: 1.5px 7px; border-radius: 4px;
+  background: var(--bg-3); color: var(--ink-3); letter-spacing: 0.01em; white-space: nowrap;
+  border: 1px solid transparent;
+}
+.label-chip.hue { background: transparent; border-color: var(--border-2); }
+.label-chip .ldot { display: inline-block; width: 6px; height: 6px; border-radius: 2px; margin-right: 5px; vertical-align: 0; }
+
+.id-chip { font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); font-variant-numeric: tabular-nums; letter-spacing: 0.01em; }
+
+.ref-chip {
+  display: inline-flex; align-items: center; gap: 5px; font-family: var(--font-mono);
+  font-size: 11px; padding: 2px 7px; border-radius: var(--radius-sm);
+  background: var(--bg-2); border: 1px solid var(--border); color: var(--ink-2);
+  cursor: pointer; white-space: nowrap; max-width: 100%;
+}
+.ref-chip:hover { border-color: var(--accent-soft-2); color: var(--accent); }
+.ref-chip svg { width: 11px; height: 11px; flex: none; color: var(--ink-4); }
+.ref-chip:hover svg { color: var(--accent); }
+.ref-chip .tt { color: var(--ink-4); }
+
+.code-chip {
+  font-family: var(--font-mono); font-size: 11px; background: var(--bg-3);
+  padding: 1.5px 6px; border-radius: 4px; color: var(--ink-2); white-space: nowrap;
+  border: 1px solid var(--border);
+}
+.code-chip b { color: var(--accent); font-weight: 600; }
+
+.pr-chip {
+  display: inline-flex; align-items: center; gap: 5px; font-family: var(--font-mono);
+  font-size: 10.5px; padding: 1.5px 7px; border-radius: 999px; white-space: nowrap;
+  border: 1px solid var(--border); background: var(--surface);
+}
+.pr-chip svg { width: 11px; height: 11px; }
+.pr-chip.open    { color: var(--s-done); border-color: color-mix(in oklch, var(--s-done) 35%, var(--border)); }
+.pr-chip.merged  { color: var(--accent); border-color: color-mix(in oklch, var(--accent) 35%, var(--border)); }
+.pr-chip.draft   { color: var(--ink-3); }
+.pr-chip.review  { color: var(--s-review); border-color: color-mix(in oklch, var(--s-review) 35%, var(--border)); }
+
+/* provenance badges */
+.prov { display: inline-flex; align-items: center; gap: 6px; }
+.av {
+  width: 22px; height: 22px; border-radius: 50%; flex: none; display: grid; place-items: center;
+  font-size: 10px; font-weight: 600; font-family: var(--font-mono); color: white;
+  background: var(--ink-3); letter-spacing: 0.01em;
+}
+.av.sm { width: 18px; height: 18px; font-size: 9px; }
+.av.lg { width: 28px; height: 28px; font-size: 11.5px; }
+.av.human { background: oklch(55% 0.09 255); border-radius: 50%; }
+.av.h-rose   { background: oklch(58% 0.13 12); }
+.av.h-teal   { background: oklch(54% 0.10 200); }
+.av.h-amber  { background: oklch(58% 0.11 60); }
+.agent-chip {
+  display: inline-flex; align-items: center; gap: 5px; font-family: var(--font-mono);
+  font-size: 10.5px; font-weight: 600; padding: 1.5px 7px 1.5px 5px; border-radius: 999px;
+  background: var(--accent-soft); color: var(--accent); letter-spacing: 0.01em; white-space: nowrap;
+}
+.spark { width: 12px; height: 12px; flex: none; }
+.agent-chip .spark { width: 12px; height: 12px; flex: none; }
+.agent-chip.opus   { background: var(--accent-soft); color: var(--accent); }
+.agent-chip.sonnet { background: var(--s-done-soft); color: var(--s-done); }
+.agent-chip.haiku  { background: var(--s-review-soft); color: var(--s-review); }
+
+.byline { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--ink-2); }
+.byline .name { font-weight: 500; }
+
+/* buttons */
+.btn {
+  border: 1px solid var(--border); background: var(--surface); padding: 5px 11px;
+  border-radius: var(--radius-sm); font-size: 12px; color: var(--ink-2); font-weight: 500;
+  white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; transition: all 0.12s;
+}
+.btn:hover { border-color: var(--border-2); color: var(--ink); }
+.btn svg { width: 13px; height: 13px; }
+.btn.tiny { padding: 3px 8px; font-size: 11px; }
+.btn.ghost { border-color: transparent; background: transparent; color: var(--ink-3); }
+.btn.ghost:hover { background: var(--bg-3); color: var(--ink); }
+.btn.accent { background: var(--accent); border-color: var(--accent); color: white; }
+.btn.icon { padding: 5px; width: 28px; height: 28px; justify-content: center; }
+
+.seg { display: inline-flex; background: var(--bg-3); border-radius: var(--radius-sm); padding: 2px; }
+.seg button { font-size: 12px; padding: 4px 11px; border-radius: 4px; color: var(--ink-3); font-weight: 500; }
+.seg button.active { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px oklch(0% 0 0 / 0.07); }
+
+.fbar { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-bottom: 16px; }
+.fchip {
+  font-size: 12px; padding: 4px 11px; border-radius: 999px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--ink-2); white-space: nowrap;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.fchip:hover { border-color: var(--border-2); color: var(--ink); }
+.fchip.active { background: var(--accent-soft); color: var(--accent); border-color: transparent; font-weight: 500; }
+.fchip .c { font-family: var(--font-mono); font-size: 10px; opacity: 0.8; font-variant-numeric: tabular-nums; }
+
+.sec-head { display: flex; align-items: baseline; gap: 10px; margin: 0 0 12px; }
+.sec-head h2 { font-size: 13px; font-weight: 600; margin: 0; letter-spacing: -0.005em; }
+.sec-head .desc { font-size: 12px; color: var(--ink-3); }
+.sec-head .spacer { flex: 1; }
+.empty {
+  border: 1px dashed var(--border-2); border-radius: var(--radius); padding: 28px;
+  text-align: center; color: var(--ink-3); font-size: 12.5px;
+}
+.empty .e-mark { width: 30px; height: 30px; margin: 0 auto 10px; color: var(--ink-4); }
+
+/* ─────────────────────────────  Dashboard  ───────────────────────────── */
+.dash { display: grid; grid-template-columns: minmax(0,1fr) 300px; gap: 18px; align-items: start; }
+@media (max-width: 1080px) { .dash { grid-template-columns: 1fr; } }
+
+.state-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 18px 20px; margin-bottom: 16px;
+}
+.state-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.state-head .tag {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase;
+  color: var(--ink-4); display: inline-flex; align-items: center; gap: 6px;
+}
+.state-text { font-size: 15.5px; line-height: 1.55; color: var(--ink); letter-spacing: -0.01em; text-wrap: pretty; }
+.state-text b { font-weight: 600; }
+.state-text .lk { color: var(--accent); cursor: pointer; border-bottom: 1px solid var(--accent-soft-2); }
+.state-text .lk:hover { border-color: var(--accent); }
+.state-foot { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 14px; padding-top: 13px; border-top: 1px solid var(--border); }
+.state-metric { display: flex; flex-direction: column; gap: 1px; }
+.state-metric .v { font-family: var(--font-mono); font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
+.state-metric .k { font-family: var(--font-mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-4); }
+
+.kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+@media (max-width: 720px) { .kpi-row { grid-template-columns: repeat(2,1fr); } }
+.kpi {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 13px 14px;
+}
+.kpi .k { font-family: var(--font-mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-4); margin-bottom: 7px; }
+.kpi .v { font-family: var(--font-mono); font-size: 23px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; line-height: 1; }
+.kpi .d { font-size: 11px; color: var(--ink-3); margin-top: 5px; }
+.kpi .d .up { color: var(--s-done); } .kpi .d .down { color: var(--s-bug); }
+
+/* health ring */
+.health-ring { display: flex; align-items: center; gap: 14px; }
+.ring { width: 64px; height: 64px; flex: none; position: relative; }
+.ring svg { transform: rotate(-90deg); }
+.ring .rt { position: absolute; inset: 0; display: grid; place-items: center; font-family: var(--font-mono); font-weight: 700; font-size: 18px; font-variant-numeric: tabular-nums; }
+
+/* burn-up */
+.burn-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; margin-bottom: 16px; }
+.burn-bar { height: 10px; border-radius: 999px; background: var(--bg-3); overflow: hidden; display: flex; margin: 12px 0 8px; }
+.burn-bar .done { background: var(--s-done); }
+.burn-bar .prog { background: var(--accent); }
+.burn-bar .rev  { background: var(--s-review); }
+.burn-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 11px; color: var(--ink-3); }
+.burn-legend .lg { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); }
+.burn-legend .lg .sw { width: 8px; height: 8px; border-radius: 2px; }
+.mstones { display: flex; gap: 6px; margin-top: 13px; }
+.mstone { flex: 1; }
+.mstone .bar { height: 4px; border-radius: 999px; background: var(--bg-3); overflow: hidden; }
+.mstone .bar > i { display: block; height: 100%; background: var(--accent); border-radius: 999px; }
+.mstone.done .bar > i { background: var(--s-done); }
+.mstone .ml { font-size: 10px; color: var(--ink-3); font-family: var(--font-mono); margin-top: 5px; display: flex; justify-content: space-between; }
+
+/* blockers */
+.blocker { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+.blocker:last-child { border-bottom: none; }
+.blocker .bmark { width: 7px; height: 7px; border-radius: 50%; margin-top: 5px; flex: none; background: var(--s-review); }
+.blocker.bug .bmark { background: var(--s-bug); }
+.blocker .bt { font-size: 12.5px; color: var(--ink); font-weight: 500; cursor: pointer; }
+.blocker .bt:hover { color: var(--accent); }
+.blocker .bs { font-size: 11.5px; color: var(--ink-3); margin-top: 1px; }
+.blocker .bw { font-family: var(--font-mono); font-size: 10px; color: var(--ink-4); margin-left: auto; white-space: nowrap; }
+
+/* dashboard rail */
+.rail-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 15px 16px; margin-bottom: 16px; }
+.rail-card h3 {
+  font-family: var(--font-mono); font-size: 10px; font-weight: 600; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--ink-3); margin: 0 0 12px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.rail-card h3 .c { color: var(--ink-4); }
+.feed-row { display: grid; grid-template-columns: 22px 1fr; gap: 9px; padding: 7px 0; }
+.feed-row + .feed-row { border-top: 1px solid var(--border); }
+.feed-body { min-width: 0; }
+.feed-line { font-size: 12px; color: var(--ink-2); line-height: 1.45; }
+.feed-line b { color: var(--ink); font-weight: 600; }
+.feed-when { font-family: var(--font-mono); font-size: 10px; color: var(--ink-4); margin-top: 2px; }
+
+/* ─────────────────────────────  Kanban Board  ───────────────────────────── */
+.board-shell { overflow-x: auto; padding-bottom: 16px; }
+.swimlane { margin-bottom: 8px; }
+.swim-head {
+  display: flex; align-items: center; gap: 8px; padding: 9px 4px 8px; position: sticky; left: 0;
+  font-size: 12px;
+}
+.swim-head .st { font-weight: 600; color: var(--ink); }
+.swim-head .ss { font-size: 11px; color: var(--ink-3); }
+.swim-head .epic-dot { width: 8px; height: 8px; border-radius: 3px; }
+.swim-head .pts { margin-left: 8px; font-family: var(--font-mono); font-size: 10px; color: var(--ink-4); }
+.kanban { display: grid; grid-auto-flow: column; grid-auto-columns: 264px; gap: 12px; align-items: start; }
+.kgrid { display: grid; grid-template-columns: repeat(var(--ncols, 5), 264px); gap: 12px; align-items: start; }
+.kheader { margin-bottom: 8px; position: sticky; top: 0; z-index: 2; background: var(--bg); }
+.kheader .kcol-head { padding: 7px 9px; background: var(--bg-2); border-radius: var(--radius); margin: 0; }
+.kcell { background: var(--bg-2); border-radius: var(--radius); padding: 9px; min-height: 52px; display: flex; flex-direction: column; gap: 7px; }
+.kcell.empty-cell { background: transparent; border: 1px dashed var(--border); }
+.kcell-empty { color: var(--ink-4); font-size: 11px; text-align: center; padding: 8px 0; font-family: var(--font-mono); }
+.kcol { background: var(--bg-2); border-radius: var(--radius); padding: 9px; min-height: 60px; }
+.kcol-head { display: flex; align-items: center; gap: 7px; padding: 3px 5px 9px; font-family: var(--font-mono); font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-3); }
+.kcol-head .cdot { width: 7px; height: 7px; border-radius: 50%; }
+.kcol-head .cnt { font-variant-numeric: tabular-nums; }
+.kcol-head .wip { margin-left: auto; font-size: 10px; color: var(--ink-4); font-variant-numeric: tabular-nums; padding: 1px 6px; border-radius: 999px; background: var(--bg-3); }
+.kcol-head .wip.over { background: var(--s-bug-soft); color: var(--s-bug); }
+.kcards { display: flex; flex-direction: column; gap: 7px; }
+
+.kcard {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm);
+  padding: 10px 11px; cursor: pointer; position: relative; transition: box-shadow 0.12s, border-color 0.12s;
+}
+.kcard:hover { box-shadow: 0 3px 10px -4px oklch(20% 0.03 255 / 0.18); border-color: var(--border-2); }
+.kcard .kc-top { display: flex; align-items: center; gap: 7px; margin-bottom: 6px; }
+.kcard .kc-id { font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-4); font-variant-numeric: tabular-nums; }
+.kcard .kc-spacer { flex: 1; }
+.kcard .kc-summary { font-size: 12.5px; color: var(--ink); font-weight: 550; line-height: 1.4; margin-bottom: 4px; letter-spacing: -0.005em; text-wrap: pretty; }
+.kcard .kc-title { font-size: 11px; color: var(--ink-3); margin-bottom: 9px; }
+.kcard .kc-meta { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.kcard .kc-meta .spacer { flex: 1; }
+.kcard .kc-labels { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 8px; }
+.kcard .pts {
+  font-family: var(--font-mono); font-size: 10px; font-weight: 600; color: var(--ink-3);
+  background: var(--bg-3); border-radius: 4px; padding: 1px 6px; font-variant-numeric: tabular-nums;
+}
+.kcard .blocked-reason {
+  display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--s-review);
+  background: var(--s-review-soft); border-radius: var(--radius-sm); padding: 5px 8px; margin-bottom: 8px;
+}
+.kcard .blocked-reason svg { width: 12px; height: 12px; flex: none; }
+.kcard.bug-card { border-left: 2.5px solid var(--s-bug); }
+/* aging treatment */
+.kcard .age { display: flex; align-items: center; gap: 5px; font-family: var(--font-mono); font-size: 10px; color: var(--ink-4); }
+.kcard .age svg { width: 11px; height: 11px; }
+.kcard.age-warm { border-color: color-mix(in oklch, var(--s-review) 30%, var(--border)); }
+.kcard.age-warm .age { color: var(--s-review); }
+.kcard.age-hot { border-color: color-mix(in oklch, var(--s-bug) 32%, var(--border)); background: color-mix(in oklch, var(--s-bug-soft) 30%, var(--surface)); }
+.kcard.age-hot .age { color: var(--s-bug); font-weight: 600; }
+.kcard .agebar { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; border-radius: 0 0 var(--radius-sm) var(--radius-sm); overflow: hidden; }
+.kcard .agebar > i { display: block; height: 100%; }
+
+/* ─────────────────────────────  Product Spec  ───────────────────────────── */
+.spec-shell { display: grid; grid-template-columns: 188px minmax(0,1fr); gap: 34px; }
+@media (max-width: 900px) { .spec-shell { grid-template-columns: 1fr; } .spec-nav { display: none; } }
+.spec-nav { position: sticky; top: 0; align-self: start; display: flex; flex-direction: column; gap: 1px; padding-top: 2px; }
+.spec-nav a { font-size: 12px; color: var(--ink-3); padding: 5px 9px; border-radius: var(--radius-sm); border-left: 2px solid transparent; }
+.spec-nav a:hover { color: var(--ink); background: var(--bg-2); }
+.spec-nav a.active { color: var(--ink); font-weight: 500; border-left-color: var(--accent); background: var(--bg-2); }
+.spec-nav .nl { font-family: var(--font-mono); font-size: 9.5px; color: var(--ink-4); text-transform: uppercase; letter-spacing: 0.07em; padding: 12px 9px 5px; }
+
+.doc { max-width: 720px; }
+.doc-h { font-size: 26px; font-weight: 600; letter-spacing: -0.025em; margin: 0 0 8px; }
+.doc-lede { font-size: 15px; color: var(--ink-2); line-height: 1.6; margin: 0 0 30px; text-wrap: pretty; }
+.doc-sec { margin-bottom: 36px; scroll-margin-top: 16px; }
+.doc-sec > h2 {
+  font-size: 12px; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--ink-4); margin: 0 0 4px; display: flex; align-items: center; gap: 8px;
+}
+.doc-sec > h2 .n { color: var(--accent); }
+.doc-sec > h3 { font-size: 20px; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 14px; }
+.doc-sec p { font-size: 14px; line-height: 1.65; color: var(--ink-2); margin: 0 0 13px; text-wrap: pretty; }
+.doc-sec p b { color: var(--ink); font-weight: 600; }
+.wlink { color: var(--accent); cursor: pointer; border-bottom: 1px solid var(--accent-soft-2); white-space: nowrap; }
+.wlink:hover { border-color: var(--accent); }
+
+.persona { display: grid; grid-template-columns: auto 1fr; gap: 14px; padding: 14px 0; border-top: 1px solid var(--border); }
+.persona:first-of-type { border-top: none; }
+.persona .pname { font-weight: 600; font-size: 14px; }
+.persona .prole { font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); margin-bottom: 6px; }
+.persona .jobs { list-style: none; padding: 0; margin: 6px 0 0; font-size: 13px; color: var(--ink-2); }
+.persona .jobs li { padding: 2px 0 2px 16px; position: relative; }
+.persona .jobs li::before { content: "→"; position: absolute; left: 0; color: var(--accent); font-family: var(--font-mono); }
+
+.story { border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px; overflow: hidden; background: var(--surface); }
+.story-head { padding: 12px 15px; display: flex; align-items: center; gap: 10px; }
+.story-head .sid { font-family: var(--font-mono); font-size: 11px; color: var(--ink-4); }
+.story-head .stitle { font-size: 13.5px; font-weight: 550; flex: 1; }
+.story-body { padding: 0 15px 14px; }
+.story .as-if { font-size: 13px; color: var(--ink-2); line-height: 1.55; margin: 0 0 12px; }
+.story .as-if em { font-style: normal; color: var(--accent); font-weight: 500; }
+.ac-label { font-family: var(--font-mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-4); margin-bottom: 7px; }
+.ac-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.ac-list li { display: grid; grid-template-columns: 16px 1fr; gap: 8px; font-size: 12.5px; color: var(--ink-2); line-height: 1.45; }
+.ac-list li svg { width: 14px; height: 14px; color: var(--s-done); margin-top: 1px; }
+.gherkin { font-family: var(--font-mono); font-size: 11.5px; }
+.gherkin .kw { color: var(--accent); font-weight: 600; }
+
+table.req { width: 100%; border-collapse: collapse; font-size: 12.5px; margin: 6px 0 4px; }
+table.req th { text-align: left; font-family: var(--font-mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-4); font-weight: 500; padding: 6px 10px; border-bottom: 1px solid var(--border-2); }
+table.req td { padding: 8px 10px; border-bottom: 1px solid var(--border); color: var(--ink-2); vertical-align: top; }
+table.req tr:last-child td { border-bottom: none; }
+table.req td .mono { font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); }
+table.req .prio { font-family: var(--font-mono); font-size: 10px; font-weight: 600; }
+table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-review); } table.req .p-could { color: var(--ink-3); }
+
+.budget-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(180px,1fr)); gap: 10px; margin: 8px 0; }
+.budget { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 11px 13px; background: var(--surface); }
+.budget .bk { font-family: var(--font-mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-4); margin-bottom: 5px; }
+.budget .bv { font-family: var(--font-mono); font-size: 16px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.budget .bd { font-size: 11px; color: var(--ink-3); margin-top: 3px; }
+
+.callout { border-radius: var(--radius); padding: 13px 15px; margin: 0 0 12px; border: 1px solid var(--border); display: grid; grid-template-columns: auto 1fr; gap: 11px; background: var(--surface); }
+.callout .cmark { width: 16px; height: 16px; margin-top: 1px; flex: none; }
+.callout .ctitle { font-size: 12.5px; font-weight: 600; margin-bottom: 2px; display: flex; align-items: center; gap: 8px; }
+.callout .ctitle .ctag { font-family: var(--font-mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.06em; padding: 1px 6px; border-radius: 4px; }
+.callout p { font-size: 12.5px; margin: 0; color: var(--ink-2); line-height: 1.5; }
+.callout.risk { border-color: color-mix(in oklch, var(--s-bug) 28%, var(--border)); background: color-mix(in oklch, var(--s-bug-soft) 30%, var(--surface)); }
+.callout.risk .cmark, .callout.risk .ctag { color: var(--s-bug); } .callout.risk .ctag { background: var(--s-bug-soft); }
+.callout.question { border-color: color-mix(in oklch, var(--s-review) 28%, var(--border)); background: color-mix(in oklch, var(--s-review-soft) 30%, var(--surface)); }
+.callout.question .cmark, .callout.question .ctag { color: var(--s-review); } .callout.question .ctag { background: var(--s-review-soft); }
+.metric-cards { display: grid; grid-template-columns: repeat(auto-fill,minmax(160px,1fr)); gap: 10px; }
+.metric-card { border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 13px; background: var(--surface); }
+.metric-card .mv { font-family: var(--font-mono); font-size: 21px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.metric-card .mk { font-size: 12px; color: var(--ink); margin-top: 3px; font-weight: 500; }
+.metric-card .mt { font-size: 11px; color: var(--ink-3); margin-top: 4px; }
+.metric-card .mt .up { color: var(--s-done); }
+.nongoals { list-style: none; padding: 0; margin: 0; }
+.nongoals li { display: grid; grid-template-columns: 16px 1fr; gap: 9px; font-size: 13px; color: var(--ink-2); padding: 6px 0; border-bottom: 1px solid var(--border); }
+.nongoals li:last-child { border: none; }
+.nongoals li svg { width: 14px; height: 14px; color: var(--ink-4); margin-top: 2px; }
+
+/* ─────────────────────────────  Roadmap (Gantt)  ───────────────────────────── */
+.gantt { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--surface); }
+.gantt-months { display: grid; padding-left: 200px; border-bottom: 1px solid var(--border); background: var(--bg-2); }
+.gantt-months .m { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-4); padding: 8px 0 8px 10px; border-left: 1px solid var(--border); }
+.gantt-row { display: grid; grid-template-columns: 200px 1fr; border-bottom: 1px solid var(--border); align-items: center; }
+.gantt-row:last-child { border-bottom: none; }
+.gantt-row:hover { background: var(--surface-2); }
+.gantt-label { padding: 10px 14px; min-width: 0; }
+.gantt-label .gl-name { font-size: 12.5px; font-weight: 550; }
+.gantt-label .gl-sub { font-family: var(--font-mono); font-size: 10px; color: var(--ink-3); margin-top: 1px; }
+.gantt-track { position: relative; height: 44px; }
+.gantt-track .grid-col { position: absolute; top: 0; bottom: 0; border-left: 1px solid var(--border); }
+.gbar { position: absolute; top: 50%; transform: translateY(-50%); height: 22px; border-radius: 6px; display: flex; align-items: center; padding: 0 9px; font-family: var(--font-mono); font-size: 10px; font-weight: 600; color: white; overflow: hidden; white-space: nowrap; cursor: pointer; }
+.gbar.done { background: var(--s-done); } .gbar.prog { background: var(--accent); } .gbar.future { background: var(--ink-4); }
+.gbar .fill { position: absolute; left: 0; top: 0; bottom: 0; background: oklch(100% 0 0 / 0.22); }
+.gbar .gbar-txt { position: relative; z-index: 1; }
+.gnow { position: absolute; top: -2px; bottom: -2px; width: 2px; background: var(--s-bug); z-index: 3; }
+.gnow::after { content: "TODAY"; position: absolute; top: -16px; left: 50%; transform: translateX(-50%); font-family: var(--font-mono); font-size: 8px; color: var(--s-bug); letter-spacing: 0.06em; }
+.gantt-phasehead { padding: 9px 14px; font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-4); background: var(--bg-2); grid-column: 1 / -1; border-bottom: 1px solid var(--border); }
+
+/* ─────────────────────────────  Decisions (ADR)  ───────────────────────────── */
+.adr-list { display: flex; flex-direction: column; gap: 14px; position: relative; }
+.adr {
+  border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); overflow: hidden;
+  position: relative;
+}
+.adr.superseded { opacity: 0.92; }
+.adr.superseded .adr-id { text-decoration: line-through; text-decoration-color: var(--ink-4); }
+.adr-head { padding: 13px 16px; display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.adr-head:hover { background: var(--surface-2); }
+.adr-id { font-family: var(--font-mono); font-size: 12px; color: var(--ink-3); font-weight: 600; }
+.adr-title { font-size: 14px; font-weight: 600; flex: 1; letter-spacing: -0.01em; }
+.adr-status { font-family: var(--font-mono); font-size: 9.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 8px; border-radius: 999px; }
+.adr-status.accepted { background: var(--s-done-soft); color: var(--s-done); }
+.adr-status.proposed { background: var(--s-progress-soft); color: var(--accent); }
+.adr-status.superseded { background: var(--bg-3); color: var(--ink-3); }
+.adr-date { font-family: var(--font-mono); font-size: 11px; color: var(--ink-4); }
+.adr-chev { color: var(--ink-4); transition: transform 0.16s; width: 16px; height: 16px; flex: none; }
+.adr.open .adr-chev { transform: rotate(90deg); }
+.adr-body { display: grid; grid-template-columns: repeat(2,1fr); gap: 0 22px; padding: 4px 16px 16px; border-top: 1px solid var(--border); }
+@media (max-width: 720px) { .adr-body { grid-template-columns: 1fr; } }
+.adr-block { padding: 12px 0; }
+.adr-block h4 { font-family: var(--font-mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-4); margin: 0 0 7px; }
+.adr-block p { font-size: 12.5px; line-height: 1.55; color: var(--ink-2); margin: 0; text-wrap: pretty; }
+.adr-block.decision { background: var(--accent-soft); margin: 12px -16px; padding: 13px 16px; }
+.adr-block.decision h4 { color: var(--accent); }
+.adr-block.decision p { color: var(--ink); font-weight: 500; }
+.adr-options { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; }
+.adr-options li { font-size: 12.5px; color: var(--ink-2); display: grid; grid-template-columns: auto 1fr; gap: 8px; line-height: 1.45; }
+.adr-options li .opt-tag { font-family: var(--font-mono); font-size: 9px; padding: 1px 5px; border-radius: 3px; height: fit-content; margin-top: 2px; background: var(--bg-3); color: var(--ink-3); }
+.adr-options li.chosen .opt-tag { background: var(--s-done-soft); color: var(--s-done); }
+.adr-options li.chosen { color: var(--ink); font-weight: 500; }
+.supersede-thread { display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: var(--ink-3); padding: 9px 16px; background: var(--bg-2); border-top: 1px solid var(--border); }
+.supersede-thread svg { width: 13px; height: 13px; color: var(--accent); }
+.supersede-thread .wlink { font-family: var(--font-mono); }
+
+/* ─────────────────────────────  Debug (signature view)  ───────────────────────────── */
+.debug-tabs { display: flex; gap: 6px; margin-bottom: 18px; flex-wrap: wrap; }
+.debug-tab {
+  border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface);
+  padding: 10px 13px; cursor: pointer; min-width: 210px; text-align: left; transition: all 0.12s;
+}
+.debug-tab:hover { border-color: var(--border-2); }
+.debug-tab.active { border-color: var(--accent); background: var(--accent-soft); }
+.debug-tab .dt-id { font-family: var(--font-mono); font-size: 10px; color: var(--ink-4); display: flex; align-items: center; gap: 7px; margin-bottom: 4px; }
+.debug-tab .dt-title { font-size: 12.5px; font-weight: 600; letter-spacing: -0.005em; line-height: 1.3; }
+.debug-tab.active .dt-title { color: var(--accent); }
+.debug-tab .dt-state { font-family: var(--font-mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.05em; padding: 1px 6px; border-radius: 999px; }
+.dt-state.confirmed, .dt-state.resolved { background: var(--s-done-soft); color: var(--s-done); }
+.dt-state.investigating { background: var(--s-review-soft); color: var(--s-review); }
+
+.investigation { border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); overflow: hidden; }
+.inv-banner { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 14px; background: var(--bg-2); }
+.inv-banner .ib-main { flex: 1; min-width: 0; }
+.inv-banner .ib-id { font-family: var(--font-mono); font-size: 11px; color: var(--ink-4); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+.inv-banner h2 { font-size: 17px; font-weight: 600; letter-spacing: -0.015em; margin: 0 0 5px; }
+.inv-banner .ib-sub { font-size: 12.5px; color: var(--ink-3); display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.inv-stat { text-align: right; }
+.inv-stat .v { font-family: var(--font-mono); font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.inv-stat .k { font-family: var(--font-mono); font-size: 9px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-4); }
+
+.timeline { padding: 8px 20px 20px; position: relative; }
+.tl-node { display: grid; grid-template-columns: 30px 1fr; gap: 14px; position: relative; padding: 14px 0 4px; }
+.tl-node::before { content: ""; position: absolute; left: 14px; top: 0; bottom: -14px; width: 2px; background: var(--border); }
+.tl-node:last-child::before { display: none; }
+.tl-dot {
+  width: 30px; height: 30px; border-radius: 50%; background: var(--surface); border: 2px solid var(--border);
+  display: grid; place-items: center; z-index: 1; color: var(--ink-3);
+}
+.tl-dot svg { width: 14px; height: 14px; }
+.tl-node.symptom .tl-dot { border-color: var(--s-bug); color: var(--s-bug); }
+.tl-node.rootcause .tl-dot { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.tl-node.fix .tl-dot { border-color: var(--s-done); color: var(--s-done); }
+.tl-node.guard .tl-dot { border-color: var(--s-done); color: var(--s-done); background: var(--s-done-soft); }
+.tl-stage { font-family: var(--font-mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-4); margin-bottom: 4px; padding-top: 4px; }
+.tl-card { background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; }
+.tl-card h4 { font-size: 13px; font-weight: 600; margin: 0 0 6px; letter-spacing: -0.005em; }
+.tl-card p { font-size: 12.5px; line-height: 1.55; color: var(--ink-2); margin: 0 0 8px; text-wrap: pretty; }
+.tl-card p:last-child { margin-bottom: 0; }
+.tl-card .who { display: flex; align-items: center; gap: 8px; margin-top: 9px; font-family: var(--font-mono); font-size: 10px; color: var(--ink-4); }
+
+.hypo { display: flex; flex-direction: column; gap: 8px; }
+.hypo-item { display: grid; grid-template-columns: auto 1fr; gap: 10px; padding: 9px 11px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); }
+.hypo-tag { font-family: var(--font-mono); font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 7px; border-radius: 999px; height: fit-content; white-space: nowrap; display: inline-flex; align-items: center; gap: 4px; }
+.hypo-tag svg { width: 11px; height: 11px; flex: none; }
+.hypo-tag.confirmed { background: var(--s-done-soft); color: var(--s-done); }
+.hypo-tag.refuted { background: var(--s-bug-soft); color: var(--s-bug); text-decoration: line-through; text-decoration-thickness: 1px; }
+.hypo-tag.testing { background: var(--s-review-soft); color: var(--s-review); }
+.hypo-item .ht { font-size: 12.5px; color: var(--ink); line-height: 1.45; }
+.hypo-item.refuted .ht { color: var(--ink-3); }
+.hypo-item .hn { font-size: 11.5px; color: var(--ink-3); margin-top: 4px; line-height: 1.45; }
+.repro-steps { counter-reset: step; list-style: none; padding: 0; margin: 0; font-family: var(--font-mono); font-size: 12px; }
+.repro-steps li { counter-increment: step; padding: 5px 0 5px 28px; position: relative; color: var(--ink-2); line-height: 1.45; }
+.repro-steps li::before { content: counter(step); position: absolute; left: 0; top: 4px; width: 18px; height: 18px; border-radius: 50%; background: var(--bg-3); color: var(--ink-3); display: grid; place-items: center; font-size: 10px; font-weight: 600; }
+.fix-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+.guard-box { display: flex; align-items: center; gap: 9px; font-size: 12.5px; color: var(--s-done); background: var(--s-done-soft); border-radius: var(--radius-sm); padding: 9px 12px; }
+.guard-box svg { width: 15px; height: 15px; flex: none; }
+.guard-box .gmono { font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-2); }
+
+/* ─────────────────────────────  Docs (Diátaxis)  ───────────────────────────── */
+.docs-shell { display: grid; grid-template-columns: 232px minmax(0,1fr); gap: 30px; }
+@media (max-width: 860px) { .docs-shell { grid-template-columns: 1fr; } }
+.docs-tree { display: flex; flex-direction: column; gap: 14px; }
+.dtree-group .dtg-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.dtree-group .dtg-head .dq { font-family: var(--font-mono); font-size: 9px; padding: 1px 6px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+.dq.tutorial { background: var(--s-progress-soft); color: var(--accent); }
+.dq.howto { background: var(--s-done-soft); color: var(--s-done); }
+.dq.reference { background: var(--s-review-soft); color: var(--s-review); }
+.dq.explanation { background: var(--bg-3); color: var(--ink-3); }
+.dtree-group .dtg-name { font-size: 12px; font-weight: 600; }
+.dtree-group .dtg-sub { font-size: 10.5px; color: var(--ink-4); }
+.dtree-item { font-size: 12.5px; color: var(--ink-3); padding: 5px 9px 5px 14px; border-radius: var(--radius-sm); cursor: pointer; border-left: 2px solid transparent; }
+.dtree-item:hover { color: var(--ink); background: var(--bg-2); }
+.dtree-item.active { color: var(--ink); font-weight: 500; background: var(--bg-2); border-left-color: var(--accent); }
+.docs-pane .doc-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); }
+.docs-pane .doc-body h3 { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; margin: 0 0 12px; }
+.docs-pane .doc-body p { font-size: 14px; line-height: 1.65; color: var(--ink-2); margin: 0 0 13px; text-wrap: pretty; }
+.docs-pane .doc-body ol, .docs-pane .doc-body ul { font-size: 13.5px; line-height: 1.7; color: var(--ink-2); padding-left: 20px; margin: 0 0 14px; }
+.docs-pane .doc-body h4 { font-size: 14px; font-weight: 600; margin: 20px 0 8px; }
+.codeblock { font-family: var(--font-mono); font-size: 12px; background: var(--bg-2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 12px 14px; color: var(--ink-2); overflow-x: auto; margin: 0 0 14px; line-height: 1.6; }
+.codeblock .cm { color: var(--ink-4); } .codeblock .kw { color: var(--accent); }
+
+/* ─────────────────────────────  Activity feed  ───────────────────────────── */
+.act-feed { border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); overflow: hidden; }
+.act-day { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-4); padding: 11px 16px 7px; background: var(--bg-2); border-bottom: 1px solid var(--border); }
+.act-row { display: grid; grid-template-columns: 26px 1fr auto; gap: 12px; padding: 11px 16px; border-bottom: 1px solid var(--border); align-items: start; }
+.act-row:last-child { border-bottom: none; }
+.act-row:hover { background: var(--surface-2); }
+.act-icon { width: 26px; height: 26px; border-radius: 7px; display: grid; place-items: center; background: var(--bg-3); color: var(--ink-3); flex: none; }
+.act-icon svg { width: 14px; height: 14px; }
+.act-body { min-width: 0; }
+.act-line { font-size: 12.5px; color: var(--ink-2); line-height: 1.5; }
+.act-line b { color: var(--ink); font-weight: 600; }
+.act-detail { font-size: 11.5px; color: var(--ink-3); margin-top: 3px; line-height: 1.45; }
+.act-when { font-family: var(--font-mono); font-size: 10.5px; color: var(--ink-4); white-space: nowrap; }
+
+/* ─────────────────────────────  Detail Drawer  ───────────────────────────── */
+.scrim { position: fixed; inset: 0; background: oklch(20% 0.02 255 / 0.28); opacity: 0; pointer-events: none; transition: opacity 0.16s; z-index: 90; }
+.scrim.open { opacity: 1; pointer-events: auto; }
+[data-theme="dark"] .scrim { background: oklch(0% 0 0 / 0.5); }
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; width: min(560px, 94vw);
+  background: var(--bg); border-left: 1px solid var(--border); box-shadow: var(--drawer-shadow);
+  transform: translateX(100%); transition: transform 0.18s cubic-bezier(0.32,0.72,0,1);
+  z-index: 91; display: flex; flex-direction: column;
+}
+.drawer.open { transform: translateX(0); }
+.drawer-head { padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; flex: none; }
+.drawer-head .dh-id { font-family: var(--font-mono); font-size: 11px; color: var(--ink-4); }
+.drawer-head .spacer { flex: 1; }
+.drawer-scroll { overflow-y: auto; flex: 1; padding: 20px; }
+.drawer h1 { font-size: 19px; font-weight: 600; letter-spacing: -0.02em; margin: 4px 0 6px; line-height: 1.25; text-wrap: pretty; }
+.drawer .d-summary { font-size: 13.5px; color: var(--ink-2); line-height: 1.55; margin: 0 0 16px; padding: 11px 13px; background: var(--accent-soft); border-radius: var(--radius-sm); display: grid; grid-template-columns: auto 1fr; gap: 9px; align-items: start; }
+.drawer .d-summary .sp { width: 14px; height: 14px; color: var(--accent); margin-top: 2px; }
+.drawer .meta-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 11px 18px; padding: 13px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+.drawer .meta-k { font-family: var(--font-mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-4); margin-bottom: 4px; }
+.drawer .meta-v { font-size: 12.5px; color: var(--ink); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.drawer .d-sec { margin-bottom: 18px; }
+.drawer .d-sec > h3 { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-4); margin: 0 0 9px; display: flex; align-items: center; gap: 8px; }
+.drawer .d-sec > h3 .c { color: var(--ink-3); background: var(--bg-3); border-radius: 999px; padding: 0 6px; font-size: 9px; }
+.drawer .d-body { font-size: 13.5px; line-height: 1.65; color: var(--ink-2); text-wrap: pretty; }
+.drawer .d-body p { margin: 0 0 11px; } .drawer .d-body p:last-child { margin: 0; }
+.drawer .d-body b { color: var(--ink); font-weight: 600; }
+.backlinks { display: flex; flex-wrap: wrap; gap: 7px; }
+.comment { display: grid; grid-template-columns: 24px 1fr; gap: 10px; padding: 11px 0; border-top: 1px solid var(--border); }
+.comment:first-child { border-top: none; padding-top: 0; }
+.comment .cm-head { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+.comment .cm-author { font-size: 12px; font-weight: 600; }
+.comment .cm-when { font-family: var(--font-mono); font-size: 10px; color: var(--ink-4); }
+.comment .cm-text { font-size: 12.5px; color: var(--ink-2); line-height: 1.5; text-wrap: pretty; }
+.comment.reply { margin-left: 22px; }
+.d-act { display: grid; grid-template-columns: 18px 1fr auto; gap: 9px; padding: 7px 0; font-size: 11.5px; align-items: start; }
+.d-act .dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 5px; background: var(--ink-4); }
+.d-act .da-when { font-family: var(--font-mono); font-size: 10px; color: var(--ink-4); white-space: nowrap; }
+.d-act .da-line { color: var(--ink-2); }
+.read-progress { position: absolute; top: 0; left: 0; height: 2px; background: var(--accent); transition: width 0.1s; }
+
+/* ─────────────────────────────  Command palette (⌘K)  ───────────────────────────── */
+.cmdk-scrim { position: fixed; inset: 0; background: oklch(20% 0.02 255 / 0.3); opacity: 0; pointer-events: none; transition: opacity 0.13s; z-index: 100; }
+.cmdk-scrim.open { opacity: 1; pointer-events: auto; }
+[data-theme="dark"] .cmdk-scrim { background: oklch(0% 0 0 / 0.55); }
+.cmdk { position: fixed; top: 14vh; left: 50%; transform: translateX(-50%) translateY(-8px) scale(0.99); width: min(580px, 92vw); background: var(--surface); border: 1px solid var(--border-2); border-radius: var(--radius-lg); box-shadow: var(--pop-shadow); z-index: 101; opacity: 0; pointer-events: none; transition: opacity 0.13s, transform 0.13s; overflow: hidden; }
+.cmdk.open { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0) scale(1); }
+.cmdk-input { display: flex; align-items: center; gap: 10px; padding: 14px 17px; border-bottom: 1px solid var(--border); }
+.cmdk-input svg { width: 17px; height: 17px; color: var(--ink-3); flex: none; }
+.cmdk-input input { flex: 1; border: none; background: none; outline: none; font: inherit; font-size: 15px; color: var(--ink); }
+.cmdk-input input::placeholder { color: var(--ink-4); }
+.cmdk-input .esc { font-family: var(--font-mono); font-size: 10px; color: var(--ink-4); border: 1px solid var(--border); border-radius: 4px; padding: 1.5px 6px; }
+.cmdk-list { max-height: 52vh; overflow-y: auto; padding: 7px; }
+.cmdk-group-label { font-family: var(--font-mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-4); padding: 9px 10px 5px; }
+.cmdk-item { display: grid; grid-template-columns: 26px 1fr auto; gap: 11px; padding: 9px 10px; border-radius: var(--radius-sm); cursor: pointer; align-items: center; }
+.cmdk-item.sel { background: var(--accent-soft); }
+.cmdk-item .ci-icon { width: 26px; height: 26px; border-radius: 6px; display: grid; place-items: center; background: var(--bg-3); color: var(--ink-3); }
+.cmdk-item.sel .ci-icon { background: var(--surface); color: var(--accent); }
+.cmdk-item .ci-icon svg { width: 14px; height: 14px; }
+.cmdk-item .ci-title { font-size: 13px; color: var(--ink); font-weight: 500; }
+.cmdk-item .ci-sub { font-size: 11px; color: var(--ink-3); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cmdk-item .ci-kind { font-family: var(--font-mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-4); }
+.cmdk-empty { padding: 30px; text-align: center; color: var(--ink-3); font-size: 13px; }
+.cmdk-foot { display: flex; gap: 14px; padding: 9px 14px; border-top: 1px solid var(--border); font-family: var(--font-mono); font-size: 10px; color: var(--ink-4); }
+.cmdk-foot .kbd { font-size: 9px; }
+
+/* fade-in for view switches */
+@keyframes vfade { from { transform: translateY(5px); } to { transform: none; } }
+.view { animation: vfade 0.16s ease both; }
+
+@media (max-width: 760px) {
+  .app { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .view { padding: 16px; }
+  .tb-search { display: none; }
+  .tb-legend { display: none; }
+}
+
+</style>
+<style>.hljs{color:var(--ink-2)} [data-theme="dark"] .hljs{color:#c9d1d9}</style>
+</head>
+<body>
+<script id="pm-data" type="application/json">
+{
+ "project": {
+  "name": "Rocketman",
+  "repo": "winsenlabs/rocketman",
+  "tagline": "Idea to production, managed in the repo",
+  "synced": "just now",
+  "health": 88,
+  "healthLabel": "On track for the OSS launch",
+  "state": "Rocketman is at \u003cb>v0.1 — Engine &amp; Hub shipped\u003c/b>, heading into the [[m2|Track &amp; Docs]] milestone. The data → HTML pipeline ([[rm-01|build.mjs]]) and the 8-view [[rm-02|calm command center]] hub are done. The launch-track skills ([[rm-07|/rm-plan + /rm-build]], [[rm-08|/rm-verify + /rm-test]]) and the [[rm-10|docs &amp; README]] are the critical path to launch. One investigation is closed — the [[bug-01|blank-hub bug]], where app.js shipped stubbed — and the single-writer rule for agent fleets is locked in [[adr-05|ADR-5]]. The inter-agent [[rm-13|relay]] just landed — agents in separate terminals now hand off tasks and message each other with zero copy-paste. Next: finish the skill stack and cut the first public release.",
+  "metrics": [
+   {
+    "k": "Track skills",
+    "v": "6",
+    "unit": "of 10"
+   },
+   {
+    "k": "Open",
+    "v": "5"
+   },
+   {
+    "k": "Blocked",
+    "v": "1"
+   },
+   {
+    "k": "Bugs",
+    "v": "0"
+   }
+  ],
+  "kpis": [
+   {
+    "k": "Build time",
+    "v": "\u003c50ms",
+    "d": "data → hub",
+    "dir": "up"
+   },
+   {
+    "k": "Hub size",
+    "v": "153KB",
+    "d": "self-contained",
+    "dir": "up"
+   },
+   {
+    "k": "Runtime deps",
+    "v": "0",
+    "d": "zero, by design",
+    "dir": "up"
+   },
+   {
+    "k": "Views",
+    "v": "8",
+    "d": "Fleet view planned",
+    "dir": "up"
+   }
+  ]
+ },
+ "burn": {
+  "total": 74,
+  "done": 26,
+  "progress": 21,
+  "review": 5,
+  "milestones": [
+   {
+    "id": "m1",
+    "name": "M1 · Engine & Hub",
+    "pct": 100,
+    "done": true,
+    "sub": "shipped"
+   },
+   {
+    "id": "m2",
+    "name": "M2 · Track & Docs",
+    "pct": 62,
+    "done": false,
+    "sub": "launch prep"
+   },
+   {
+    "id": "m3",
+    "name": "M3 · Fleet & Rollup",
+    "pct": 8,
+    "done": false,
+    "sub": "post-launch"
+   }
+  ]
+ },
+ "people": {
+  "tejas": {
+   "name": "Tejas",
+   "kind": "human",
+   "av": "TS",
+   "tone": "human"
+  },
+  "opus": {
+   "name": "opus",
+   "kind": "agent",
+   "model": "opus"
+  },
+  "sonnet": {
+   "name": "sonnet",
+   "kind": "agent",
+   "model": "sonnet"
+  },
+  "haiku": {
+   "name": "haiku",
+   "kind": "agent",
+   "model": "haiku"
+  }
+ },
+ "epics": {
+  "engine": {
+   "name": "Engine",
+   "color": "oklch(52% 0.17 252)"
+  },
+  "track": {
+   "name": "Track",
+   "color": "oklch(58% 0.13 12)"
+  },
+  "docs": {
+   "name": "Docs & Launch",
+   "color": "oklch(57% 0.13 155)"
+  },
+  "platform": {
+   "name": "Platform",
+   "color": "oklch(68% 0.15 70)"
+  }
+ },
+ "labels": {
+  "engine": {
+   "name": "engine",
+   "color": "oklch(52% 0.17 252)"
+  },
+  "skills": {
+   "name": "skills",
+   "color": "oklch(54% 0.18 305)"
+  },
+  "docs": {
+   "name": "docs",
+   "color": "oklch(57% 0.13 155)"
+  },
+  "ci": {
+   "name": "ci",
+   "color": "oklch(68% 0.15 70)"
+  },
+  "design": {
+   "name": "design",
+   "color": "oklch(57% 0.20 25)"
+  },
+  "dx": {
+   "name": "dx",
+   "color": "oklch(55% 0.12 200)"
+  }
+ },
+ "columns": [
+  {
+   "id": "backlog",
+   "name": "Backlog",
+   "status": "backlog"
+  },
+  {
+   "id": "progress",
+   "name": "In Progress",
+   "status": "progress",
+   "wip": 3
+  },
+  {
+   "id": "review",
+   "name": "Review",
+   "status": "review",
+   "wip": 2
+  },
+  {
+   "id": "blocked",
+   "name": "Blocked",
+   "status": "blocked"
+  },
+  {
+   "id": "done",
+   "name": "Done",
+   "status": "done"
+  }
+ ],
+ "tasks": [
+  {
+   "id": "rm-01",
+   "ref": "RM-1",
+   "col": "done",
+   "epic": "engine",
+   "owner": "opus",
+   "author": "tejas",
+   "title": "Data → HTML bundler (build.mjs)",
+   "summary": "Inlines hub.css, app.js, and the merged data island into one self-contained PM/index.html.",
+   "labels": [
+    "engine"
+   ],
+   "points": 5,
+   "age": 0,
+   "pr": {
+    "num": 1,
+    "status": "merged"
+   },
+   "body": "\u003cp>The content pipeline. \u003ccode>build.mjs\u003c/code> reads the four \u003ccode>PM/data/*.json\u003c/code> files, flat-merges them into one \u003ccode>#pm-data\u003c/code> island, and inlines the engine CSS and JS into a single offline HTML file (ADR-2, ADR-4).\u003c/p>\u003cp>It escapes \u003ccode>&lt;\u003c/code> in the data island so embedded markup can't close the script early ([[bug-02|BUG-2]]), and refuses to ship if \u003ccode>app.js\u003c/code> looks stubbed ([[bug-01|BUG-1]]).\u003c/p>",
+   "backlinks": [
+    "adr-02",
+    "adr-04",
+    "bug-01",
+    "bug-02"
+   ],
+   "comments": [
+    {
+     "author": "opus",
+     "when": "1h ago",
+     "text": "Build is deterministic — same data in, byte-identical hub out. That makes the CI staleness check trivial."
+    }
+   ],
+   "activity": [
+    {
+     "when": "1h ago",
+     "who": "opus",
+     "line": "merged \u003cb>PR #1\u003c/b>"
+    },
+    {
+     "when": "2h ago",
+     "who": "tejas",
+     "line": "created the task"
+    }
+   ]
+  },
+  {
+   "id": "rm-02",
+   "ref": "RM-2",
+   "col": "done",
+   "epic": "engine",
+   "owner": "opus",
+   "author": "tejas",
+   "title": "Calm command center hub (8 views)",
+   "summary": "Dashboard, Board, Spec, Roadmap, Decisions, Debug, Docs, Activity — system fonts, zero deps, light + dark.",
+   "labels": [
+    "design",
+    "engine"
+   ],
+   "points": 8,
+   "age": 0,
+   "pr": {
+    "num": 2,
+    "status": "merged"
+   },
+   "body": "\u003cp>The reading surface: a single-page hub with eight views over one flat data island. Cool-neutral oklch palette, one blue accent, semantic status colors, system fonts only (ADR-6). Keyboard nav, ⌘K search, and an entity drawer that overlays any view.\u003c/p>",
+   "backlinks": [
+    "adr-06"
+   ],
+   "comments": [],
+   "activity": [
+    {
+     "when": "12m ago",
+     "who": "opus",
+     "line": "merged \u003cb>PR #2\u003c/b>"
+    },
+    {
+     "when": "yesterday",
+     "who": "tejas",
+     "line": "approved the design direction"
+    }
+   ]
+  },
+  {
+   "id": "rm-03",
+   "ref": "RM-3",
+   "col": "review",
+   "epic": "engine",
+   "owner": "sonnet",
+   "author": "opus",
+   "title": "Schema + doctor validator",
+   "summary": "Validates the data island and flags broken backlinks, unknown owners, and stale links before build.",
+   "labels": [
+    "engine",
+    "dx"
+   ],
+   "points": 3,
+   "age": 1,
+   "pr": {
+    "num": 7,
+    "status": "review"
+   },
+   "body": "\u003cp>A pre-build validation pass folded into \u003ccode>build.mjs\u003c/code> and exposed as \u003ccode>rocketman doctor\u003c/code>. Every cross-reference (backlinks, owner, epic, debug→task) must resolve to a known id, or the build warns (and fails in \u003ccode>--strict\u003c/code>).\u003c/p>",
+   "backlinks": [
+    "adr-04",
+    "rm-01"
+   ],
+   "comments": [
+    {
+     "author": "sonnet",
+     "when": "30m ago",
+     "text": "Doctor now resolves backlinks against tasks, ADRs, debug, and spec sections. PR up for review."
+    }
+   ],
+   "activity": [
+    {
+     "when": "30m ago",
+     "who": "sonnet",
+     "line": "moved to \u003cb>Review\u003c/b>"
+    },
+    {
+     "when": "3h ago",
+     "who": "sonnet",
+     "line": "picked up the task"
+    }
+   ]
+  },
+  {
+   "id": "rm-04",
+   "ref": "RM-4",
+   "col": "progress",
+   "epic": "platform",
+   "owner": "opus",
+   "author": "tejas",
+   "title": "rocketman CLI (init · build · new · doctor)",
+   "summary": "One binary scaffolds PM/ into any repo, regenerates the hub, creates entities, and validates links.",
+   "labels": [
+    "dx",
+    "ci"
+   ],
+   "points": 5,
+   "age": 1,
+   "pr": {
+    "num": 12,
+    "status": "open"
+   },
+   "body": "\u003cp>The front door. \u003ccode>rocketman init\u003c/code> copies the PM/ template + CLAUDE.md into a repo; \u003ccode>build\u003c/code> regenerates the hub; \u003ccode>new task|adr|debug\u003c/code> appends a correctly-shaped entity; \u003ccode>doctor\u003c/code> validates. Zero dependencies — pure Node.\u003c/p>",
+   "backlinks": [
+    "rm-01"
+   ],
+   "comments": [],
+   "activity": [
+    {
+     "when": "1h ago",
+     "who": "opus",
+     "line": "opened \u003cb>PR #12\u003c/b>"
+    },
+    {
+     "when": "1d ago",
+     "who": "tejas",
+     "line": "created the task"
+    }
+   ]
+  },
+  {
+   "id": "rm-05",
+   "ref": "RM-5",
+   "col": "done",
+   "epic": "track",
+   "owner": "opus",
+   "author": "tejas",
+   "title": "/rm-ideate — forced product thinking",
+   "summary": "Six forcing questions (demand, status quo, wedge, why-now) that must be answered before any code.",
+   "labels": [
+    "skills"
+   ],
+   "points": 3,
+   "age": 0,
+   "pr": {
+    "num": 3,
+    "status": "merged"
+   },
+   "body": "\u003cp>Stage one of the track. Refuses to let an idea proceed until it survives six questions about real demand and the narrowest wedge. Writes an idea brief that \u003ccode>/rm-prd\u003c/code> turns into a spec.\u003c/p>",
+   "backlinks": [
+    "rm-06"
+   ],
+   "comments": [],
+   "activity": [
+    {
+     "when": "yesterday",
+     "who": "opus",
+     "line": "merged \u003cb>PR #3\u003c/b>"
+    }
+   ]
+  },
+  {
+   "id": "rm-06",
+   "ref": "RM-6",
+   "col": "done",
+   "epic": "track",
+   "owner": "opus",
+   "author": "tejas",
+   "title": "/rm-prd — generate the PRD",
+   "summary": "Turns an idea brief into spec sections (vision, personas, requirements) written into PM/data/spec.json.",
+   "labels": [
+    "skills"
+   ],
+   "points": 3,
+   "age": 0,
+   "pr": {
+    "num": 4,
+    "status": "merged"
+   },
+   "body": "\u003cp>Stage two. Reads the idea brief and produces a structured PRD — vision, problem, personas + JTBD, user stories with acceptance criteria, non-functional budgets, non-goals, risks — straight into the spec data.\u003c/p>",
+   "backlinks": [
+    "rm-05"
+   ],
+   "comments": [],
+   "activity": [
+    {
+     "when": "yesterday",
+     "who": "opus",
+     "line": "merged \u003cb>PR #4\u003c/b>"
+    }
+   ]
+  },
+  {
+   "id": "rm-07",
+   "ref": "RM-7",
+   "col": "progress",
+   "epic": "track",
+   "owner": "sonnet",
+   "author": "tejas",
+   "title": "/rm-plan + /rm-build",
+   "summary": "Plan lays the launch track into milestones + ready tasks; build allocates them to a sub-agent fleet.",
+   "labels": [
+    "skills"
+   ],
+   "points": 8,
+   "age": 2,
+   "pr": {
+    "num": 9,
+    "status": "open"
+   },
+   "body": "\u003cp>Stages three and four. \u003ccode>/rm-plan\u003c/code> decomposes the PRD into epics, milestones, and a board of ready tasks. \u003ccode>/rm-build\u003c/code> turns the board into a work queue: it allocates ready tasks to sub-agents on demand, and — per the single-writer rule ([[adr-05|ADR-5]]) — is the sole writer back to PM/ data.\u003c/p>",
+   "backlinks": [
+    "rm-06",
+    "adr-05",
+    "rm-08"
+   ],
+   "comments": [
+    {
+     "author": "sonnet",
+     "when": "2h ago",
+     "text": "Allocator picks ready tasks (deps satisfied, unassigned) and fans out. Parent serializes all writes back to the hub."
+    },
+    {
+     "author": "tejas",
+     "when": "1h ago",
+     "text": "Make sure the activity feed records which agent touched which task — provenance is the point.",
+     "reply": true
+    }
+   ],
+   "activity": [
+    {
+     "when": "1h ago",
+     "who": "sonnet",
+     "line": "pushed to \u003cb>PR #9\u003c/b>"
+    },
+    {
+     "when": "2d ago",
+     "who": "tejas",
+     "line": "created the task"
+    }
+   ]
+  },
+  {
+   "id": "rm-08",
+   "ref": "RM-8",
+   "col": "progress",
+   "epic": "track",
+   "owner": "opus",
+   "author": "tejas",
+   "title": "/rm-verify + /rm-test",
+   "summary": "Verify runs the automated gate; test generates a crisp human test script and records pass/fail.",
+   "labels": [
+    "skills"
+   ],
+   "points": 5,
+   "age": 1,
+   "pr": {
+    "num": 11,
+    "status": "open"
+   },
+   "body": "\u003cp>Stages five and six. \u003ccode>/rm-verify\u003c/code> runs the project's checks (build, lint, tests, the hub doctor) as a gate before review. \u003ccode>/rm-test\u003c/code> produces a short manual test script for a human and writes the result back onto the task.\u003c/p>",
+   "backlinks": [
+    "rm-07",
+    "rm-09"
+   ],
+   "comments": [],
+   "activity": [
+    {
+     "when": "1h ago",
+     "who": "opus",
+     "line": "opened \u003cb>PR #11\u003c/b>"
+    }
+   ]
+  },
+  {
+   "id": "rm-09",
+   "ref": "RM-9",
+   "col": "blocked",
+   "epic": "track",
+   "owner": "opus",
+   "author": "tejas",
+   "title": "/rm-launch + /rm-iterate",
+   "summary": "Ship to production, then capture every post-launch change into the changelog and activity feed.",
+   "labels": [
+    "skills"
+   ],
+   "points": 5,
+   "age": 1,
+   "blockedReason": "Waiting on the CLI ship hooks in RM-4",
+   "body": "\u003cp>Stages seven and eight. \u003ccode>/rm-launch\u003c/code> ships (tag, changelog, release) and \u003ccode>/rm-iterate\u003c/code> captures modifications as new tasks + changelog entries. Parked until the [[rm-04|CLI]] exposes the ship hooks it calls.\u003c/p>",
+   "backlinks": [
+    "rm-04",
+    "rm-08"
+   ],
+   "comments": [
+    {
+     "author": "opus",
+     "when": "40m ago",
+     "text": "Stubbed the skill so it's ready the moment RM-4 lands the ship API."
+    }
+   ],
+   "activity": [
+    {
+     "when": "40m ago",
+     "who": "opus",
+     "line": "moved to \u003cb>Blocked\u003c/b> — reason: CLI ship hooks"
+    }
+   ]
+  },
+  {
+   "id": "rm-10",
+   "ref": "RM-10",
+   "col": "progress",
+   "epic": "docs",
+   "owner": "haiku",
+   "author": "tejas",
+   "title": "Diátaxis docs + README",
+   "summary": "Tutorial, how-tos, reference, and explanation — plus the OSS landing README for launch.",
+   "labels": [
+    "docs"
+   ],
+   "points": 5,
+   "age": 1,
+   "pr": {
+    "num": 14,
+    "status": "open"
+   },
+   "body": "\u003cp>The docs set, structured by Diátaxis and also rendered inside the hub's Docs view. Plus the landing README with a one-command quickstart, badges, and the MIT license for the public launch.\u003c/p>",
+   "backlinks": [],
+   "comments": [],
+   "activity": [
+    {
+     "when": "2h ago",
+     "who": "haiku",
+     "line": "opened \u003cb>PR #14\u003c/b>"
+    }
+   ]
+  },
+  {
+   "id": "rm-11",
+   "ref": "RM-11",
+   "col": "backlog",
+   "epic": "engine",
+   "owner": "opus",
+   "author": "tejas",
+   "title": "Fleet view — multi-agent runs",
+   "summary": "A ninth view: a parent → sub-agent tree per run, so a fleet's work is skimmable at a glance.",
+   "labels": [
+    "engine",
+    "design"
+   ],
+   "points": 8,
+   "age": 0,
+   "body": "\u003cp>Post-launch. Render orchestration runs as a tree: the parent agent, the sub-agents it allocated, the task each touched, status, and token spend — turning a fleet's work into something a human can skim. Builds on the provenance already in the data ([[adr-05|ADR-5]]).\u003c/p>",
+   "backlinks": [
+    "adr-05"
+   ],
+   "comments": [],
+   "activity": []
+  },
+  {
+   "id": "rm-12",
+   "ref": "RM-12",
+   "col": "backlog",
+   "epic": "engine",
+   "owner": "sonnet",
+   "author": "tejas",
+   "title": "Cross-repo rollup",
+   "summary": "Aggregate many repos' PM/ data into one read-only org dashboard.",
+   "labels": [
+    "engine"
+   ],
+   "points": 8,
+   "age": 0,
+   "body": "\u003cp>Post-launch. A read-only aggregator that reads multiple repos' \u003ccode>PM/data\u003c/code> and renders one org-wide hub — every in-flight task across every repo, in one place.\u003c/p>",
+   "backlinks": [],
+   "comments": [],
+   "activity": []
+  },
+  {
+   "id": "rm-13",
+   "ref": "RM-13",
+   "col": "review",
+   "epic": "engine",
+   "owner": "opus",
+   "author": "tejas",
+   "title": "Inter-agent relay (agent bus)",
+   "summary": "A conflict-free file bus in PM/comms so agents in separate terminals send messages and hand off tasks.",
+   "labels": [
+    "engine",
+    "dx"
+   ],
+   "points": 8,
+   "age": 0,
+   "pr": {
+    "num": 18,
+    "status": "review"
+   },
+   "body": "\u003cp>Multiple agents in separate terminals couldn't talk, so coordinating meant copy-pasting between them. The relay — \u003ccode>PM/comms/\u003c/code> + the \u003ccode>rocketman relay\u003c/code> CLI + the \u003ccode>/rm-relay\u003c/code> skill — gives them a shared nervous system: presence, free-form messages, and explicit task handoffs (offer → accept → complete). Each agent writes only its own files, so no terminal stomps another ([[adr-08|ADR-8]]). Polled on an interval via \u003ccode>/loop\u003c/code>.\u003c/p>",
+   "backlinks": [
+    "adr-08",
+    "rm-11"
+   ],
+   "comments": [
+    {
+     "author": "opus",
+     "when": "10m ago",
+     "text": "Handed RM-8 off to the skills session over the bus — it accepted and is wiring /rm-verify now. Zero copy-paste."
+    }
+   ],
+   "activity": [
+    {
+     "when": "10m ago",
+     "who": "opus",
+     "line": "moved to \u003cb>Review\u003c/b> — opened \u003cb>PR #18\u003c/b>"
+    }
+   ]
+  }
+ ],
+ "spec": {
+  "title": "Rocketman — Product Spec",
+  "lede": "An in-repo project hub that takes a product from idea to production: spec, plan, board, decisions, debugging, and docs live in your repo as structured data and render to one offline HTML file humans skim and agents act on. This is the source-of-truth PRD for the v0.1 launch.",
+  "nav": [
+   {
+    "id": "vision",
+    "label": "Vision",
+    "group": "Why"
+   },
+   {
+    "id": "problem",
+    "label": "Problem",
+    "group": "Why"
+   },
+   {
+    "id": "personas",
+    "label": "Personas & JTBD",
+    "group": "Who"
+   },
+   {
+    "id": "requirements",
+    "label": "Requirements",
+    "group": "What"
+   },
+   {
+    "id": "nonfunctional",
+    "label": "Non-functional",
+    "group": "What"
+   },
+   {
+    "id": "flows",
+    "label": "The Track",
+    "group": "How"
+   },
+   {
+    "id": "metrics",
+    "label": "Success Metrics",
+    "group": "Outcomes"
+   },
+   {
+    "id": "nongoals",
+    "label": "Non-Goals",
+    "group": "Outcomes"
+   },
+   {
+    "id": "risks",
+    "label": "Risks & Open Qs",
+    "group": "Outcomes"
+   }
+  ],
+  "sections": [
+   {
+    "id": "vision",
+    "n": "01",
+    "kicker": "Vision",
+    "title": "A project should be one file away",
+    "blocks": [
+     {
+      "type": "p",
+      "html": "Coding agents can finally do real work — but they thrash without shared context, and humans don't read long markdown. \u003cb>Rocketman gives both a single living source of truth\u003c/b> that travels with the code: it branches with it, reviews inside the PR, and merges with it."
+     },
+     {
+      "type": "p",
+      "html": "The north star is \u003cb>legibility\u003c/b>. A human should understand exactly where a project stands in ten seconds; an agent fleet should pick it up and act without re-deriving context. The hub is a generated, read-only view; the truth is structured data you edit and rebuild."
+     }
+    ]
+   },
+   {
+    "id": "problem",
+    "n": "02",
+    "kicker": "Problem",
+    "title": "Project context is scattered and stale",
+    "blocks": [
+     {
+      "type": "p",
+      "html": "Teams hit three failure modes. \u003cb>Unread:\u003c/b> specs rot in markdown nobody opens. \u003cb>Disconnected:\u003c/b> the board lives in a SaaS tool, a context-switch away from the code. \u003cb>Amnesiac:\u003c/b> every new agent session re-derives the same context, and decisions and debugging trails vanish into chat history."
+     },
+     {
+      "type": "p",
+      "html": "Rocketman addresses all three by putting the whole project — [[requirements|spec]], board, [[adr-05|decisions]], and [[bug-01|debugging trails]] — in the repo as structured data, rendered into a hub that's actually pleasant to read."
+     }
+    ]
+   },
+   {
+    "id": "personas",
+    "n": "03",
+    "kicker": "Personas & Jobs-to-be-Done",
+    "title": "Who Rocketman serves",
+    "blocks": [
+     {
+      "type": "persona",
+      "name": "The Founder / PM",
+      "role": "owns the product",
+      "jobs": [
+       "See exactly where the project stands in ten seconds, without reading a wall of text",
+       "Know what's blocked and what's next at a glance",
+       "Trust that the spec reflects what's actually being built"
+      ]
+     },
+     {
+      "type": "persona",
+      "name": "The Engineer",
+      "role": "ships the code",
+      "jobs": [
+       "Find the decision and the debugging trail next to the code they explain",
+       "Move a task or record an ADR without leaving the repo",
+       "Never re-explain the project to a fresh agent session"
+      ]
+     },
+     {
+      "type": "persona",
+      "name": "The Agent Fleet",
+      "role": "does the work",
+      "jobs": [
+       "Load shared, structured context and act without re-deriving it",
+       "Pick ready tasks off the board as a work queue",
+       "Write results back safely under the single-writer rule"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "requirements",
+    "n": "04",
+    "kicker": "Requirements",
+    "title": "User stories & functional requirements",
+    "blocks": [
+     {
+      "type": "story",
+      "sid": "US-1",
+      "title": "Skim the whole project fast",
+      "asIf": "As a \u003cem>Founder/PM\u003c/em>, I want a dashboard that summarizes project state so that I understand where things stand without reading every task.",
+      "ac": [
+       "Given a project, when I open the hub, then a one-paragraph AI summary and a health score are the first thing I see.",
+       "Given blockers exist, when I view the dashboard, then they are surfaced with their reason.",
+       "Given any link in the summary, when I click it, then the relevant entity opens in a drawer."
+      ]
+     },
+     {
+      "type": "story",
+      "sid": "US-2",
+      "title": "Edit safely as an agent fleet",
+      "asIf": "As an \u003cem>Agent Fleet\u003c/em>, I want one writer to own all updates so that parallel work never corrupts the hub.",
+      "ac": [
+       "Given sub-agents working in parallel, when they finish, then they return results to the parent rather than writing directly.",
+       "Given the parent writes results, when the build runs, then the hub regenerates deterministically.",
+       "Given any change, when it lands, then the activity feed records the actor with human-vs-agent provenance."
+      ]
+     },
+     {
+      "type": "table",
+      "title": "Functional requirements",
+      "rows": [
+       {
+        "id": "FR-1",
+        "prio": "must",
+        "text": "Render the whole project to one self-contained, offline HTML file."
+       },
+       {
+        "id": "FR-2",
+        "prio": "must",
+        "text": "Keep structured data as the source of truth; the HTML is generated and read-only."
+       },
+       {
+        "id": "FR-3",
+        "prio": "must",
+        "text": "Eight views: dashboard, board, spec, roadmap, decisions, debug, docs, activity."
+       },
+       {
+        "id": "FR-4",
+        "prio": "must",
+        "text": "Show an AI summary line on every entity and bidirectional backlinks."
+       },
+       {
+        "id": "FR-5",
+        "prio": "must",
+        "text": "Record human-vs-agent provenance on every item and activity event."
+       },
+       {
+        "id": "FR-6",
+        "prio": "should",
+        "text": "Ship a Claude skill stack that walks idea → production."
+       },
+       {
+        "id": "FR-7",
+        "prio": "could",
+        "text": "Aggregate many repos into one read-only org rollup."
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "nonfunctional",
+    "n": "05",
+    "kicker": "Non-functional",
+    "title": "Budgets & constraints",
+    "blocks": [
+     {
+      "type": "p",
+      "html": "These are hard constraints, not preferences. The build enforces what it can."
+     },
+     {
+      "type": "budgets",
+      "items": [
+       {
+        "k": "Runtime deps",
+        "v": "0",
+        "d": "zero, by design"
+       },
+       {
+        "k": "Build time",
+        "v": "\u003c 100ms",
+        "d": "data → hub"
+       },
+       {
+        "k": "Hub size",
+        "v": "\u003c 300KB",
+        "d": "single file"
+       },
+       {
+        "k": "Interaction",
+        "v": "\u003c 100ms",
+        "d": "view switches"
+       },
+       {
+        "k": "Offline",
+        "v": "100%",
+        "d": "opens at file://"
+       },
+       {
+        "k": "Themes",
+        "v": "2",
+        "d": "light + dark"
+       }
+      ]
+     },
+     {
+      "type": "p",
+      "html": "\u003cb>Determinism:\u003c/b> same data in, byte-identical hub out — so CI can fail a PR whose committed hub is stale ([[rm-03|the doctor]]). \u003cb>No fonts:\u003c/b> system stack only, so it renders identically offline."
+     }
+    ]
+   },
+   {
+    "id": "flows",
+    "n": "06",
+    "kicker": "The Rocketman Track",
+    "title": "Idea → production, as a skill stack",
+    "blocks": [
+     {
+      "type": "p",
+      "html": "Rocketman ships a Claude skill stack that walks a product from a raw idea to a shipped, iterated product. Each stage reads from and writes back to the same PM/ data, so the hub is always current."
+     },
+     {
+      "type": "p",
+      "html": "\u003cb>Ideate\u003c/b> ([[rm-05|/rm-ideate]]) → \u003cb>PRD\u003c/b> ([[rm-06|/rm-prd]]) → \u003cb>Plan\u003c/b> → \u003cb>Build\u003c/b> ([[rm-07|/rm-plan + /rm-build]]) → \u003cb>Verify\u003c/b> → \u003cb>Test\u003c/b> ([[rm-08|/rm-verify + /rm-test]]) → \u003cb>Launch\u003c/b> → \u003cb>Iterate\u003c/b> ([[rm-09|/rm-launch + /rm-iterate]]). Eight stages, one repo."
+     }
+    ]
+   },
+   {
+    "id": "metrics",
+    "n": "07",
+    "kicker": "Success Metrics",
+    "title": "How we'll know it works",
+    "blocks": [
+     {
+      "type": "metrics",
+      "items": [
+       {
+        "v": "\u003c 10s",
+        "k": "Time to project state",
+        "t": "open hub → understand status"
+       },
+       {
+        "v": "0",
+        "k": "Context re-derivations",
+        "t": "agents read the hub, not chat history"
+       },
+       {
+        "v": "100%",
+        "k": "Change provenance",
+        "t": "every edit attributed human/agent"
+       },
+       {
+        "v": "1 file",
+        "k": "To share a project",
+        "t": "the committed hub"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "nongoals",
+    "n": "08",
+    "kicker": "Non-Goals",
+    "title": "What Rocketman deliberately is not",
+    "blocks": [
+     {
+      "type": "p",
+      "html": "Not a hosted SaaS — it lives in your repo. Not a real-time multiplayer editor — edits go through data + Claude. Not a replacement for issue-tracker sync — that's an optional adapter ([[rm-04|the CLI]] + the mirror skill). The HTML is read-only; it is not an input surface."
+     },
+     {
+      "type": "p",
+      "html": "\u003cb>Scope discipline:\u003c/b> one version, final. Cross-repo rollup ([[rm-12|RM-12]]) and a live Fleet view ([[rm-11|RM-11]]) are explicit post-launch milestones, not hidden scope in v0.1."
+     }
+    ]
+   },
+   {
+    "id": "risks",
+    "n": "09",
+    "kicker": "Risks & Open Questions",
+    "title": "What could bite us",
+    "blocks": [
+     {
+      "type": "p",
+      "html": "\u003cb>Browser support:\u003c/b> the theme uses oklch(); pre-2023 browsers fall back poorly ([[bug-03|BUG-3]]). \u003cb>Scale:\u003c/b> very large projects may need pagination/archiving in the views. \u003cb>Merge conflicts:\u003c/b> a single tasks.json can conflict — per-entity files are proposed in [[adr-07|ADR-7]]."
+     },
+     {
+      "type": "p",
+      "html": "\u003cb>Open question:\u003c/b> should a local \u003ccode>rocketman serve\u003c/code> mode let the board write back to disk, or stay strictly read-only? Tracked in the decision backlog."
+     }
+    ]
+   }
+  ]
+ },
+ "docs": {
+  "groups": [
+   {
+    "id": "tutorial",
+    "q": "T",
+    "name": "Tutorial",
+    "sub": "Learn by doing",
+    "items": [
+     {
+      "id": "doc-t1",
+      "title": "Your first Rocketman project",
+      "active": true
+     }
+    ]
+   },
+   {
+    "id": "howto",
+    "q": "H",
+    "name": "How-to",
+    "sub": "Solve a task",
+    "items": [
+     {
+      "id": "doc-h1",
+      "title": "Add Rocketman to an existing repo"
+     },
+     {
+      "id": "doc-h2",
+      "title": "Write a PRD with the track"
+     },
+     {
+      "id": "doc-h3",
+      "title": "Run a build & verify on CI"
+     }
+    ]
+   },
+   {
+    "id": "reference",
+    "q": "R",
+    "name": "Reference",
+    "sub": "Look it up",
+    "items": [
+     {
+      "id": "doc-r1",
+      "title": "Data schema"
+     },
+     {
+      "id": "doc-r2",
+      "title": "CLI commands"
+     },
+     {
+      "id": "doc-r3",
+      "title": "The skill stack"
+     }
+    ]
+   },
+   {
+    "id": "explanation",
+    "q": "E",
+    "name": "Explanation",
+    "sub": "Understand why",
+    "items": [
+     {
+      "id": "doc-e1",
+      "title": "Why HTML, not markdown"
+     },
+     {
+      "id": "doc-e2",
+      "title": "The single-writer rule"
+     }
+    ]
+   }
+  ],
+  "content": {
+   "doc-t1": {
+    "kind": "Tutorial",
+    "title": "Your first Rocketman project",
+    "meta": "~2 min",
+    "html": "\u003cp>Install Rocketman, scaffold a hub, and open it.\u003c/p>\u003cpre>\u003ccode>npx rocketman init\nnpx rocketman build\nopen PM/index.html\u003c/code>\u003c/pre>\u003cp>\u003cb>init\u003c/b> scaffolds \u003ccode>PM/\u003c/code> with starter data and a \u003ccode>CLAUDE.md\u003c/code>. \u003cb>build\u003c/b> merges your data into \u003ccode>PM/index.html\u003c/code>. \u003cb>open\u003c/b> it — no server, no dependencies.\u003c/p>"
+   },
+   "doc-h1": {
+    "kind": "How-to",
+    "title": "Add Rocketman to an existing repo",
+    "meta": "how-to",
+    "html": "\u003cp>Drop the hub into any repo without touching your stack.\u003c/p>\u003cpre>\u003ccode>cd your-repo\nnpx rocketman init\ngit add PM/ .claude/\u003c/code>\u003c/pre>\u003cp>Commit \u003ccode>PM/\u003c/code> alongside your code — it branches, reviews, and merges with the code, so project state never drifts from the branch it describes.\u003c/p>"
+   },
+   "doc-h2": {
+    "kind": "How-to",
+    "title": "Write a PRD with the track",
+    "meta": "how-to",
+    "html": "\u003cp>Let the skill stack force the thinking, then generate the spec.\u003c/p>\u003cpre>\u003ccode>/rm-ideate   # forcing questions\n/rm-prd      # writes PM/data/spec.json\n/rm-plan     # lays out the board\u003c/code>\u003c/pre>"
+   },
+   "doc-h3": {
+    "kind": "How-to",
+    "title": "Run a build & verify on CI",
+    "meta": "how-to",
+    "html": "\u003cp>Fail the PR if the committed hub is stale or any reference is broken.\u003c/p>\u003cpre>\u003ccode>node engine/build.mjs --check\u003c/code>\u003c/pre>\u003cp>The check rebuilds in memory and compares against the committed \u003ccode>PM/index.html\u003c/code>; a non-zero exit means someone forgot to rebuild.\u003c/p>"
+   },
+   "doc-r1": {
+    "kind": "Reference",
+    "title": "Data schema",
+    "meta": "reference",
+    "html": "\u003cp>Four files merge — flat — into one \u003ccode>#pm-data\u003c/code> island.\u003c/p>\u003cul>\u003cli>\u003ccode>core.json\u003c/code> — project, burn, people, epics, labels, columns\u003c/li>\u003cli>\u003ccode>tasks.json\u003c/code> — the board\u003c/li>\u003cli>\u003ccode>spec.json\u003c/code> — spec sections + docs\u003c/li>\u003cli>\u003ccode>content.json\u003c/code> — ADRs, debug logs, activity\u003c/li>\u003c/ul>\u003cpre>\u003ccode>{ \"id\": \"rm-01\", \"col\": \"done\", \"owner\": \"opus\",\n  \"summary\": \"...\", \"backlinks\": [\"adr-02\"] }\u003c/code>\u003c/pre>"
+   },
+   "doc-r2": {
+    "kind": "Reference",
+    "title": "CLI commands",
+    "meta": "reference",
+    "html": "\u003cul>\u003cli>\u003ccode>rocketman init\u003c/code> — scaffold PM/ into a repo\u003c/li>\u003cli>\u003ccode>rocketman build\u003c/code> — regenerate PM/index.html\u003c/li>\u003cli>\u003ccode>rocketman new &lt;task|adr|debug&gt;\u003c/code> — create an entity\u003c/li>\u003cli>\u003ccode>rocketman doctor\u003c/code> — validate data + references\u003c/li>\u003c/ul>"
+   },
+   "doc-r3": {
+    "kind": "Reference",
+    "title": "The skill stack",
+    "meta": "reference",
+    "html": "\u003cp>The track, as Claude skills:\u003c/p>\u003cul>\u003cli>\u003ccode>/rm-ideate\u003c/code> · \u003ccode>/rm-prd\u003c/code> · \u003ccode>/rm-plan\u003c/code> · \u003ccode>/rm-build\u003c/code>\u003c/li>\u003cli>\u003ccode>/rm-verify\u003c/code> · \u003ccode>/rm-test\u003c/code> · \u003ccode>/rm-launch\u003c/code> · \u003ccode>/rm-iterate\u003c/code>\u003c/li>\u003cli>Infra: \u003ccode>/rm-init\u003c/code> · \u003ccode>/rm-sync\u003c/code> · \u003ccode>/rm-mirror\u003c/code> · \u003ccode>/rm-decision\u003c/code> · \u003ccode>/rm-debug\u003c/code>\u003c/li>\u003c/ul>"
+   },
+   "doc-e1": {
+    "kind": "Explanation",
+    "title": "Why HTML, not markdown",
+    "meta": "explanation",
+    "html": "\u003cp>Humans don't read long markdown, and raw HTML is terrible to diff and for agents to edit reliably.\u003c/p>\u003cp>Rocketman splits the two. Structured data is the source of truth — small, diffable, agent-writable. The HTML is a generated, read-only view. You edit data; the build renders the hub. Best of both worlds.\u003c/p>"
+   },
+   "doc-e2": {
+    "kind": "Explanation",
+    "title": "The single-writer rule",
+    "meta": "explanation",
+    "html": "\u003cp>When a parent agent allocates work to a fleet of sub-agents, concurrent writes corrupt shared state.\u003c/p>\u003cul>\u003cli>Sub-agents \u003cb>read\u003c/b> the hub and \u003cb>return\u003c/b> structured results\u003c/li>\u003cli>The parent is the \u003cb>sole writer\u003c/b> back to PM/ data\u003c/li>\u003cli>Only the append-only activity log may be appended concurrently\u003c/li>\u003c/ul>\u003cp>Serializing writes through one parent keeps a fleet's output consistent and reviewable, with full provenance preserved.\u003c/p>"
+   }
+  }
+ },
+ "adrs": [
+  {
+   "id": "adr-01",
+   "ref": "ADR-1",
+   "title": "Markdown project docs",
+   "status": "superseded",
+   "date": "2026-05-20",
+   "author": "tejas",
+   "summary": "Originally we kept PM docs as plain markdown for simplicity.",
+   "context": "We wanted project context in the repo and easy to diff in a PR. Markdown is the obvious default.",
+   "options": [
+    {
+     "text": "Plain markdown files",
+     "chosen": true
+    },
+    {
+     "text": "Structured data + generated HTML",
+     "chosen": false
+    },
+    {
+     "text": "An external SaaS tool",
+     "chosen": false
+    }
+   ],
+   "decision": "Chose plain markdown for the first cut.",
+   "consequences": "Superseded by ADR-2. Long markdown went unread by humans and was lossy for the rich, scannable views we wanted.",
+   "backlinks": [
+    "adr-02"
+   ]
+  },
+  {
+   "id": "adr-02",
+   "ref": "ADR-2",
+   "title": "Separate data from presentation",
+   "status": "accepted",
+   "date": "2026-05-22",
+   "author": "tejas",
+   "summary": "Structured data is the source of truth; the hub is generated, read-only HTML.",
+   "context": "We need humans to skim HTML, agents to edit reliably, and git to diff cleanly — all from one source.",
+   "options": [
+    {
+     "text": "Hand-write and hand-edit HTML",
+     "chosen": false
+    },
+    {
+     "text": "Data is truth; generate read-only HTML",
+     "chosen": true
+    },
+    {
+     "text": "Keep everything in markdown",
+     "chosen": false
+    }
+   ],
+   "decision": "Author structured data; a generator renders read-only HTML. Never hand-edit the HTML.",
+   "consequences": "Clean, reviewable diffs and reliable agent edits — at the cost of requiring a build step to regenerate the hub.",
+   "backlinks": [
+    "adr-01",
+    "rm-01"
+   ]
+  },
+  {
+   "id": "adr-03",
+   "ref": "ADR-3",
+   "title": "One offline, committed HTML file",
+   "status": "accepted",
+   "date": "2026-05-23",
+   "author": "tejas",
+   "summary": "Generate a single self-contained index.html, commit it, open offline.",
+   "context": "How should a human view the hub with the least friction — no server, no network?",
+   "options": [
+    {
+     "text": "Build on demand + GitHub Pages",
+     "chosen": false
+    },
+    {
+     "text": "Local server (rocketman serve)",
+     "chosen": false
+    },
+    {
+     "text": "Committed self-contained file",
+     "chosen": true
+    }
+   ],
+   "decision": "Generate one self-contained index.html, commit it, and open it at file:// with zero dependencies.",
+   "consequences": "Works fully offline from any checkout; marked linguist-generated so diffs stay collapsed.",
+   "backlinks": [
+    "adr-02"
+   ]
+  },
+  {
+   "id": "adr-04",
+   "ref": "ADR-4",
+   "title": "Flat-merge JSON data islands",
+   "status": "accepted",
+   "date": "2026-05-24",
+   "author": "opus",
+   "summary": "Four focused JSON files merge into one flat #pm-data island at build time.",
+   "context": "One large data file is conflict-prone; deeply nested data is awkward to edit.",
+   "options": [
+    {
+     "text": "One big data file",
+     "chosen": false
+    },
+    {
+     "text": "Four flat-merged files",
+     "chosen": true
+    },
+    {
+     "text": "One file per entity now",
+     "chosen": false
+    }
+   ],
+   "decision": "Author core, tasks, spec, and content; the build flat-merges them into one island.",
+   "consequences": "Smaller, focused diffs and a simple runtime read; the build owns the merge step.",
+   "backlinks": [
+    "adr-02",
+    "rm-01"
+   ]
+  },
+  {
+   "id": "adr-05",
+   "ref": "ADR-5",
+   "title": "Single-writer rule for agent fleets",
+   "status": "accepted",
+   "date": "2026-05-25",
+   "author": "tejas",
+   "summary": "Sub-agents read and return results; the parent is the sole writer to PM/ data.",
+   "context": "A parent agent allocates work to sub-agents on demand; concurrent writes would corrupt the hub.",
+   "options": [
+    {
+     "text": "Every agent writes directly to PM/ data",
+     "chosen": false
+    },
+    {
+     "text": "Parent is sole writer; sub-agents return results",
+     "chosen": true
+    }
+   ],
+   "decision": "Sub-agents read context and return structured results. The parent serializes all writes; only the activity log is append-only.",
+   "consequences": "No concurrent-write corruption and fully reviewable fleet output; the parent becomes a clear serialization point.",
+   "backlinks": [
+    "adr-02",
+    "adr-04",
+    "rm-07"
+   ]
+  },
+  {
+   "id": "adr-06",
+   "ref": "ADR-6",
+   "title": "Calm command center aesthetic",
+   "status": "accepted",
+   "date": "2026-05-26",
+   "author": "tejas",
+   "summary": "Linear/Height energy: cool neutrals, one blue accent, semantic status colors, system fonts.",
+   "context": "The hub must be instantly scannable, not flashy or noisy.",
+   "options": [
+    {
+     "text": "Dense cockpit (terminal/Bloomberg)",
+     "chosen": false
+    },
+    {
+     "text": "Editorial document (Stripe docs)",
+     "chosen": false
+    },
+    {
+     "text": "Calm command center (Linear/Height)",
+     "chosen": true
+    }
+   ],
+   "decision": "Cool-neutral oklch grays, a single blue accent, semantic status colors, and system fonts only.",
+   "consequences": "Fast to scan, no dependency on web fonts, and consistent light and dark themes.",
+   "backlinks": [
+    "rm-02"
+   ]
+  },
+  {
+   "id": "adr-07",
+   "ref": "ADR-7",
+   "title": "Per-entity data files",
+   "status": "proposed",
+   "date": "2026-05-29",
+   "author": "opus",
+   "summary": "Proposed: split tasks/ADRs/debug into one file per entity for cleaner history.",
+   "context": "Large projects may hit merge conflicts on a single tasks.json.",
+   "options": [
+    {
+     "text": "Keep one file per type (today)",
+     "chosen": false
+    },
+    {
+     "text": "One file per entity",
+     "chosen": false
+    }
+   ],
+   "decision": "Undecided. Proposed to glob a directory of per-entity files for cleaner git blame and fewer conflicts.",
+   "consequences": "Better per-entity history at the cost of many more files; the build would glob a directory instead of reading one file.",
+   "backlinks": [
+    "adr-04"
+   ]
+  },
+  {
+   "id": "adr-08",
+   "ref": "ADR-8",
+   "title": "File-based agent relay bus",
+   "status": "accepted",
+   "date": "2026-05-30",
+   "author": "tejas",
+   "summary": "Agents coordinate through a per-file bus in PM/comms, polled on an interval.",
+   "context": "Multiple agent sessions in separate terminals can't talk; coordination meant manual copy-paste. We need messages + task handoffs without standing up a server.",
+   "options": [
+    {
+     "text": "A single shared comms.json",
+     "chosen": false
+    },
+    {
+     "text": "A network message broker / server",
+     "chosen": false
+    },
+    {
+     "text": "Per-file bus in PM/comms, polled",
+     "chosen": true
+    }
+   ],
+   "decision": "Each agent writes only its own files (presence, the messages it sends, its own acks) under PM/comms; polling reads the directory. Handoffs follow an offer → accept → complete lifecycle.",
+   "consequences": "Conflict-free with no server and no merge races; it travels in the repo and folds into the hub. Coordination is eventually-consistent at the poll interval rather than instant.",
+   "backlinks": [
+    "adr-05",
+    "rm-13"
+   ]
+  }
+ ],
+ "debug": [
+  {
+   "id": "bug-01",
+   "ref": "BUG-1",
+   "title": "Hub renders blank from the design bundle",
+   "state": "fixed",
+   "task": "rm-01",
+   "owner": "opus",
+   "elapsed": "25m",
+   "hyposCount": 2,
+   "summary": "The exported index.html shipped with app.js stubbed out as a placeholder, so nothing rendered.",
+   "symptom": "Opening the bundled index.html shows only the empty shell — no views paint.",
+   "hypotheses": [
+    {
+     "status": "refuted",
+     "text": "The data island is missing",
+     "note": "#pm-data is present and valid JSON."
+    },
+    {
+     "status": "confirmed",
+     "text": "app.js was never inlined",
+     "note": "The script body is a literal placeholder, so boot() is undefined."
+    }
+   ],
+   "repro": [
+    "Open the shipped PM/index.html",
+    "Observe only the shell paints",
+    "Inspect the \u003cscript> body — it's a placeholder",
+    "boot() is never called"
+   ],
+   "rootCause": "The design export stubs large scripts to keep the bundle small; the real app.js was never inlined.",
+   "fix": {
+    "text": "build.mjs inlines the real engine/app.js plus a fresh data island into the template.",
+    "pr": 1,
+    "commit": "a1b2c3d",
+    "file": "engine/build.mjs"
+   },
+   "guard": "The build asserts app.js is over 10KB and contains boot() before it writes index.html.",
+   "timeline": [
+    {
+     "stage": "symptom",
+     "kind": "alert",
+     "when": "25m ago",
+     "who": "opus"
+    },
+    {
+     "stage": "hypothesis",
+     "kind": "search",
+     "when": "20m ago",
+     "who": "opus"
+    },
+    {
+     "stage": "repro",
+     "kind": "check",
+     "when": "16m ago",
+     "who": "opus"
+    },
+    {
+     "stage": "rootcause",
+     "kind": "bug",
+     "when": "12m ago",
+     "who": "opus"
+    },
+    {
+     "stage": "fix",
+     "kind": "commit",
+     "when": "6m ago",
+     "who": "opus"
+    },
+    {
+     "stage": "guard",
+     "kind": "check",
+     "when": "2m ago",
+     "who": "opus"
+    }
+   ],
+   "backlinks": [
+    "rm-01"
+   ]
+  },
+  {
+   "id": "bug-02",
+   "ref": "BUG-2",
+   "title": "Closing script tag in content breaks the island",
+   "state": "fixed",
+   "task": "rm-01",
+   "owner": "opus",
+   "elapsed": "16m",
+   "hyposCount": 1,
+   "summary": "A literal closing-script sequence inside embedded JSON ended the data script early and truncated the page.",
+   "symptom": "When a doc contained a closing-script string, everything below it disappeared.",
+   "hypotheses": [
+    {
+     "status": "confirmed",
+     "text": "The HTML parser closes the island early",
+     "note": "The JSON is parsed as raw text; a nested close-tag ends the script."
+    }
+   ],
+   "repro": [
+    "Add a doc whose body contains a closing script tag",
+    "Rebuild the hub",
+    "Open it",
+    "Everything after the tag is gone"
+   ],
+   "rootCause": "Embedded JSON must escape the script-close sequence before it lands in the HTML.",
+   "fix": {
+    "text": "build.mjs replaces \u003c with its unicode escape inside the JSON island.",
+    "pr": 1,
+    "commit": "d4e5f6a",
+    "file": "engine/build.mjs"
+   },
+   "guard": "A self-check round-trips a closing-script string through the bundler and asserts the data survives.",
+   "timeline": [
+    {
+     "stage": "symptom",
+     "kind": "alert",
+     "when": "40m ago",
+     "who": "opus"
+    },
+    {
+     "stage": "hypothesis",
+     "kind": "search",
+     "when": "34m ago",
+     "who": "opus"
+    },
+    {
+     "stage": "rootcause",
+     "kind": "bug",
+     "when": "30m ago",
+     "who": "opus"
+    },
+    {
+     "stage": "fix",
+     "kind": "commit",
+     "when": "26m ago",
+     "who": "opus"
+    },
+    {
+     "stage": "guard",
+     "kind": "check",
+     "when": "24m ago",
+     "who": "opus"
+    }
+   ],
+   "backlinks": [
+    "rm-01"
+   ]
+  },
+  {
+   "id": "bug-03",
+   "ref": "BUG-3",
+   "title": "oklch colors fall back to black on old browsers",
+   "state": "monitoring",
+   "task": "rm-02",
+   "owner": "sonnet",
+   "elapsed": "—",
+   "hyposCount": 1,
+   "summary": "Browsers older than mid-2023 don't support the oklch() color function the theme is built on.",
+   "symptom": "On very old browsers the entire UI renders close to black.",
+   "hypotheses": [
+    {
+     "status": "confirmed",
+     "text": "oklch() is unsupported",
+     "note": "Verified against caniuse and a legacy-browser VM."
+    }
+   ],
+   "repro": [
+    "Open the hub in a pre-2023 browser",
+    "Observe the near-black UI"
+   ],
+   "rootCause": "The theme is built entirely on oklch() color tokens with no sRGB fallback.",
+   "fix": {
+    "text": "Document the supported-browser baseline; evaluate sRGB fallbacks if demand warrants.",
+    "pr": 0,
+    "commit": "",
+    "file": "engine/hub.css"
+   },
+   "guard": "Track real usage; revisit fallbacks only if a meaningful share of users are affected.",
+   "timeline": [
+    {
+     "stage": "symptom",
+     "kind": "alert",
+     "when": "2d ago",
+     "who": "sonnet"
+    },
+    {
+     "stage": "hypothesis",
+     "kind": "search",
+     "when": "2d ago",
+     "who": "sonnet"
+    },
+    {
+     "stage": "rootcause",
+     "kind": "bug",
+     "when": "1d ago",
+     "who": "sonnet"
+    }
+   ],
+   "backlinks": [
+    "rm-02"
+   ]
+  }
+ ],
+ "activity": [
+  {
+   "day": "Today",
+   "events": [
+    {
+     "when": "just now",
+     "who": "opus",
+     "icon": "link",
+     "line": "handed \u003cb>RM-8\u003c/b> off to \u003cb>skills\u003c/b> over the relay",
+     "detail": "skills accepted — wiring /rm-verify · [[rm-13|RM-13]]"
+    },
+    {
+     "when": "just now",
+     "who": "opus",
+     "icon": "commit",
+     "line": "wrote \u003cb>build.mjs\u003c/b> — data → single-file hub",
+     "detail": "The content pipeline lands · [[rm-01|RM-1]]"
+    },
+    {
+     "when": "12m ago",
+     "who": "opus",
+     "icon": "check",
+     "line": "merged \u003cb>PR #2\u003c/b> — calm command center hub",
+     "detail": "8 views, light + dark · [[rm-02|RM-2]]"
+    },
+    {
+     "when": "30m ago",
+     "who": "sonnet",
+     "icon": "review",
+     "line": "moved \u003cb>RM-3\u003c/b> to Review",
+     "detail": "Schema + doctor validator · [[rm-03|RM-3]]"
+    },
+    {
+     "when": "40m ago",
+     "who": "tejas",
+     "icon": "check",
+     "line": "accepted \u003cb>ADR-5\u003c/b>",
+     "detail": "Single-writer rule for fleets · [[adr-05|ADR-5]]"
+    },
+    {
+     "when": "1h ago",
+     "who": "opus",
+     "icon": "check",
+     "line": "closed \u003cb>BUG-1\u003c/b> — blank hub",
+     "detail": "app.js was stubbed in the bundle · [[bug-01|BUG-1]]"
+    }
+   ]
+  },
+  {
+   "day": "Yesterday",
+   "events": [
+    {
+     "when": "yesterday",
+     "who": "opus",
+     "icon": "commit",
+     "line": "shipped \u003cb>/rm-ideate\u003c/b> and \u003cb>/rm-prd\u003c/b>",
+     "detail": "Track stages 1–2 · [[rm-05|RM-5]] · [[rm-06|RM-6]]"
+    },
+    {
+     "when": "yesterday",
+     "who": "haiku",
+     "icon": "task",
+     "line": "opened \u003cb>PR #14\u003c/b> — Diátaxis docs",
+     "detail": "Tutorial, how-tos, reference · [[rm-10|RM-10]]"
+    },
+    {
+     "when": "yesterday",
+     "who": "sonnet",
+     "icon": "link",
+     "line": "linked \u003cb>RM-9\u003c/b> to \u003cb>RM-4\u003c/b>",
+     "detail": "Launch skills wait on the CLI ship hooks"
+    }
+   ]
+  },
+  {
+   "day": "Earlier",
+   "events": [
+    {
+     "when": "2d ago",
+     "who": "opus",
+     "icon": "commit",
+     "line": "fixed \u003cb>BUG-2\u003c/b> — script-close in the island",
+     "detail": "Escape the markup in the data island · [[bug-02|BUG-2]]"
+    },
+    {
+     "when": "3d ago",
+     "who": "tejas",
+     "icon": "task",
+     "line": "created the project from the locked spec",
+     "detail": "One version, final · [[vision|Spec]]"
+    }
+   ]
+  }
+ ],
+ "comms": {
+  "agents": [
+   {
+    "session": "engine",
+    "agent": "Claude Opus",
+    "model": "opus",
+    "focus": "engine + build pipeline (RM-1, RM-3)",
+    "status": "active",
+    "started": "2026-05-30T08:40:00Z",
+    "heartbeat": "2026-05-30T09:12:00Z"
+   },
+   {
+    "session": "skills",
+    "agent": "Claude Sonnet",
+    "model": "sonnet",
+    "focus": "the Rocketman Track skills (RM-7, RM-8)",
+    "status": "active",
+    "started": "2026-05-30T08:42:00Z",
+    "heartbeat": "2026-05-30T09:11:30Z"
+   }
+  ],
+  "messages": [
+   {
+    "id": "m-h1a2b3",
+    "ts": "2026-05-30T09:05:00Z",
+    "from": "engine",
+    "to": "skills",
+    "kind": "handoff",
+    "subject": "Build pipeline is ready — wire /rm-verify to it",
+    "body": "build.mjs now exposes build()/validate()/loadComms() and the CLI has `rocketman check` + `rocketman doctor`. RM-8's /rm-verify can call those directly as its gate. Doctor output format is {issues:[]}. Over to you for the skill wiring.",
+    "task": "rm-08",
+    "status": "open"
+   }
+  ],
+  "acks": [
+   {
+    "msg": "m-h1a2b3",
+    "by": "skills",
+    "kind": "accept",
+    "ts": "2026-05-30T09:08:00Z",
+    "note": "Picked up RM-8 — wiring /rm-verify to `rocketman check` + doctor now."
+   }
+  ]
+ }
+}
+</script>
+<script>
+/* ════════════════════════════════════════════════════════════════
+   Winsen Project Hub — vanilla render engine. Read-first, zero deps.
+   ════════════════════════════════════════════════════════════════ */
+(function () {
+  "use strict";
+  const D = JSON.parse(document.getElementById("pm-data").textContent);
+
+  /* ───────────────────────── icons ───────────────────────── */
+  const I = {
+    dashboard:'<path d="M3 9l7-5 7 5v8a1 1 0 01-1 1h-3v-5H7v5H4a1 1 0 01-1-1z"/>',
+    board:'<rect x="3" y="3" width="14" height="14" rx="1.5"/><path d="M8 3v14M13 3v14"/>',
+    spec:'<path d="M5 3h7l3 3v11a1 1 0 01-1 1H5a1 1 0 01-1-1V4a1 1 0 011-1z"/><path d="M11 3v4h4M7 11h6M7 14h4"/>',
+    roadmap:'<path d="M3 6h9M3 10h13M3 14h6"/><circle cx="15" cy="6" r="1.4"/><circle cx="9" cy="14" r="1.4"/>',
+    decision:'<path d="M10 3v14M5 7h10M5 7l-2 5h4zM15 7l-2 5h4z"/><path d="M3 12a2 2 0 004 0M13 12a2 2 0 004 0"/>',
+    debug:'<rect x="6" y="6" width="8" height="9" rx="4"/><path d="M10 3v3M4 8H2M4 12H2M18 8h-2M18 12h-2M6 6L4 4M14 6l2-2"/>',
+    docs:'<path d="M4 4a1 1 0 011-1h5v14H5a1 1 0 01-1-1zM10 3h5a1 1 0 011 1v11a1 1 0 01-1 1h-5z"/>',
+    activity:'<path d="M3 10h3l2-5 4 10 2-5h3"/>',
+    search:'<circle cx="9" cy="9" r="6"/><path d="M14 14l3 3"/>',
+    sun:'<circle cx="8" cy="8" r="3.2"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.4 3.4l1.4 1.4M11.2 11.2l1.4 1.4M3.4 12.6l1.4-1.4M11.2 4.8l1.4-1.4"/>',
+    moon:'<path d="M13.5 9.5A5.5 5.5 0 016.5 2.5 5.5 5.5 0 1013.5 9.5z"/>',
+    spark:'<path d="M10 2l1.6 4.8L16 8l-4.4 1.2L10 14l-1.6-4.8L4 8l4.4-1.2z"/>',
+    pr:'<circle cx="5" cy="5" r="2"/><circle cx="5" cy="15" r="2"/><circle cx="15" cy="15" r="2"/><path d="M5 7v6M15 13V9a2 2 0 00-2-2H8"/><path d="M10 5h-2"/>',
+    merge:'<circle cx="5" cy="5" r="2"/><circle cx="5" cy="15" r="2"/><circle cx="15" cy="9" r="2"/><path d="M5 7v6M5 9a8 8 0 008 0"/>',
+    commit:'<circle cx="10" cy="10" r="3"/><path d="M10 3v4M10 13v4"/>',
+    branch:'<circle cx="6" cy="4" r="2"/><circle cx="6" cy="16" r="2"/><circle cx="14" cy="7" r="2"/><path d="M6 6v8M14 9a8 8 0 01-8 5"/>',
+    clock:'<circle cx="10" cy="10" r="7"/><path d="M10 6v4l3 2"/>',
+    check:'<path d="M4 10l4 4 8-9"/>',
+    checkcircle:'<circle cx="10" cy="10" r="7.5"/><path d="M6.5 10l2.3 2.3L13.5 7.5"/>',
+    x:'<path d="M5 5l10 10M15 5L5 15"/>',
+    chev:'<path d="M7 4l6 6-6 6"/>',
+    alert:'<path d="M10 3l8 14H2z"/><path d="M10 8v4M10 15v.5"/>',
+    lock:'<rect x="4" y="9" width="12" height="8" rx="1.5"/><path d="M7 9V6a3 3 0 016 0v3"/>',
+    link:'<path d="M8 11a3 3 0 004 0l2-2a3 3 0 00-4-4l-1 1M12 9a3 3 0 00-4 0l-2 2a3 3 0 004 4l1-1"/>',
+    file:'<path d="M5 3h7l3 3v11a1 1 0 01-1 1H5a1 1 0 01-1-1V4a1 1 0 011-1z"/><path d="M11 3v4h4"/>',
+    flame:'<path d="M10 2c1 3-2 4-2 7a4 4 0 008 0c0-1-.5-2-1-2.5.2 2-1 3-2 2 1-3-1-5-3-6.5z"/>',
+    beaker:'<path d="M8 3v5L4 16a1 1 0 001 1h10a1 1 0 001-1l-4-8V3"/><path d="M7 3h6M6.5 11h7"/>',
+    block:'<circle cx="10" cy="10" r="7"/><path d="M5 5l10 10"/>',
+    comment:'<path d="M4 5h12a1 1 0 011 1v7a1 1 0 01-1 1H8l-4 3v-3a1 1 0 01-1-1V6a1 1 0 011-1z"/>',
+    arrow:'<path d="M4 10h11M11 6l4 4-4 4"/>',
+    doc:'<path d="M5 3h7l3 3v11a1 1 0 01-1 1H5a1 1 0 01-1-1V4a1 1 0 011-1z"/><path d="M11 3v4h4M7 11h6"/>',
+    fix:'<path d="M12 3l2 2-1.5 1.5 2 2L18 6l1 1a5 5 0 01-6.5 6.5l-5 5-3-3 5-5A5 5 0 0110 4z"/>',
+    review:'<circle cx="9" cy="9" r="5.5"/><path d="M13 13l4 4M7 9l1.5 1.5L12 7"/>',
+    task:'<rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 10l2 2 4-4"/>',
+    blocks:'<rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/><rect x="3" y="11" width="6" height="6" rx="1"/>'
+  };
+  const icon = (n, cls) => `<svg class="${cls||''}" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${I[n]||I.task}</svg>`;
+  const iconFill = (n, cls) => `<svg class="${cls||''}" viewBox="0 0 20 20" fill="currentColor">${I[n]}</svg>`;
+
+  /* ───────────────────────── registry + linking ───────────────────────── */
+  const REG = {};
+  D.tasks.forEach(t => REG[t.id] = { kind: "task", label: t.ref, sub: t.summary, ent: t });
+  D.adrs.forEach(a => REG[a.id] = { kind: "adr", label: a.ref, sub: a.summary, ent: a });
+  D.debug.forEach(b => REG[b.id] = { kind: "debug", label: b.ref, sub: b.summary, ent: b });
+  D.burn.milestones.forEach(m => REG[m.id] = { kind: "milestone", label: m.name });
+  D.spec.sections.forEach(s => REG["spec-"+s.id] = { kind: "spec", label: s.title, sec: s.id });
+  Object.keys(D.docs.content).forEach(k => REG[k] = { kind: "doc", label: D.docs.content[k].title, doc: k });
+
+  function links(str) {
+    if (!str) return "";
+    return String(str)
+      .replace(/\[\[([^\]|]+)\|([^\]]+)\]\]/g, (m, id, label) =>
+        `<span class="wlink" data-link="${id}">${label}</span>`)
+      .replace(/`([^`]+)`/g, (m, c) => {
+        const fm = c.match(/^(.*?):(\d+)$/);
+        return fm ? `<span class="code-chip">${fm[1]}:<b>${fm[2]}</b></span>` : `<span class="code-chip">${c}</span>`;
+      });
+  }
+  const esc = s => String(s).replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+
+  /* ───────────────────────── people ───────────────────────── */
+  const P = D.people;
+  function avatar(pid, size) {
+    const p = P[pid]; if (!p) return "";
+    const cls = "av" + (size ? " " + size : "") + (p.tone ? " " + p.tone : "");
+    if (p.kind === "agent") return agentChip(pid);
+    return `<span class="${cls}" title="${p.name}">${p.av}</span>`;
+  }
+  function agentChip(pid) {
+    const p = P[pid];
+    return `<span class="agent-chip ${p.model}" title="AI agent — ${p.model}">${iconFill("spark","spark")}${p.name}</span>`;
+  }
+  function byline(pid) {
+    const p = P[pid]; if (!p) return "";
+    if (p.kind === "agent") return agentChip(pid);
+    return `<span class="byline">${avatar(pid,"sm")}<span class="name">${p.name}</span></span>`;
+  }
+  function actorMark(pid, size) {
+    const p = P[pid]; if (!p) return "";
+    return p.kind === "agent" ? `<span class="av ${size||''}" style="background:var(--accent)" title="${p.name}">${iconFill("spark","spark")}</span>` : avatar(pid, size);
+  }
+
+  /* ───────────────────────── shared bits ───────────────────────── */
+  const COL = {}; D.columns.forEach(c => COL[c.id] = c);
+  function statusPill(colId) {
+    const c = COL[colId] || { name: colId, status: colId };
+    return `<span class="status-pill st-${c.status}"><span class="dot"></span>${c.name}</span>`;
+  }
+  function labelChip(id) {
+    const l = D.labels[id]; if (!l) return "";
+    return `<span class="label-chip hue"><span class="ldot" style="background:${l.color}"></span>${l.name}</span>`;
+  }
+  function prChip(pr) {
+    if (!pr) return "";
+    const map = { open:["pr","open"], merged:["merge","merged"], draft:["pr","draft"], review:["review","review"] };
+    const [ic, cls] = map[pr.status] || ["pr","open"];
+    return `<span class="pr-chip ${cls}">${icon(ic)}#${pr.num} ${pr.status}</span>`;
+  }
+  function ageClass(days) { return days >= 7 ? "age-hot" : days >= 4 ? "age-warm" : ""; }
+
+  /* ════════════════════════ VIEWS ════════════════════════ */
+  const V = {};
+
+  /* ── Dashboard ── */
+  V.dashboard = () => {
+    const pr = D.project, b = D.burn;
+    const ring = (val) => {
+      const r = 27, c = 2 * Math.PI * r, off = c * (1 - val / 100);
+      const col = val >= 75 ? "var(--s-done)" : val >= 50 ? "var(--s-review)" : "var(--s-bug)";
+      return `<div class="ring"><svg width="64" height="64"><circle cx="32" cy="32" r="${r}" stroke="var(--bg-3)" stroke-width="6" fill="none"/><circle cx="32" cy="32" r="${r}" stroke="${col}" stroke-width="6" fill="none" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${off}"/></svg><div class="rt" style="color:${col}">${val}</div></div>`;
+    };
+    const pct = n => (n / b.total * 100).toFixed(1) + "%";
+    const blockers = D.tasks.filter(t => t.col === "blocked" || t.labels.includes("security") && false);
+    const blockItems = [
+      { t: D.tasks.find(x=>x.id==="t-108"), reason: "Awaiting vendor decision (ADR-003)", wait: "1d" },
+      { t: D.tasks.find(x=>x.id==="t-105"), reason: "Blocked by webhook retry race (INV-201)", wait: "5h", bug: true }
+    ];
+    return `
+    <div class="view view-wide">
+      <div class="ph"><div><h1>${pr.name}</h1><p class="sub">${pr.tagline} · <span class="mono">${pr.repo}</span></p></div></div>
+      <div class="dash">
+        <div>
+          <div class="state-card">
+            <div class="state-head"><span class="tag">${iconFill("spark","spark")} Auto-generated · synced ${pr.synced}</span></div>
+            <div class="state-text">${links(pr.state)}</div>
+            <div class="state-foot">
+              ${pr.metrics.map(m=>`<div class="state-metric"><span class="v">${m.v}${m.unit?`<span style="font-size:11px;color:var(--ink-4)"> ${m.unit}</span>`:""}</span><span class="k">${m.k}</span></div>`).join("")}
+              <div class="state-metric" style="margin-left:auto"><span class="v" style="display:flex;align-items:center;gap:10px">${ring(pr.health)}</span></div>
+            </div>
+          </div>
+          <div class="kpi-row">
+            ${pr.kpis.map(k=>`<div class="kpi"><div class="k">${k.k}</div><div class="v">${k.v}</div><div class="d"><span class="${k.dir==='up'?'up':'down'}">${k.d}</span></div></div>`).join("")}
+          </div>
+          <div class="burn-card">
+            <div class="sec-head"><h2>Milestone burn-up</h2><span class="desc">${b.done} of ${b.total} pts done</span><span class="spacer"></span><span class="mono" style="font-size:11px;color:var(--ink-3)">Beta · Jun 27</span></div>
+            <div class="burn-bar">
+              <div class="done" style="width:${pct(b.done)}"></div>
+              <div class="prog" style="width:${pct(b.progress)}"></div>
+              <div class="rev" style="width:${pct(b.review)}"></div>
+            </div>
+            <div class="burn-legend">
+              <span class="lg"><span class="sw" style="background:var(--s-done)"></span>Done ${b.done}</span>
+              <span class="lg"><span class="sw" style="background:var(--accent)"></span>In progress ${b.progress}</span>
+              <span class="lg"><span class="sw" style="background:var(--s-review)"></span>In review ${b.review}</span>
+              <span class="lg"><span class="sw" style="background:var(--bg-3);border:1px solid var(--border)"></span>Remaining ${b.total-b.done-b.progress-b.review}</span>
+            </div>
+            <div class="mstones">
+              ${b.milestones.map(m=>`<div class="mstone ${m.done?'done':''}"><div class="bar"><i style="width:${m.pct}%"></i></div><div class="ml"><span>${m.name}</span><span>${m.sub}</span></div></div>`).join("")}
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="rail-card">
+            <h3>Current blockers <span class="c">${blockItems.length}</span></h3>
+            ${blockItems.map(x=>`<div class="blocker ${x.bug?'bug':''}"><span class="bmark"></span><div style="flex:1;min-width:0"><div class="bt" data-link="${x.t.id}">${x.t.ref} · ${x.t.title}</div><div class="bs">${x.reason}</div></div><span class="bw">${x.wait}</span></div>`).join("")}
+          </div>
+          <div class="rail-card">
+            <h3>Recent activity <span class="c">live</span></h3>
+            ${D.activity[0].events.slice(0,5).map(e=>`<div class="feed-row"><span>${actorMark(e.who,"sm")}</span><div class="feed-body"><div class="feed-line">${links(e.line)}</div><div class="feed-when">${e.when}</div></div></div>`).join("")}
+            <div style="margin-top:10px"><button class="btn ghost tiny" data-go="activity">View all activity ${icon("arrow")}</button></div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  };
+
+  /* ── Board ── */
+  let boardLane = "epic";
+  V.board = () => {
+    const lanes = laneGroups(boardLane);
+    const ncols = D.columns.length;
+    const colCount = c => D.tasks.filter(t => t.col === c.id).length;
+    const header = `<div class="kgrid kheader" style="--ncols:${ncols}">${D.columns.map(c=>{
+      const n = colCount(c), over = c.wip && n > c.wip;
+      return `<div class="kcol-head"><span class="cdot" style="background:var(--s-${c.status})"></span>${c.name}<span class="cnt">&nbsp;${n}</span>${c.wip?`<span class="wip ${over?'over':''}">WIP ${n}/${c.wip}</span>`:""}</div>`;
+    }).join("")}</div>`;
+    const body = lanes.map(lane => {
+      const cells = D.columns.map(c => {
+        const cards = lane.tasks.filter(t => t.col === c.id);
+        return `<div class="kcell ${cards.length?'':'empty-cell'}">${cards.length?cards.map(card).join(""):'<div class="kcell-empty">—</div>'}</div>`;
+      }).join("");
+      const pts = lane.tasks.reduce((s,t)=>s+(t.points||0),0);
+      return `<div class="swimlane"><div class="swim-head">${lane.dot?`<span class="epic-dot" style="background:${lane.dot}"></span>`:""}<span class="st">${lane.name}</span><span class="ss">${lane.tasks.length} cards</span><span class="pts">${pts} pts</span></div><div class="kgrid" style="--ncols:${ncols}">${cells}</div></div>`;
+    }).join("");
+    return `
+    <div class="view view-wide">
+      <div class="ph"><div><h1>Board<span class="count-badge">${D.tasks.length}</span></h1><p class="sub">Kanban · WIP limits · card aging · swimlanes</p></div>
+        <span class="spacer"></span>
+        <div class="seg" id="lane-seg">
+          ${[["epic","Epic"],["owner","Owner"],["none","None"]].map(([k,l])=>`<button data-lane="${k}" class="${boardLane===k?'active':''}">${l}</button>`).join("")}
+        </div>
+      </div>
+      <div class="board-shell"><div class="board" style="min-width:${ncols*264 + (ncols-1)*12}px">${header}${body}</div></div>
+    </div>`;
+  };
+  function laneGroups(mode) {
+    if (mode === "none") return [{ name: "All work", tasks: D.tasks }];
+    if (mode === "owner") {
+      const map = {};
+      D.tasks.forEach(t => { (map[t.owner] = map[t.owner] || []).push(t); });
+      return Object.keys(map).map(o => ({ name: P[o].name + (P[o].kind==='agent'?" · agent":""), tasks: map[o] }));
+    }
+    return Object.keys(D.epics).map(e => ({ name: D.epics[e].name, dot: D.epics[e].color, tasks: D.tasks.filter(t => t.epic === e) }));
+  }
+  function card(t) {
+    const aging = t.col !== "done" && t.age >= 4;
+    const isBug = t.labels.includes("security") && t.col === "blocked";
+    return `<div class="kcard ${ageClass(t.col==='done'?0:t.age)} ${t.col==='blocked'&&false?'bug-card':''}" data-link="${t.id}">
+      <div class="kc-top"><span class="kc-id">${t.ref}</span><span class="kc-spacer"></span>${P[t.owner].kind==='agent'?agentChip(t.owner):avatar(t.owner,"sm")}</div>
+      <div class="kc-summary">${links(t.summary)}</div>
+      ${t.blockedReason?`<div class="blocked-reason">${icon("block")}${t.blockedReason}</div>`:""}
+      ${t.labels.length?`<div class="kc-labels">${t.labels.map(labelChip).join("")}</div>`:""}
+      <div class="kc-meta">
+        <span class="pts">${t.points}pt</span>
+        ${t.pr?prChip(t.pr):""}
+        <span class="spacer"></span>
+        ${aging?`<span class="age">${icon("clock")}${t.age}d</span>`:""}
+      </div>
+    </div>`;
+  }
+
+  /* ── Spec ── */
+  V.spec = () => {
+    const s = D.spec;
+    const navGroups = [];
+    s.nav.forEach(n => { let g = navGroups.find(x=>x.g===n.group); if(!g){g={g:n.group,items:[]};navGroups.push(g);} g.items.push(n); });
+    const nav = navGroups.map(g=>`<div class="nl">${g.g}</div>${g.items.map(n=>`<a href="#sec-${n.id}" data-spec-nav="${n.id}">${n.label}</a>`).join("")}`).join("");
+    const body = s.sections.map(sec => `
+      <section class="doc-sec" id="sec-${sec.id}">
+        <h2><span class="n">${sec.n}</span> ${sec.kicker}</h2>
+        <h3>${sec.title}</h3>
+        ${sec.blocks.map(specBlock).join("")}
+      </section>`).join("");
+    return `
+    <div class="view">
+      <div class="ph"><div><h1>${s.title}</h1><p class="sub">Beta milestone · living document</p></div></div>
+      <div class="spec-shell">
+        <nav class="spec-nav">${nav}</nav>
+        <div class="doc"><p class="doc-lede">${links(s.lede)}</p>${body}</div>
+      </div>
+    </div>`;
+  };
+  function specBlock(b) {
+    switch (b.type) {
+      case "p": return `<p>${links(b.html)}</p>`;
+      case "persona": return `<div class="persona"><span class="av lg human">${b.name.split(" ").slice(-1)[0][0]}</span><div><div class="pname">${b.name}</div><div class="prole">${b.role}</div><ul class="jobs">${b.jobs.map(j=>`<li>${j}</li>`).join("")}</ul></div></div>`;
+      case "story": return `<div class="story"><div class="story-head"><span class="sid">${b.sid}</span><span class="stitle">${b.title}</span></div><div class="story-body"><p class="as-if">${b.asIf}</p><div class="ac-label">Acceptance criteria</div><ul class="ac-list">${b.ac.map(a=>`<li>${icon("check")}<span class="gherkin">${gherkin(a)}</span></li>`).join("")}</ul></div></div>`;
+      case "table": return `<div class="ac-label" style="margin:6px 0 8px">${b.title}</div><table class="req"><thead><tr><th>ID</th><th>Priority</th><th>Requirement</th></tr></thead><tbody>${b.rows.map(r=>`<tr><td class="mono">${r.id}</td><td><span class="prio p-${r.prio}">${r.prio.toUpperCase()}</span></td><td>${links(r.text)}</td></tr>`).join("")}</tbody></table>`;
+      case "budgets": return `<div class="budget-grid">${b.items.map(x=>`<div class="budget"><div class="bk">${x.k}</div><div class="bv">${x.v}</div><div class="bd">${x.d}</div></div>`).join("")}</div>`;
+      case "metrics": return `<div class="metric-cards">${b.items.map(x=>`<div class="metric-card"><div class="mv">${x.v}</div><div class="mk">${x.k}</div><div class="mt">${x.t}</div></div>`).join("")}</div>`;
+      case "nongoals": return `<ul class="nongoals">${b.items.map(x=>`<li>${icon("x")}<span>${links(x)}</span></li>`).join("")}</ul>`;
+      case "callout": return `<div class="callout ${b.variant}"><span class="cmark">${icon(b.variant==='risk'?'alert':'beaker')}</span><div><div class="ctitle"><span class="ctag">${b.tag}</span>${b.title}</div><p>${links(b.html)}</p></div></div>`;
+      default: return "";
+    }
+  }
+  function gherkin(s) { return s.replace(/\b(Given|When|Then|And)\b/g, '<span class="kw">$1</span>'); }
+
+  /* ── Roadmap ── */
+  const MONTHS = ["Mar","Apr","May","Jun","Jul","Aug"];
+  const TODAY = 2.92;
+  const ROAD = [
+    { phase: "Phase 1 — Foundations" },
+    { name: "Auth & scoped tokens", sub: "WIN-130 · shipped", s: 0.1, e: 1.0, kind: "done", pct: 100 },
+    { name: "Event ingestion API", sub: "WIN-131 · shipped", s: 0.6, e: 1.5, kind: "done", pct: 100 },
+    { name: "Invoice PDF service", sub: "WIN-132 · shipped", s: 1.2, e: 1.9, kind: "done", pct: 100 },
+    { phase: "Phase 2 — Metering & Invoicing (Beta)" },
+    { name: "Rollup pipeline", sub: "WIN-103 · in review", s: 1.7, e: 3.1, kind: "prog", pct: 80 },
+    { name: "Stripe webhook sync", sub: "WIN-105 · in progress", s: 2.1, e: 3.3, kind: "prog", pct: 55 },
+    { name: "Idempotency keys", sub: "WIN-116 · in progress", s: 2.4, e: 3.2, kind: "prog", pct: 45 },
+    { name: "Tax engine", sub: "WIN-108 · blocked", s: 2.8, e: 3.6, kind: "future", pct: 5 },
+    { phase: "Phase 3 — Dunning & Tax (GA)" },
+    { name: "Proration", sub: "WIN-120 · planned", s: 3.4, e: 4.2, kind: "future", pct: 0 },
+    { name: "Dunning workflow", sub: "planned", s: 4.0, e: 5.2, kind: "future", pct: 0 },
+    { name: "GA hardening", sub: "planned", s: 4.8, e: 5.7, kind: "future", pct: 0 }
+  ];
+  V.roadmap = () => {
+    const W = 100 / MONTHS.length;
+    const months = MONTHS.map((m,i)=>`<div class="m" style="border-left:${i?'1px solid var(--border)':'none'}">${m}</div>`).join("");
+    const rows = ROAD.map(r => {
+      if (r.phase) return `<div class="gantt-row" style="grid-template-columns:1fr"><div class="gantt-phasehead">${r.phase}</div></div>`;
+      const left = r.s * W, width = (r.e - r.s) * W;
+      const cls = r.kind;
+      const grid = MONTHS.map((m,i)=>`<div class="grid-col" style="left:${i*W}%"></div>`).join("");
+      return `<div class="gantt-row"><div class="gantt-label"><div class="gl-name">${r.name}</div><div class="gl-sub">${r.sub}</div></div><div class="gantt-track">${grid}<div class="gnow" style="left:${TODAY*W}%"></div><div class="gbar ${cls}" style="left:${left}%;width:${width}%">${r.pct>0&&r.pct<100?`<span class="fill" style="width:${r.pct}%"></span>`:""}<span class="gbar-txt">${r.pct}%</span></div></div></div>`;
+    }).join("");
+    return `
+    <div class="view view-wide">
+      <div class="ph"><div><h1>Roadmap</h1><p class="sub">Milestones & phases · Mar–Aug 2026</p></div></div>
+      <div class="gantt">
+        <div class="gantt-months" style="grid-template-columns:repeat(${MONTHS.length},1fr)">${months}</div>
+        ${rows}
+      </div>
+    </div>`;
+  };
+
+  /* ── Decisions (ADR) ── */
+  let openAdr = null;
+  V.decisions = () => {
+    const list = D.adrs.map(a => {
+      const open = openAdr === a.id;
+      const supersedeNote = a.id === "adr-002" ? `<div class="supersede-thread">${icon("branch")} Informed the tax decision in <span class="wlink" data-link="adr-003">ADR-003</span></div>` : "";
+      return `<div class="adr ${a.status} ${open?'open':''}" id="adr-${a.id}">
+        <div class="adr-head" data-adr="${a.id}">
+          <span class="adr-id">${a.ref}</span>
+          <span class="adr-title">${a.title}</span>
+          <span class="adr-status ${a.status}">${a.status}</span>
+          <span class="adr-date mono">${a.date}</span>
+          ${icon("chev","adr-chev")}
+        </div>
+        ${open?`<div class="adr-body">
+          <div class="adr-block"><h4>Context</h4><p>${links(a.context)}</p></div>
+          <div class="adr-block"><h4>Options considered</h4><ul class="adr-options">${a.options.map(o=>`<li class="${o.chosen?'chosen':''}"><span class="opt-tag">${o.chosen?'chosen':'—'}</span><span>${links(o.text)}</span></li>`).join("")}</ul></div>
+          <div class="adr-block decision" style="grid-column:1/-1"><h4>Decision · by ${P[a.author].name}</h4><p>${links(a.decision)}</p></div>
+          <div class="adr-block" style="grid-column:1/-1"><h4>Consequences</h4><p>${links(a.consequences)}</p></div>
+        </div>${supersedeNote}`:supersedeNote}
+      </div>`;
+    }).join("");
+    return `
+    <div class="view">
+      <div class="ph"><div><h1>Decisions<span class="count-badge">${D.adrs.length}</span></h1><p class="sub">Architecture Decision Records · immutable · Context → Options → Decision → Consequences</p></div></div>
+      <div class="adr-list">${list}</div>
+    </div>`;
+  };
+
+  /* ── Debug (signature view) ── */
+  let openInv = D.debug[0].id;
+  V.debug = () => {
+    const inv = D.debug.find(d => d.id === openInv) || D.debug[0];
+    const tabs = D.debug.map(d => `<button class="debug-tab ${d.id===inv.id?'active':''}" data-inv="${d.id}">
+      <div class="dt-id">${d.ref} <span class="dt-state ${d.state}">${d.state}</span></div>
+      <div class="dt-title">${d.title}</div></button>`).join("");
+    const tl = inv.timeline.map(node => {
+      let inner = "";
+      if (node.kind === "symptom") inner = `<p>${links(inv.symptom)}</p>`;
+      else if (node.kind === "hypo") inner = `<div class="hypo">${inv.hypotheses.map(h=>`<div class="hypo-item ${h.status}"><span class="hypo-tag ${h.status}">${h.status==='confirmed'?icon("check"):h.status==='refuted'?icon("x"):icon("beaker")}${h.status}</span><div><div class="ht">${links(h.text)}</div><div class="hn">${links(h.note)}</div></div></div>`).join("")}</div>`;
+      else if (node.kind === "repro") inner = `<ol class="repro-steps">${inv.repro.map(r=>`<li>${links(r)}</li>`).join("")}</ol>`;
+      else if (node.kind === "rootcause") inner = `<p>${links(inv.rootCause)}</p>`;
+      else if (node.kind === "fix") inner = `<p>${links(inv.fix.text)}</p><div class="fix-row">${prChip({num:inv.fix.pr,status:'merged'})}<span class="ref-chip"><span class="tt">commit</span> ${inv.fix.commit}</span>${fileChip(inv.fix.file)}</div>`;
+      else if (node.kind === "guard") inner = `<div class="guard-box">${icon("checkcircle")}<div><div style="font-weight:600">Regression guarded</div><div class="gmono">${links(inv.guard)}</div></div></div>`;
+      return `<div class="tl-node ${node.kind}"><div class="tl-dot">${icon(tlIcon(node.kind))}</div><div><div class="tl-stage">${node.stage}</div><div class="tl-card"><h4>${node.stage==='Hypotheses'?`${inv.hyposCount} hypotheses tested`:node.stage==='Root cause'?'Confirmed root cause':node.stage}</h4>${inner}<div class="who">${actorMark(node.who,"sm")} ${P[node.who].name} · ${node.when}</div></div></div></div>`;
+    }).join("");
+    return `
+    <div class="view view-wide">
+      <div class="ph"><div><h1>Debug log</h1><p class="sub">Investigations as timelines · Symptom → Hypotheses → Root cause → Fix → Guard</p></div></div>
+      <div class="debug-tabs">${tabs}</div>
+      <div class="investigation">
+        <div class="inv-banner">
+          <div class="ib-main">
+            <div class="ib-id">${inv.ref} <span class="dt-state ${inv.state}">${inv.state}</span></div>
+            <h2>${inv.title}</h2>
+            <div class="ib-sub">${links(inv.summary)} <span class="ref-chip" data-link="${inv.task}"><span class="tt">task</span> ${REG[inv.task].label}</span></div>
+          </div>
+          <div class="inv-stat"><div class="v">${inv.elapsed}</div><div class="k">to resolve</div></div>
+        </div>
+        <div class="timeline">${tl}</div>
+      </div>
+    </div>`;
+  };
+  function tlIcon(k){return {symptom:"alert",hypo:"beaker",repro:"branch",rootcause:"search",fix:"fix",guard:"checkcircle"}[k]||"commit";}
+  function fileChip(f){const m=f.match(/^(.*?):(\d+)$/);return `<span class="ref-chip">${icon("file")}${m?`${m[1]}:<b style="color:var(--accent)">${m[2]}</b>`:f}</span>`;}
+
+  /* ── Docs ── */
+  let openDoc = "doc-t1";
+  V.docs = () => {
+    const tree = D.docs.groups.map(g=>`
+      <div class="dtree-group">
+        <div class="dtg-head"><span class="dq ${g.q}">${g.name}</span><span class="dtg-sub">${g.sub}</span></div>
+        ${g.items.map(it=>`<div class="dtree-item ${it.id===openDoc?'active':''}" data-doc="${it.id}">${it.title}</div>`).join("")}
+      </div>`).join("");
+    const c = D.docs.content[openDoc];
+    return `
+    <div class="view">
+      <div class="ph"><div><h1>Docs</h1><p class="sub">Diátaxis · Tutorial · How-to · Reference · Explanation</p></div></div>
+      <div class="docs-shell">
+        <nav class="docs-tree">${tree}</nav>
+        <div class="docs-pane"><div class="doc-meta"><span class="dq ${c.kind}">${c.kind}</span><span>${c.meta}</span></div><div class="doc-body"><h3>${c.title}</h3>${links(c.html)}</div></div>
+      </div>
+    </div>`;
+  };
+
+  /* ── Activity ── */
+  V.activity = () => {
+    const feed = D.activity.map(day=>`
+      <div class="act-day">${day.day}</div>
+      ${day.events.map(e=>`<div class="act-row"><span class="act-icon">${icon(e.icon||"commit")}</span><div class="act-body"><div class="act-line">${actorMark(e.who,"sm")} ${links(e.line)}</div>${e.detail?`<div class="act-detail">${links(e.detail)}</div>`:""}</div><span class="act-when">${e.when}</span></div>`).join("")}
+    `).join("");
+    return `
+    <div class="view">
+      <div class="ph"><div><h1>Activity</h1><p class="sub">Chronological · human & agent attribution</p></div></div>
+      <div class="act-feed">${feed}</div>
+    </div>`;
+  };
+
+  /* ════════════════════════ DRAWER ════════════════════════ */
+  function openDrawer(id) {
+    const r = REG[id]; if (!r) return;
+    if (r.kind === "milestone") { go("roadmap"); return; }
+    if (r.kind === "spec") { go("spec"); setTimeout(()=>{const el=document.getElementById("sec-"+r.sec);if(el)el.scrollIntoView({block:"start"});},60); return; }
+    if (r.kind === "doc") { openDoc = r.doc; go("docs"); return; }
+    let html = "";
+    if (r.kind === "task") html = drawerTask(r.ent);
+    else if (r.kind === "adr") html = drawerAdr(r.ent);
+    else if (r.kind === "debug") html = drawerDebug(r.ent);
+    const dr = document.getElementById("drawer");
+    dr.innerHTML = html;
+    document.getElementById("scrim").classList.add("open");
+    dr.classList.add("open");
+    const sc = dr.querySelector(".drawer-scroll");
+    const bar = dr.querySelector(".read-progress");
+    sc.scrollTop = 0; bar.style.width = "0%";
+    sc.onscroll = () => { const max = sc.scrollHeight - sc.clientHeight; bar.style.width = (max>0?(sc.scrollTop/max*100):0)+"%"; };
+  }
+  function closeDrawer() { document.getElementById("scrim").classList.remove("open"); document.getElementById("drawer").classList.remove("open"); }
+
+  function backlinkChips(ids) {
+    return (ids||[]).map(id=>{const r=REG[id];if(!r)return"";const k=r.kind==='task'?'task':r.kind==='adr'?'decision':r.kind==='debug'?'debug':r.kind;return `<span class="ref-chip" data-link="${id}"><span class="tt">${k}</span> ${r.label}</span>`;}).join("");
+  }
+  function commentsBlock(comments) {
+    if (!comments || !comments.length) return `<div class="empty" style="padding:16px">No comments yet.</div>`;
+    return comments.map(c=>`<div class="comment ${c.reply?'reply':''}"><span>${actorMark(c.author,"sm")}</span><div><div class="cm-head"><span class="cm-author">${P[c.author].name}</span>${P[c.author].kind==='agent'?'<span class="agent-chip '+P[c.author].model+'" style="padding:0 6px 0 4px">'+iconFill("spark","spark")+P[c.author].model+'</span>':''}<span class="cm-when">${c.when}</span></div><div class="cm-text">${links(c.text)}</div></div></div>`).join("");
+  }
+  function activityBlock(acts) {
+    return (acts||[]).map(a=>`<div class="d-act"><span class="dot" style="background:${P[a.who]&&P[a.who].kind==='agent'?'var(--accent)':'var(--ink-4)'}"></span><span class="da-line">${actorMark(a.who,"sm")} ${links(a.line)}</span><span class="da-when">${a.when}</span></div>`).join("");
+  }
+  function drawerHead(id, kind) {
+    return `<div class="drawer-head"><span class="read-progress"></span><span class="dh-id mono">${REG[id].label}</span><span class="status-pill st-${kind}" style="${kind==='adr'?'display:none':''}"></span><span class="spacer"></span><button class="btn ghost icon" id="drawer-close">${icon("x")}</button></div>`;
+  }
+  function drawerTask(t) {
+    return `${drawerHeadTask(t)}
+      <div class="drawer-scroll"><div class="drawer-body-inner">
+      <h1>${t.title}</h1>
+      <div class="d-summary">${iconFill("spark","sp")}<span>${links(t.summary)}</span></div>
+      <div class="meta-grid">
+        <div><div class="meta-k">Status</div><div class="meta-v">${statusPill(t.col)}</div></div>
+        <div><div class="meta-k">Owner</div><div class="meta-v">${byline(t.owner)}</div></div>
+        <div><div class="meta-k">Epic</div><div class="meta-v"><span class="epic-dot" style="display:inline-block;width:8px;height:8px;border-radius:3px;background:${D.epics[t.epic].color}"></span> ${D.epics[t.epic].name}</div></div>
+        <div><div class="meta-k">Points</div><div class="meta-v mono">${t.points}</div></div>
+        <div><div class="meta-k">Labels</div><div class="meta-v">${t.labels.map(labelChip).join("")}</div></div>
+        <div><div class="meta-k">Pull request</div><div class="meta-v">${t.pr?prChip(t.pr):'<span style="color:var(--ink-4)">—</span>'}</div></div>
+      </div>
+      ${t.blockedReason?`<div class="callout question" style="margin-bottom:16px"><span class="cmark">${icon("block")}</span><div><div class="ctitle">Blocked</div><p>${t.blockedReason}</p></div></div>`:""}
+      <div class="d-sec"><h3>Description</h3><div class="d-body">${links(t.body)}</div></div>
+      <div class="d-sec"><h3>Referenced by <span class="c">${(t.backlinks||[]).length}</span></h3><div class="backlinks">${backlinkChips(t.backlinks)||'<span style="color:var(--ink-4);font-size:12px">No backlinks</span>'}</div></div>
+      <div class="d-sec"><h3>Comments <span class="c">${(t.comments||[]).length}</span></h3>${commentsBlock(t.comments)}</div>
+      <div class="d-sec"><h3>Activity</h3>${activityBlock(t.activity)}</div>
+      </div></div>`;
+  }
+  function drawerHeadTask(t){return `<div class="drawer-head"><span class="read-progress"></span><span class="dh-id mono">${t.ref}</span>${statusPill(t.col)}<span class="spacer"></span><button class="btn ghost tiny">${icon("link")} Copy link</button><button class="btn ghost icon" id="drawer-close">${icon("x")}</button></div>`;}
+  function drawerAdr(a) {
+    return `<div class="drawer-head"><span class="read-progress"></span><span class="dh-id mono">${a.ref}</span><span class="adr-status ${a.status}">${a.status}</span><span class="spacer"></span><button class="btn ghost icon" id="drawer-close">${icon("x")}</button></div>
+      <div class="drawer-scroll"><div class="drawer-body-inner">
+      <h1>${a.title}</h1>
+      <div class="d-summary">${iconFill("spark","sp")}<span>${links(a.summary)}</span></div>
+      <div class="meta-grid"><div><div class="meta-k">Date</div><div class="meta-v mono">${a.date}</div></div><div><div class="meta-k">Author</div><div class="meta-v">${byline(a.author)}</div></div></div>
+      <div class="d-sec"><h3>Context</h3><div class="d-body"><p>${links(a.context)}</p></div></div>
+      <div class="d-sec"><h3>Options considered</h3><ul class="adr-options">${a.options.map(o=>`<li class="${o.chosen?'chosen':''}"><span class="opt-tag">${o.chosen?'chosen':'—'}</span><span>${links(o.text)}</span></li>`).join("")}</ul></div>
+      <div class="d-sec"><h3>Decision</h3><div class="adr-block decision" style="margin:0;border-radius:var(--radius-sm)"><p>${links(a.decision)}</p></div></div>
+      <div class="d-sec"><h3>Consequences</h3><div class="d-body"><p>${links(a.consequences)}</p></div></div>
+      <div class="d-sec"><h3>Referenced by <span class="c">${(a.backlinks||[]).length}</span></h3><div class="backlinks">${backlinkChips(a.backlinks)}</div></div>
+      </div></div>`;
+  }
+  function drawerDebug(b) {
+    return `<div class="drawer-head"><span class="read-progress"></span><span class="dh-id mono">${b.ref}</span><span class="dt-state ${b.state}">${b.state}</span><span class="spacer"></span><button class="btn ghost icon" id="drawer-close">${icon("x")}</button></div>
+      <div class="drawer-scroll"><div class="drawer-body-inner">
+      <h1>${b.title}</h1>
+      <div class="d-summary">${iconFill("spark","sp")}<span>${links(b.summary)}</span></div>
+      <div class="meta-grid"><div><div class="meta-k">Owner</div><div class="meta-v">${byline(b.owner)}</div></div><div><div class="meta-k">Time to resolve</div><div class="meta-v mono">${b.elapsed}</div></div><div><div class="meta-k">Linked task</div><div class="meta-v">${backlinkChips([b.task])}</div></div><div><div class="meta-k">Fix</div><div class="meta-v">${prChip({num:b.fix.pr,status:'merged'})}</div></div></div>
+      <div class="d-sec"><h3>Symptom</h3><div class="d-body">${links(b.symptom)}</div></div>
+      <div class="d-sec"><h3>Root cause</h3><div class="d-body">${links(b.rootCause)}</div></div>
+      <div class="d-sec"><h3>Fix</h3><div class="d-body"><p>${links(b.fix.text)}</p></div><div class="fix-row" style="margin-top:8px">${fileChip(b.fix.file)}<span class="ref-chip"><span class="tt">commit</span> ${b.fix.commit}</span></div></div>
+      <div class="d-sec"><h3>Open in full timeline</h3><button class="btn" data-inv-go="${b.id}">${icon("debug")} View investigation timeline ${icon("arrow")}</button></div>
+      </div></div>`;
+  }
+
+  /* ════════════════════════ COMMAND PALETTE ════════════════════════ */
+  const CMD_ITEMS = [];
+  D.tasks.forEach(t=>CMD_ITEMS.push({id:t.id,title:`${t.ref} · ${t.title}`,sub:t.summary,kind:"Task",icon:"task"}));
+  D.adrs.forEach(a=>CMD_ITEMS.push({id:a.id,title:`${a.ref} · ${a.title}`,sub:a.summary,kind:"Decision",icon:"decision"}));
+  D.debug.forEach(b=>CMD_ITEMS.push({id:b.id,title:`${b.ref} · ${b.title}`,sub:b.summary,kind:"Debug",icon:"debug"}));
+  D.spec.sections.forEach(s=>CMD_ITEMS.push({id:"spec-"+s.id,title:s.title,sub:"Spec · "+s.kicker,kind:"Spec",icon:"spec"}));
+  Object.keys(D.docs.content).forEach(k=>CMD_ITEMS.push({id:k,title:D.docs.content[k].title,sub:"Docs · "+D.docs.content[k].kind,kind:"Doc",icon:"docs"}));
+  const VIEWS_NAV = [["dashboard","Dashboard"],["board","Board"],["spec","Product Spec"],["roadmap","Roadmap"],["decisions","Decisions"],["debug","Debug log"],["docs","Docs"],["activity","Activity"]];
+  VIEWS_NAV.forEach(([v,l])=>CMD_ITEMS.push({id:"view:"+v,title:l,sub:"Jump to view",kind:"Go to",icon:v}));
+  let cmdSel = 0, cmdResults = [];
+  function openCmd() {
+    document.getElementById("cmdk-scrim").classList.add("open");
+    document.getElementById("cmdk").classList.add("open");
+    const inp = document.getElementById("cmdk-input"); inp.value = ""; inp.focus();
+    runCmd("");
+  }
+  function closeCmd() { document.getElementById("cmdk-scrim").classList.remove("open"); document.getElementById("cmdk").classList.remove("open"); }
+  function runCmd(q) {
+    q = q.trim().toLowerCase();
+    cmdResults = q ? CMD_ITEMS.filter(it=>(it.title+" "+it.sub+" "+it.kind).toLowerCase().includes(q)) : CMD_ITEMS;
+    cmdSel = 0; renderCmd();
+  }
+  function renderCmd() {
+    const list = document.getElementById("cmdk-list");
+    if (!cmdResults.length) { list.innerHTML = `<div class="cmdk-empty">No matches.</div>`; return; }
+    const groups = {};
+    cmdResults.forEach(it=>{(groups[it.kind]=groups[it.kind]||[]).push(it);});
+    let idx = -1; let html = "";
+    Object.keys(groups).forEach(k=>{
+      html += `<div class="cmdk-group-label">${k}</div>`;
+      groups[k].forEach(it=>{ idx++; const i=idx;
+        html += `<div class="cmdk-item ${i===cmdSel?'sel':''}" data-cmd="${it.id}" data-i="${i}"><span class="ci-icon">${icon(it.icon)}</span><div style="min-width:0"><div class="ci-title">${it.title}</div><div class="ci-sub">${it.sub}</div></div><span class="ci-kind">${it.kind}</span></div>`;
+      });
+    });
+    list.innerHTML = html;
+    const sel = list.querySelector(".cmdk-item.sel");
+    if (sel) { const r=sel.getBoundingClientRect(), lr=list.getBoundingClientRect(); if(r.bottom>lr.bottom)list.scrollTop+=r.bottom-lr.bottom; if(r.top<lr.top)list.scrollTop-=lr.top-r.top; }
+  }
+  function execCmd(id) {
+    closeCmd();
+    if (id.startsWith("view:")) go(id.slice(5));
+    else openDrawer(id);
+  }
+
+  /* ════════════════════════ ROUTER / SHELL ════════════════════════ */
+  const NAV = [
+    { id:"dashboard", label:"Dashboard", icon:"dashboard" },
+    { id:"board", label:"Board", icon:"board", count:D.tasks.filter(t=>t.col!=='done').length },
+    { id:"spec", label:"Product Spec", icon:"spec" },
+    { id:"roadmap", label:"Roadmap", icon:"roadmap" },
+    { id:"decisions", label:"Decisions", icon:"decision", count:D.adrs.length },
+    { id:"debug", label:"Debug", icon:"debug", count:D.debug.length, dot:"var(--s-bug)" },
+    { id:"docs", label:"Docs", icon:"docs" },
+    { id:"activity", label:"Activity", icon:"activity" }
+  ];
+  let current = "dashboard";
+  function go(view) {
+    if (!V[view]) return;
+    current = view;
+    closeDrawer();
+    document.getElementById("main").innerHTML = V[view]();
+    document.querySelectorAll(".sb-item").forEach(b=>b.classList.toggle("active", b.dataset.view===view));
+    document.getElementById("tb-view").textContent = (NAV.find(n=>n.id===view)||{}).label || "";
+    document.querySelector(".scroll").scrollTop = 0;
+    try { location.hash = view; } catch(e){}
+  }
+
+  function buildShell() {
+    const sb = `
+      <div class="sb-brand"><div class="sb-mark">${icon("blocks")}</div><div><div class="sb-brand-name">${D.project.name}</div><div class="sb-brand-sub">${D.project.repo}</div></div></div>
+      <div class="sb-group"><div class="sb-group-label">Views</div>
+        ${NAV.map(n=>`<button class="sb-item" data-view="${n.id}">${icon(n.icon,"sb-icon")}<span class="sb-name">${n.label}</span>${n.dot?`<span class="sb-dot" style="background:${n.dot}"></span>`:""}${n.count!=null?`<span class="sb-count">${n.count}</span>`:""}</button>`).join("")}
+      </div>
+      <div class="sb-foot"><span class="av human" style="width:24px;height:24px;font-size:9px">TS</span><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:500">Tejas S.</div><div class="sb-foot-status"><span class="dot"></span>maintainer</div></div></div>`;
+    document.getElementById("sidebar").innerHTML = sb;
+
+    const tb = `
+      <div class="tb-crumb"><span class="tb-proj">${D.project.name}</span><span class="tb-view" id="tb-view"></span></div>
+      <button class="tb-search" id="tb-search">${icon("search")}<span>Search tasks, decisions, docs…</span><span class="kbd">⌘K</span></button>
+      <span class="tb-spacer"></span>
+      <div class="tb-legend"><span class="lg">${avatar("tejas","sm")} human</span><span class="lg">${iconFill("spark","spark")} agent</span></div>
+      <div class="tb-sync"><span class="dot"></span>synced ${D.project.synced}</div>
+      <div class="theme-toggle" id="theme-toggle"><button data-mode="light">${iconFill("sun")}</button><button data-mode="dark">${iconFill("moon")}</button></div>`;
+    document.getElementById("topbar").innerHTML = tb;
+  }
+
+  function applyTheme(m) {
+    document.documentElement.setAttribute("data-theme", m);
+    try { localStorage.setItem("pm-theme", m); } catch(e){}
+    document.querySelectorAll("#theme-toggle button").forEach(b=>b.classList.toggle("active", b.dataset.mode===m));
+  }
+
+  /* ───────────────────────── events ───────────────────────── */
+  document.addEventListener("click", e => {
+    const view = e.target.closest("[data-view]"); if (view) { go(view.dataset.view); return; }
+    const go2 = e.target.closest("[data-go]"); if (go2) { go(go2.dataset.go); return; }
+    const lane = e.target.closest("[data-lane]"); if (lane) { boardLane = lane.dataset.lane; document.getElementById("main").innerHTML = V.board(); return; }
+    const adr = e.target.closest("[data-adr]"); if (adr) { openAdr = openAdr===adr.dataset.adr?null:adr.dataset.adr; document.getElementById("main").innerHTML = V.decisions(); return; }
+    const invTab = e.target.closest("[data-inv]"); if (invTab) { openInv = invTab.dataset.inv; document.getElementById("main").innerHTML = V.debug(); return; }
+    const invGo = e.target.closest("[data-inv-go]"); if (invGo) { openInv = invGo.dataset.invGo; go("debug"); return; }
+    const docItem = e.target.closest("[data-doc]"); if (docItem) { openDoc = docItem.dataset.doc; if(current!=="docs")go("docs"); else document.getElementById("main").innerHTML = V.docs(); return; }
+    const specNav = e.target.closest("[data-spec-nav]"); if (specNav) { e.preventDefault(); const el=document.getElementById("sec-"+specNav.dataset.specNav); if(el)el.scrollIntoView({block:"start"}); return; }
+    const lk = e.target.closest("[data-link]"); if (lk) { openDrawer(lk.dataset.link); return; }
+    if (e.target.closest("#drawer-close") || e.target.id==="scrim") { closeDrawer(); return; }
+    if (e.target.closest("#tb-search")) { openCmd(); return; }
+    if (e.target.id==="cmdk-scrim") { closeCmd(); return; }
+    const cmd = e.target.closest("[data-cmd]"); if (cmd) { execCmd(cmd.dataset.cmd); return; }
+    const tt = e.target.closest("#theme-toggle button"); if (tt) { applyTheme(tt.dataset.mode); return; }
+  });
+  document.addEventListener("mousemove", e => {
+    const it = e.target.closest && e.target.closest("[data-i]");
+    if (it && document.getElementById("cmdk").classList.contains("open")) { const i=+it.dataset.i; if(i!==cmdSel){cmdSel=i;renderCmd();} }
+  });
+  document.addEventListener("keydown", e => {
+    const cmdOpen = document.getElementById("cmdk").classList.contains("open");
+    if ((e.metaKey||e.ctrlKey) && e.key.toLowerCase()==="k") { e.preventDefault(); cmdOpen?closeCmd():openCmd(); return; }
+    if (e.key === "Escape") { if(cmdOpen)closeCmd(); else closeDrawer(); return; }
+    if (cmdOpen) {
+      if (e.key==="ArrowDown"){e.preventDefault();cmdSel=Math.min(cmdSel+1,cmdResults.length-1);renderCmd();}
+      else if (e.key==="ArrowUp"){e.preventDefault();cmdSel=Math.max(cmdSel-1,0);renderCmd();}
+      else if (e.key==="Enter"){e.preventDefault();if(cmdResults[cmdSel])execCmd(cmdResults[cmdSel].id);}
+    } else if (!/input|textarea/i.test((e.target.tagName||""))) {
+      const map={d:"dashboard",b:"board",s:"spec",r:"roadmap",c:"decisions",g:"debug",o:"docs",a:"activity"};
+      if(map[e.key.toLowerCase()] && !e.metaKey && !e.ctrlKey) go(map[e.key.toLowerCase()]);
+    }
+  });
+  document.getElementById("cmdk-input") || 0;
+
+  /* ───────────────────────── boot ───────────────────────── */
+  function boot() {
+    buildShell();
+    document.getElementById("cmdk-input").addEventListener("input", e => runCmd(e.target.value));
+    let saved = "light"; try { saved = localStorage.getItem("pm-theme") || (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"); } catch(e){}
+    applyTheme(saved);
+    const initial = (location.hash||"").replace("#","");
+    go(V[initial] ? initial : "dashboard");
+  }
+  boot();
+})();
+
+</script>
+</body>
+</html>

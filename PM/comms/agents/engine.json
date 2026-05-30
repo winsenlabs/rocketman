@@ -1,0 +1,9 @@
+{
+  "session": "engine",
+  "agent": "Claude Opus",
+  "model": "opus",
+  "focus": "engine + build pipeline (RM-1, RM-3)",
+  "status": "active",
+  "started": "2026-05-30T08:40:00Z",
+  "heartbeat": "2026-05-30T09:12:00Z"
+}

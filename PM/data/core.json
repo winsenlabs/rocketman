@@ -1,0 +1,58 @@
+{
+  "project": {
+    "name": "Rocketman",
+    "repo": "winsenlabs/rocketman",
+    "tagline": "Idea to production, managed in the repo",
+    "synced": "just now",
+    "health": 88,
+    "healthLabel": "On track for the OSS launch",
+    "state": "Rocketman is at <b>v0.1 — Engine &amp; Hub shipped</b>, heading into the [[m2|Track &amp; Docs]] milestone. The data → HTML pipeline ([[rm-01|build.mjs]]) and the 8-view [[rm-02|calm command center]] hub are done. The launch-track skills ([[rm-07|/rm-plan + /rm-build]], [[rm-08|/rm-verify + /rm-test]]) and the [[rm-10|docs &amp; README]] are the critical path to launch. One investigation is closed — the [[bug-01|blank-hub bug]], where app.js shipped stubbed — and the single-writer rule for agent fleets is locked in [[adr-05|ADR-5]]. The inter-agent [[rm-13|relay]] just landed — agents in separate terminals now hand off tasks and message each other with zero copy-paste. Next: finish the skill stack and cut the first public release.",
+    "metrics": [
+      { "k": "Track skills", "v": "6", "unit": "of 10" },
+      { "k": "Open", "v": "5" },
+      { "k": "Blocked", "v": "1" },
+      { "k": "Bugs", "v": "0" }
+    ],
+    "kpis": [
+      { "k": "Build time", "v": "<50ms", "d": "data → hub", "dir": "up" },
+      { "k": "Hub size", "v": "153KB", "d": "self-contained", "dir": "up" },
+      { "k": "Runtime deps", "v": "0", "d": "zero, by design", "dir": "up" },
+      { "k": "Views", "v": "8", "d": "Fleet view planned", "dir": "up" }
+    ]
+  },
+  "burn": {
+    "total": 74, "done": 26, "progress": 21, "review": 5,
+    "milestones": [
+      { "id": "m1", "name": "M1 · Engine & Hub", "pct": 100, "done": true, "sub": "shipped" },
+      { "id": "m2", "name": "M2 · Track & Docs", "pct": 62, "done": false, "sub": "launch prep" },
+      { "id": "m3", "name": "M3 · Fleet & Rollup", "pct": 8, "done": false, "sub": "post-launch" }
+    ]
+  },
+  "people": {
+    "tejas":  { "name": "Tejas",  "kind": "human", "av": "TS", "tone": "human" },
+    "opus":   { "name": "opus",   "kind": "agent", "model": "opus" },
+    "sonnet": { "name": "sonnet", "kind": "agent", "model": "sonnet" },
+    "haiku":  { "name": "haiku",  "kind": "agent", "model": "haiku" }
+  },
+  "epics": {
+    "engine":   { "name": "Engine",        "color": "oklch(52% 0.17 252)" },
+    "track":    { "name": "Track",         "color": "oklch(58% 0.13 12)" },
+    "docs":     { "name": "Docs & Launch", "color": "oklch(57% 0.13 155)" },
+    "platform": { "name": "Platform",      "color": "oklch(68% 0.15 70)" }
+  },
+  "labels": {
+    "engine": { "name": "engine", "color": "oklch(52% 0.17 252)" },
+    "skills": { "name": "skills", "color": "oklch(54% 0.18 305)" },
+    "docs":   { "name": "docs",   "color": "oklch(57% 0.13 155)" },
+    "ci":     { "name": "ci",     "color": "oklch(68% 0.15 70)" },
+    "design": { "name": "design", "color": "oklch(57% 0.20 25)" },
+    "dx":     { "name": "dx",     "color": "oklch(55% 0.12 200)" }
+  },
+  "columns": [
+    { "id": "backlog",  "name": "Backlog",     "status": "backlog" },
+    { "id": "progress", "name": "In Progress", "status": "progress", "wip": 3 },
+    { "id": "review",   "name": "Review",      "status": "review", "wip": 2 },
+    { "id": "blocked",  "name": "Blocked",     "status": "blocked" },
+    { "id": "done",     "name": "Done",        "status": "done" }
+  ]
+}

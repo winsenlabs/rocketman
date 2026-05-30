@@ -1,0 +1,24 @@
+{
+  "adrs": [
+    {
+      "id": "adr-01", "ref": "ADR-1", "title": "Adopt Rocketman for project management", "status": "accepted",
+      "date": "2026-01-01", "author": "you",
+      "summary": "Manage this project in the repo as a Rocketman hub.",
+      "context": "We want project context to live with the code, readable by humans and agents, instead of in a separate SaaS tool.",
+      "options": [
+        { "text": "A hosted PM SaaS", "chosen": false },
+        { "text": "Markdown docs", "chosen": false },
+        { "text": "Rocketman (in-repo HTML hub)", "chosen": true }
+      ],
+      "decision": "Use Rocketman: structured data in PM/data renders to one offline hub, version-controlled with the code.",
+      "consequences": "Project state branches and reviews with the code; agents read it without an API. The HTML is generated — edit the data.",
+      "backlinks": []
+    }
+  ],
+  "debug": [],
+  "activity": [
+    { "day": "Today", "events": [
+      { "when": "just now", "who": "you", "icon": "task", "line": "created the project with <b>rocketman init</b>", "detail": "Edit PM/data/*.json and run rocketman build · [[rm-01|RM-1]]" }
+    ]}
+  ]
+}

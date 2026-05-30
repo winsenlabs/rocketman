@@ -1,0 +1,46 @@
+{
+  "project": {
+    "name": "My Project",
+    "repo": "you/my-project",
+    "tagline": "What this project is, in one line",
+    "synced": "just now",
+    "health": 60,
+    "healthLabel": "Getting started",
+    "state": "This is a fresh Rocketman hub. Edit <code>PM/data/*.json</code> and run <code>rocketman build</code>. Start by writing your spec with <code>/rm-ideate</code> then <code>/rm-prd</code>, then lay the board with <code>/rm-plan</code>. Your first task is [[rm-01|RM-1]].",
+    "metrics": [
+      { "k": "Open", "v": "1" },
+      { "k": "Blocked", "v": "0" },
+      { "k": "Done", "v": "0" },
+      { "k": "Bugs", "v": "0" }
+    ],
+    "kpis": [
+      { "k": "Tasks", "v": "1", "d": "edit the board", "dir": "up" },
+      { "k": "Spec", "v": "1", "d": "write your PRD", "dir": "up" },
+      { "k": "Decisions", "v": "1", "d": "record ADRs", "dir": "up" },
+      { "k": "Deps", "v": "0", "d": "zero, by design", "dir": "up" }
+    ]
+  },
+  "burn": {
+    "total": 1, "done": 0, "progress": 0, "review": 0,
+    "milestones": [
+      { "id": "m1", "name": "M1 · First milestone", "pct": 0, "done": false, "sub": "define it" }
+    ]
+  },
+  "people": {
+    "you":  { "name": "You",  "kind": "human", "av": "Y", "tone": "human" },
+    "opus": { "name": "opus", "kind": "agent", "model": "opus" }
+  },
+  "epics": {
+    "core": { "name": "Core", "color": "oklch(52% 0.17 252)" }
+  },
+  "labels": {
+    "setup": { "name": "setup", "color": "oklch(57% 0.13 155)" }
+  },
+  "columns": [
+    { "id": "backlog",  "name": "Backlog",     "status": "backlog" },
+    { "id": "progress", "name": "In Progress", "status": "progress", "wip": 3 },
+    { "id": "review",   "name": "Review",      "status": "review", "wip": 2 },
+    { "id": "blocked",  "name": "Blocked",     "status": "blocked" },
+    { "id": "done",     "name": "Done",        "status": "done" }
+  ]
+}

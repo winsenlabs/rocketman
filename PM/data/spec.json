@@ -1,0 +1,152 @@
+{
+  "spec": {
+    "title": "Rocketman — Product Spec",
+    "lede": "An in-repo project hub that takes a product from idea to production: spec, plan, board, decisions, debugging, and docs live in your repo as structured data and render to one offline HTML file humans skim and agents act on. This is the source-of-truth PRD for the v0.1 launch.",
+    "nav": [
+      { "id": "vision", "label": "Vision", "group": "Why" },
+      { "id": "problem", "label": "Problem", "group": "Why" },
+      { "id": "personas", "label": "Personas & JTBD", "group": "Who" },
+      { "id": "requirements", "label": "Requirements", "group": "What" },
+      { "id": "nonfunctional", "label": "Non-functional", "group": "What" },
+      { "id": "flows", "label": "The Track", "group": "How" },
+      { "id": "metrics", "label": "Success Metrics", "group": "Outcomes" },
+      { "id": "nongoals", "label": "Non-Goals", "group": "Outcomes" },
+      { "id": "risks", "label": "Risks & Open Qs", "group": "Outcomes" }
+    ],
+    "sections": [
+      { "id": "vision", "n": "01", "kicker": "Vision", "title": "A project should be one file away",
+        "blocks": [
+          { "type": "p", "html": "Coding agents can finally do real work — but they thrash without shared context, and humans don't read long markdown. <b>Rocketman gives both a single living source of truth</b> that travels with the code: it branches with it, reviews inside the PR, and merges with it." },
+          { "type": "p", "html": "The north star is <b>legibility</b>. A human should understand exactly where a project stands in ten seconds; an agent fleet should pick it up and act without re-deriving context. The hub is a generated, read-only view; the truth is structured data you edit and rebuild." }
+        ]
+      },
+      { "id": "problem", "n": "02", "kicker": "Problem", "title": "Project context is scattered and stale",
+        "blocks": [
+          { "type": "p", "html": "Teams hit three failure modes. <b>Unread:</b> specs rot in markdown nobody opens. <b>Disconnected:</b> the board lives in a SaaS tool, a context-switch away from the code. <b>Amnesiac:</b> every new agent session re-derives the same context, and decisions and debugging trails vanish into chat history." },
+          { "type": "p", "html": "Rocketman addresses all three by putting the whole project — [[requirements|spec]], board, [[adr-05|decisions]], and [[bug-01|debugging trails]] — in the repo as structured data, rendered into a hub that's actually pleasant to read." }
+        ]
+      },
+      { "id": "personas", "n": "03", "kicker": "Personas & Jobs-to-be-Done", "title": "Who Rocketman serves",
+        "blocks": [
+          { "type": "persona", "name": "The Founder / PM", "role": "owns the product", "jobs": ["See exactly where the project stands in ten seconds, without reading a wall of text", "Know what's blocked and what's next at a glance", "Trust that the spec reflects what's actually being built"] },
+          { "type": "persona", "name": "The Engineer", "role": "ships the code", "jobs": ["Find the decision and the debugging trail next to the code they explain", "Move a task or record an ADR without leaving the repo", "Never re-explain the project to a fresh agent session"] },
+          { "type": "persona", "name": "The Agent Fleet", "role": "does the work", "jobs": ["Load shared, structured context and act without re-deriving it", "Pick ready tasks off the board as a work queue", "Write results back safely under the single-writer rule"] }
+        ]
+      },
+      { "id": "requirements", "n": "04", "kicker": "Requirements", "title": "User stories & functional requirements",
+        "blocks": [
+          { "type": "story", "sid": "US-1", "title": "Skim the whole project fast",
+            "asIf": "As a <em>Founder/PM</em>, I want a dashboard that summarizes project state so that I understand where things stand without reading every task.",
+            "ac": [
+              "Given a project, when I open the hub, then a one-paragraph AI summary and a health score are the first thing I see.",
+              "Given blockers exist, when I view the dashboard, then they are surfaced with their reason.",
+              "Given any link in the summary, when I click it, then the relevant entity opens in a drawer."
+            ]
+          },
+          { "type": "story", "sid": "US-2", "title": "Edit safely as an agent fleet",
+            "asIf": "As an <em>Agent Fleet</em>, I want one writer to own all updates so that parallel work never corrupts the hub.",
+            "ac": [
+              "Given sub-agents working in parallel, when they finish, then they return results to the parent rather than writing directly.",
+              "Given the parent writes results, when the build runs, then the hub regenerates deterministically.",
+              "Given any change, when it lands, then the activity feed records the actor with human-vs-agent provenance."
+            ]
+          },
+          { "type": "table", "title": "Functional requirements", "rows": [
+            { "id": "FR-1", "prio": "must", "text": "Render the whole project to one self-contained, offline HTML file." },
+            { "id": "FR-2", "prio": "must", "text": "Keep structured data as the source of truth; the HTML is generated and read-only." },
+            { "id": "FR-3", "prio": "must", "text": "Eight views: dashboard, board, spec, roadmap, decisions, debug, docs, activity." },
+            { "id": "FR-4", "prio": "must", "text": "Show an AI summary line on every entity and bidirectional backlinks." },
+            { "id": "FR-5", "prio": "must", "text": "Record human-vs-agent provenance on every item and activity event." },
+            { "id": "FR-6", "prio": "should", "text": "Ship a Claude skill stack that walks idea → production." },
+            { "id": "FR-7", "prio": "could", "text": "Aggregate many repos into one read-only org rollup." }
+          ]}
+        ]
+      },
+      { "id": "nonfunctional", "n": "05", "kicker": "Non-functional", "title": "Budgets & constraints",
+        "blocks": [
+          { "type": "p", "html": "These are hard constraints, not preferences. The build enforces what it can." },
+          { "type": "budgets", "items": [
+            { "k": "Runtime deps", "v": "0", "d": "zero, by design" },
+            { "k": "Build time", "v": "< 100ms", "d": "data → hub" },
+            { "k": "Hub size", "v": "< 300KB", "d": "single file" },
+            { "k": "Interaction", "v": "< 100ms", "d": "view switches" },
+            { "k": "Offline", "v": "100%", "d": "opens at file://" },
+            { "k": "Themes", "v": "2", "d": "light + dark" }
+          ]},
+          { "type": "p", "html": "<b>Determinism:</b> same data in, byte-identical hub out — so CI can fail a PR whose committed hub is stale ([[rm-03|the doctor]]). <b>No fonts:</b> system stack only, so it renders identically offline." }
+        ]
+      },
+      { "id": "flows", "n": "06", "kicker": "The Rocketman Track", "title": "Idea → production, as a skill stack",
+        "blocks": [
+          { "type": "p", "html": "Rocketman ships a Claude skill stack that walks a product from a raw idea to a shipped, iterated product. Each stage reads from and writes back to the same PM/ data, so the hub is always current." },
+          { "type": "p", "html": "<b>Ideate</b> ([[rm-05|/rm-ideate]]) → <b>PRD</b> ([[rm-06|/rm-prd]]) → <b>Plan</b> → <b>Build</b> ([[rm-07|/rm-plan + /rm-build]]) → <b>Verify</b> → <b>Test</b> ([[rm-08|/rm-verify + /rm-test]]) → <b>Launch</b> → <b>Iterate</b> ([[rm-09|/rm-launch + /rm-iterate]]). Eight stages, one repo." }
+        ]
+      },
+      { "id": "metrics", "n": "07", "kicker": "Success Metrics", "title": "How we'll know it works",
+        "blocks": [
+          { "type": "metrics", "items": [
+            { "v": "< 10s", "k": "Time to project state", "t": "open hub → understand status" },
+            { "v": "0", "k": "Context re-derivations", "t": "agents read the hub, not chat history" },
+            { "v": "100%", "k": "Change provenance", "t": "every edit attributed human/agent" },
+            { "v": "1 file", "k": "To share a project", "t": "the committed hub" }
+          ]}
+        ]
+      },
+      { "id": "nongoals", "n": "08", "kicker": "Non-Goals", "title": "What Rocketman deliberately is not",
+        "blocks": [
+          { "type": "p", "html": "Not a hosted SaaS — it lives in your repo. Not a real-time multiplayer editor — edits go through data + Claude. Not a replacement for issue-tracker sync — that's an optional adapter ([[rm-04|the CLI]] + the mirror skill). The HTML is read-only; it is not an input surface." },
+          { "type": "p", "html": "<b>Scope discipline:</b> one version, final. Cross-repo rollup ([[rm-12|RM-12]]) and a live Fleet view ([[rm-11|RM-11]]) are explicit post-launch milestones, not hidden scope in v0.1." }
+        ]
+      },
+      { "id": "risks", "n": "09", "kicker": "Risks & Open Questions", "title": "What could bite us",
+        "blocks": [
+          { "type": "p", "html": "<b>Browser support:</b> the theme uses oklch(); pre-2023 browsers fall back poorly ([[bug-03|BUG-3]]). <b>Scale:</b> very large projects may need pagination/archiving in the views. <b>Merge conflicts:</b> a single tasks.json can conflict — per-entity files are proposed in [[adr-07|ADR-7]]." },
+          { "type": "p", "html": "<b>Open question:</b> should a local <code>rocketman serve</code> mode let the board write back to disk, or stay strictly read-only? Tracked in the decision backlog." }
+        ]
+      }
+    ]
+  },
+  "docs": {
+    "groups": [
+      { "id": "tutorial", "q": "T", "name": "Tutorial", "sub": "Learn by doing",
+        "items": [ { "id": "doc-t1", "title": "Your first Rocketman project", "active": true } ] },
+      { "id": "howto", "q": "H", "name": "How-to", "sub": "Solve a task",
+        "items": [
+          { "id": "doc-h1", "title": "Add Rocketman to an existing repo" },
+          { "id": "doc-h2", "title": "Write a PRD with the track" },
+          { "id": "doc-h3", "title": "Run a build & verify on CI" }
+        ] },
+      { "id": "reference", "q": "R", "name": "Reference", "sub": "Look it up",
+        "items": [
+          { "id": "doc-r1", "title": "Data schema" },
+          { "id": "doc-r2", "title": "CLI commands" },
+          { "id": "doc-r3", "title": "The skill stack" }
+        ] },
+      { "id": "explanation", "q": "E", "name": "Explanation", "sub": "Understand why",
+        "items": [
+          { "id": "doc-e1", "title": "Why HTML, not markdown" },
+          { "id": "doc-e2", "title": "The single-writer rule" }
+        ] }
+    ],
+    "content": {
+      "doc-t1": { "kind": "Tutorial", "title": "Your first Rocketman project", "meta": "~2 min",
+        "html": "<p>Install Rocketman, scaffold a hub, and open it.</p><pre><code>npx rocketman init\nnpx rocketman build\nopen PM/index.html</code></pre><p><b>init</b> scaffolds <code>PM/</code> with starter data and a <code>CLAUDE.md</code>. <b>build</b> merges your data into <code>PM/index.html</code>. <b>open</b> it — no server, no dependencies.</p>" },
+      "doc-h1": { "kind": "How-to", "title": "Add Rocketman to an existing repo", "meta": "how-to",
+        "html": "<p>Drop the hub into any repo without touching your stack.</p><pre><code>cd your-repo\nnpx rocketman init\ngit add PM/ .claude/</code></pre><p>Commit <code>PM/</code> alongside your code — it branches, reviews, and merges with the code, so project state never drifts from the branch it describes.</p>" },
+      "doc-h2": { "kind": "How-to", "title": "Write a PRD with the track", "meta": "how-to",
+        "html": "<p>Let the skill stack force the thinking, then generate the spec.</p><pre><code>/rm-ideate   # forcing questions\n/rm-prd      # writes PM/data/spec.json\n/rm-plan     # lays out the board</code></pre>" },
+      "doc-h3": { "kind": "How-to", "title": "Run a build & verify on CI", "meta": "how-to",
+        "html": "<p>Fail the PR if the committed hub is stale or any reference is broken.</p><pre><code>node engine/build.mjs --check</code></pre><p>The check rebuilds in memory and compares against the committed <code>PM/index.html</code>; a non-zero exit means someone forgot to rebuild.</p>" },
+      "doc-r1": { "kind": "Reference", "title": "Data schema", "meta": "reference",
+        "html": "<p>Four files merge — flat — into one <code>#pm-data</code> island.</p><ul><li><code>core.json</code> — project, burn, people, epics, labels, columns</li><li><code>tasks.json</code> — the board</li><li><code>spec.json</code> — spec sections + docs</li><li><code>content.json</code> — ADRs, debug logs, activity</li></ul><pre><code>{ \"id\": \"rm-01\", \"col\": \"done\", \"owner\": \"opus\",\n  \"summary\": \"...\", \"backlinks\": [\"adr-02\"] }</code></pre>" },
+      "doc-r2": { "kind": "Reference", "title": "CLI commands", "meta": "reference",
+        "html": "<ul><li><code>rocketman init</code> — scaffold PM/ into a repo</li><li><code>rocketman build</code> — regenerate PM/index.html</li><li><code>rocketman new &lt;task|adr|debug&gt;</code> — create an entity</li><li><code>rocketman doctor</code> — validate data + references</li></ul>" },
+      "doc-r3": { "kind": "Reference", "title": "The skill stack", "meta": "reference",
+        "html": "<p>The track, as Claude skills:</p><ul><li><code>/rm-ideate</code> · <code>/rm-prd</code> · <code>/rm-plan</code> · <code>/rm-build</code></li><li><code>/rm-verify</code> · <code>/rm-test</code> · <code>/rm-launch</code> · <code>/rm-iterate</code></li><li>Infra: <code>/rm-init</code> · <code>/rm-sync</code> · <code>/rm-mirror</code> · <code>/rm-decision</code> · <code>/rm-debug</code></li></ul>" },
+      "doc-e1": { "kind": "Explanation", "title": "Why HTML, not markdown", "meta": "explanation",
+        "html": "<p>Humans don't read long markdown, and raw HTML is terrible to diff and for agents to edit reliably.</p><p>Rocketman splits the two. Structured data is the source of truth — small, diffable, agent-writable. The HTML is a generated, read-only view. You edit data; the build renders the hub. Best of both worlds.</p>" },
+      "doc-e2": { "kind": "Explanation", "title": "The single-writer rule", "meta": "explanation",
+        "html": "<p>When a parent agent allocates work to a fleet of sub-agents, concurrent writes corrupt shared state.</p><ul><li>Sub-agents <b>read</b> the hub and <b>return</b> structured results</li><li>The parent is the <b>sole writer</b> back to PM/ data</li><li>Only the append-only activity log may be appended concurrently</li></ul><p>Serializing writes through one parent keeps a fleet's output consistent and reviewable, with full provenance preserved.</p>" }
+    }
+  }
+}

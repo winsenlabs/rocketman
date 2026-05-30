@@ -1,0 +1,14 @@
+{
+  "tasks": [
+    {
+      "id": "rm-01", "ref": "RM-1", "col": "todo", "epic": "core", "owner": "you", "author": "you",
+      "title": "Write the spec",
+      "summary": "Run /rm-ideate then /rm-prd to turn your idea into a real PRD in the Spec view.",
+      "labels": ["setup"], "points": 2, "age": 0,
+      "body": "<p>This is an example task. Delete it once you've laid your own plan with <code>/rm-plan</code>. Edit tasks in <code>PM/data/tasks.json</code>, then run <code>rocketman build</code>.</p>",
+      "backlinks": [],
+      "comments": [],
+      "activity": [{ "when": "just now", "who": "you", "line": "created the project with <b>rocketman init</b>" }]
+    }
+  ]
+}
