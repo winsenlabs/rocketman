@@ -115,6 +115,15 @@
     const c = COL[colId] || { name: colId, status: colId };
     return `<span class="status-pill st-${c.status}"><span class="dot"></span>${c.name}</span>`;
   }
+  // A task's pill: a custom `status` (+ optional `statusTone`) overrides the column-derived pill.
+  function taskStatus(t) {
+    if (t && t.status) {
+      const tone = t.statusTone || "warn";
+      const inCol = (COL[t.col] || {}).name || t.col;
+      return `<span class="status-pill st-${tone}" title="In ${inCol}"><span class="dot"></span>${esc(t.status)}</span>`;
+    }
+    return statusPill((t && t.col));
+  }
   function labelChip(id) {
     const l = D.labels[id]; if (!l) return "";
     return `<span class="label-chip hue"><span class="ldot" style="background:${l.color}"></span>${l.name}</span>`;
@@ -234,6 +243,7 @@
     return `<div class="kcard ${ageClass(t.col==='done'?0:t.age)} ${t.col==='blocked'&&false?'bug-card':''}" data-link="${t.id}">
       <div class="kc-top"><span class="kc-id">${t.ref}</span><span class="kc-spacer"></span>${P[t.owner]?(P[t.owner].kind==='agent'?agentChip(t.owner):avatar(t.owner,"sm")):'<span class="av sm unassigned" title="Unassigned">·</span>'}</div>
       <div class="kc-summary">${links(t.summary)}</div>
+      ${t.status?`<div class="kc-cstatus">${taskStatus(t)}</div>`:""}
       ${t.blockedReason?`<div class="blocked-reason">${icon("block")}${t.blockedReason}</div>`:""}
       ${t.labels.length?`<div class="kc-labels">${t.labels.map(labelChip).join("")}</div>`:""}
       <div class="kc-meta">
@@ -445,7 +455,7 @@
     const body = tasks.map((t) => `<tr class="li-row" data-link="${t.id}">
       <td class="li-id mono">${t.ref}</td>
       <td class="li-sum"><div class="li-sum-t">${links(t.summary || t.title || "")}</div></td>
-      <td>${statusPill(t.col)}</td>
+      <td>${taskStatus(t)}</td>
       <td class="li-owner">${ownerCell(t)}</td>
       <td>${epicCell(t)}</td>
       <td class="li-pts mono">${t.points || ""}</td>
@@ -648,7 +658,7 @@
       <h1>${t.title}</h1>
       <div class="d-summary">${iconFill("spark","sp")}<span>${links(t.summary)}</span></div>
       <div class="meta-grid">
-        <div><div class="meta-k">Status</div><div class="meta-v">${statusPill(t.col)}</div></div>
+        <div><div class="meta-k">Status</div><div class="meta-v">${taskStatus(t)}</div></div>
         <div><div class="meta-k">Owner</div><div class="meta-v">${byline(t.owner)}</div></div>
         <div><div class="meta-k">Epic</div><div class="meta-v"><span class="epic-dot" style="display:inline-block;width:8px;height:8px;border-radius:3px;background:${D.epics[t.epic].color}"></span> ${D.epics[t.epic].name}</div></div>
         <div><div class="meta-k">Points</div><div class="meta-v mono">${t.points}</div></div>
@@ -663,7 +673,7 @@
       <div class="d-sec"><h3>Activity</h3>${activityBlock(t.activity)}</div>
       </div></div>`;
   }
-  function drawerHeadTask(t){return `<div class="drawer-head"><span class="read-progress"></span><span class="dh-id mono">${t.ref}</span>${statusPill(t.col)}<span class="spacer"></span><button class="btn ghost tiny">${icon("link")} Copy link</button><button class="btn ghost icon" id="drawer-close">${icon("x")}</button></div>`;}
+  function drawerHeadTask(t){return `<div class="drawer-head"><span class="read-progress"></span><span class="dh-id mono">${t.ref}</span>${taskStatus(t)}<span class="spacer"></span><button class="btn ghost tiny">${icon("link")} Copy link</button><button class="btn ghost icon" id="drawer-close">${icon("x")}</button></div>`;}
   function drawerAdr(a) {
     return `<div class="drawer-head"><span class="read-progress"></span><span class="dh-id mono">${a.ref}</span><span class="adr-status ${a.status}">${a.status}</span><span class="spacer"></span><button class="btn ghost icon" id="drawer-close">${icon("x")}</button></div>
       <div class="drawer-scroll"><div class="drawer-body-inner">
