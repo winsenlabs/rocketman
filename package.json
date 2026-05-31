@@ -12,7 +12,9 @@
   "scripts": {
     "build": "node engine/build.mjs",
     "check": "node engine/build.mjs --check",
-    "doctor": "node bin/rocketman.mjs doctor"
+    "doctor": "node bin/rocketman.mjs doctor",
+    "smoke": "node engine/smoke.mjs",
+    "test": "node engine/build.mjs --check && node bin/rocketman.mjs doctor && node engine/smoke.mjs"
   },
   "files": [
     "engine",

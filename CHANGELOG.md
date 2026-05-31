@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.2] — 2026-05-31
 
 ### Added
+- **CI smoke test** (`engine/smoke.mjs`) — boots the built hub against a tiny zero-dependency DOM
+  shim and drives every view through the app's own click handler, failing if any view throws or
+  renders empty. Catches runtime render bugs the build can't (e.g. a recursion or undefined deref
+  that blanks the hub while `build --check` still passes). Wired into CI and `npm test`.
 - **Custom task status** — a task can set `status` (free-text, e.g. `"done · caveats"`) plus
   `statusTone` (`done`/`progress`/`review`/`blocked`/`bug`/`warn`/`accent`) to override the
   column-derived pill. Shows on the board card, in the List, and in the drawer — for when a task's

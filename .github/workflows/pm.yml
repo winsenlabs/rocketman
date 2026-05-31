@@ -23,3 +23,6 @@ jobs:
 
       - name: Verify PM/index.html is up to date
         run: node engine/build.mjs --check
+
+      - name: Smoke test (every view boots + renders, no uncaught errors)
+        run: node engine/smoke.mjs
