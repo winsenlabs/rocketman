@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Keyboard shortcuts (Linear-style), shown where they live** — every view has a single-key jump
+  (`d` Dashboard · `b` Board · `l` List · `s` Spec · `r` Roadmap · `c` Decisions · `g` Debug ·
+  `o` Docs · `a` Activity · `y` Dependencies · `f` Fleet), and each key now renders as a faint
+  `<kbd>` hint on its sidebar row so the binding is discoverable in place, not hidden in a manual.
+  Press `?` anywhere for a cheat-sheet overlay listing every shortcut; `t` toggles the theme; `Esc`
+  closes the overlay, ⌘K palette, or drawer (in that order). In the **List** view, `j`/`k` move the
+  row selection and `↵` opens the selected task. All single-key bindings are suppressed while typing
+  in an input, textarea, or select, and when a modifier (⌘/Ctrl/Alt) is held, so they never fight
+  real typing. Verified headless: 11 sidebar hints render, `?` opens a 17-row sheet, `j`/`k`/`↵`
+  drive List selection, and a keystroke inside an input does not change the view.
+
 ## [0.1.2] — 2026-05-31
 
 ### Added

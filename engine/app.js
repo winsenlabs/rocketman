@@ -744,24 +744,57 @@
     else openDrawer(id);
   }
 
+  /* ── keyboard cheat sheet (press ?) ── */
+  function buildKeys() {
+    const navRows = NAV.filter(n=>n.key).map(n=>`<div class="keys-row"><kbd>${n.key}</kbd><span>Go to ${n.label}</span></div>`).join("");
+    return `<div class="keys-card">
+      <div class="keys-head"><h3>Keyboard shortcuts</h3><button class="btn ghost icon" id="keys-close">${icon("x")}</button></div>
+      <div class="keys-grid">
+        <div class="keys-col"><div class="keys-col-label">Navigate</div>${navRows}</div>
+        <div class="keys-col">
+          <div class="keys-col-label">General</div>
+          <div class="keys-row"><kbd>⌘</kbd><kbd>K</kbd><span>Command palette &amp; search</span></div>
+          <div class="keys-row"><kbd>t</kbd><span>Toggle light / dark</span></div>
+          <div class="keys-row"><kbd>?</kbd><span>This cheat sheet</span></div>
+          <div class="keys-row"><kbd>esc</kbd><span>Close drawer / overlay</span></div>
+          <div class="keys-col-label" style="margin-top:16px">In the List</div>
+          <div class="keys-row"><kbd>j</kbd><kbd>k</kbd><span>Move down / up</span></div>
+          <div class="keys-row"><kbd>↵</kbd><span>Open selected task</span></div>
+        </div>
+      </div></div>`;
+  }
+  function keysOpen() { return document.getElementById("keys").classList.contains("open"); }
+  function openKeys() { const k=document.getElementById("keys"); k.innerHTML=buildKeys(); document.getElementById("keys-scrim").classList.add("open"); k.classList.add("open"); }
+  function closeKeys() { document.getElementById("keys-scrim").classList.remove("open"); document.getElementById("keys").classList.remove("open"); }
+  function listNav(dir, e) {
+    const rows = [...document.querySelectorAll(".li-row")]; if (!rows.length) return;
+    if (e) e.preventDefault();
+    if (dir === 0) { if (listSel >= 0 && rows[listSel]) openDrawer(rows[listSel].dataset.link); return; }
+    listSel = listSel < 0 ? (dir > 0 ? 0 : rows.length - 1) : Math.max(0, Math.min(rows.length - 1, listSel + dir));
+    rows.forEach((r, i) => r.classList.toggle("li-sel", i === listSel));
+    rows[listSel].scrollIntoView({ block: "nearest" });
+  }
+
   /* ════════════════════════ ROUTER / SHELL ════════════════════════ */
   const NAV = [
-    { id:"dashboard", label:"Dashboard", icon:"dashboard" },
-    { id:"board", label:"Board", icon:"board", count:D.tasks.filter(t=>t.col!=='done').length },
-    { id:"list", label:"List", icon:"list", count:(D.tasks||[]).length },
-    { id:"spec", label:"Product Spec", icon:"spec" },
-    { id:"roadmap", label:"Roadmap", icon:"roadmap" },
-    { id:"decisions", label:"Decisions", icon:"decision", count:D.adrs.length },
-    { id:"debug", label:"Debug", icon:"debug", count:D.debug.length, dot:"var(--s-bug)" },
-    { id:"docs", label:"Docs", icon:"docs" },
-    { id:"activity", label:"Activity", icon:"activity" },
-    { id:"depends", label:"Dependencies", icon:"link", count: (((D.tasks||[]).filter(t=>t.col==="blocked").length)+((D.adrs||[]).filter(a=>a.status==="proposed").length))||undefined },
-    { id:"fleet", label:"Fleet", icon:"blocks", count:((D.comms&&D.comms.agents)||[]).length||undefined }
+    { id:"dashboard", label:"Dashboard", icon:"dashboard", key:"d" },
+    { id:"board", label:"Board", icon:"board", key:"b", count:D.tasks.filter(t=>t.col!=='done').length },
+    { id:"list", label:"List", icon:"list", key:"l", count:(D.tasks||[]).length },
+    { id:"spec", label:"Product Spec", icon:"spec", key:"s" },
+    { id:"roadmap", label:"Roadmap", icon:"roadmap", key:"r" },
+    { id:"decisions", label:"Decisions", icon:"decision", key:"c", count:D.adrs.length },
+    { id:"debug", label:"Debug", icon:"debug", key:"g", count:D.debug.length, dot:"var(--s-bug)" },
+    { id:"docs", label:"Docs", icon:"docs", key:"o" },
+    { id:"activity", label:"Activity", icon:"activity", key:"a" },
+    { id:"depends", label:"Dependencies", icon:"link", key:"y", count: (((D.tasks||[]).filter(t=>t.col==="blocked").length)+((D.adrs||[]).filter(a=>a.status==="proposed").length))||undefined },
+    { id:"fleet", label:"Fleet", icon:"blocks", key:"f", count:((D.comms&&D.comms.agents)||[]).length||undefined }
   ];
   let current = "dashboard";
+  let listSel = -1;
   function go(view) {
     if (!V[view]) return;
     current = view;
+    listSel = -1;
     closeDrawer();
     document.getElementById("main").innerHTML = V[view]();
     document.querySelectorAll(".sb-item").forEach(b=>b.classList.toggle("active", b.dataset.view===view));
@@ -774,7 +807,7 @@
     const sb = `
       <div class="sb-brand"><div class="sb-mark">${icon("blocks")}</div><div><div class="sb-brand-name">${D.project.name}</div><div class="sb-brand-sub">${D.project.repo}</div></div></div>
       <div class="sb-group"><div class="sb-group-label">Views</div>
-        ${NAV.map(n=>`<button class="sb-item" data-view="${n.id}">${icon(n.icon,"sb-icon")}<span class="sb-name">${n.label}</span>${n.dot?`<span class="sb-dot" style="background:${n.dot}"></span>`:""}${n.count!=null?`<span class="sb-count">${n.count}</span>`:""}</button>`).join("")}
+        ${NAV.map(n=>`<button class="sb-item" data-view="${n.id}">${icon(n.icon,"sb-icon")}<span class="sb-name">${n.label}</span>${n.dot?`<span class="sb-dot" style="background:${n.dot}"></span>`:""}${n.count!=null?`<span class="sb-count">${n.count}</span>`:""}${n.key?`<kbd class="sb-key">${n.key}</kbd>`:""}</button>`).join("")}
       </div>
       <div class="sb-foot"><span class="av human" style="width:24px;height:24px;font-size:9px">TS</span><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:500">Tejas S.</div><div class="sb-foot-status"><span class="dot"></span>maintainer</div></div></div>`;
     document.getElementById("sidebar").innerHTML = sb;
@@ -810,6 +843,7 @@
     if (e.target.closest("#drawer-close") || e.target.id==="scrim") { closeDrawer(); return; }
     if (e.target.closest("#tb-search")) { openCmd(); return; }
     if (e.target.id==="cmdk-scrim") { closeCmd(); return; }
+    if (e.target.id==="keys-scrim" || e.target.closest("#keys-close")) { closeKeys(); return; }
     const cmd = e.target.closest("[data-cmd]"); if (cmd) { execCmd(cmd.dataset.cmd); return; }
     const cbtn = e.target.closest("[data-comment]");
     if (cbtn) {
@@ -855,14 +889,19 @@
   document.addEventListener("keydown", e => {
     const cmdOpen = document.getElementById("cmdk").classList.contains("open");
     if ((e.metaKey||e.ctrlKey) && e.key.toLowerCase()==="k") { e.preventDefault(); cmdOpen?closeCmd():openCmd(); return; }
-    if (e.key === "Escape") { if(cmdOpen)closeCmd(); else closeDrawer(); return; }
+    if (e.key === "Escape") { if(keysOpen())closeKeys(); else if(cmdOpen)closeCmd(); else closeDrawer(); return; }
     if (cmdOpen) {
       if (e.key==="ArrowDown"){e.preventDefault();cmdSel=Math.min(cmdSel+1,cmdResults.length-1);renderCmd();}
       else if (e.key==="ArrowUp"){e.preventDefault();cmdSel=Math.max(cmdSel-1,0);renderCmd();}
       else if (e.key==="Enter"){e.preventDefault();if(cmdResults[cmdSel])execCmd(cmdResults[cmdSel].id);}
-    } else if (!/input|textarea/i.test((e.target.tagName||""))) {
+    } else if (!/input|textarea|select/i.test((e.target.tagName||"")) && !e.metaKey && !e.ctrlKey && !e.altKey) {
+      if (e.key === "?") { e.preventDefault(); keysOpen()?closeKeys():openKeys(); return; }
+      if (keysOpen()) return;
+      const k = e.key.toLowerCase();
+      if (k === "t") { applyTheme(document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark"); return; }
+      if (current === "list" && (k === "j" || k === "k" || e.key === "Enter")) { listNav(k==="j"?1:(k==="k"?-1:0), e); return; }
       const map={d:"dashboard",b:"board",s:"spec",r:"roadmap",c:"decisions",g:"debug",o:"docs",a:"activity",f:"fleet",y:"depends",l:"list"};
-      if(map[e.key.toLowerCase()] && !e.metaKey && !e.ctrlKey) go(map[e.key.toLowerCase()]);
+      if(map[k]) go(map[k]);
     }
   });
   document.getElementById("cmdk-input") || 0;
