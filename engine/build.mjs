@@ -232,6 +232,8 @@ ${css}
     <span style="margin-left:auto">${(D.project && D.project.name) || 'Project'} Hub</span>
   </div>
 </div>
+<div class="keys-scrim" id="keys-scrim"></div>
+<div class="keys" id="keys" role="dialog" aria-label="Keyboard shortcuts"></div>
 <script id="pm-data" type="application/json">
 ${island}
 </script>

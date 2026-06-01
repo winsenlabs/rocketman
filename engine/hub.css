@@ -947,3 +947,21 @@ table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-
 .doc-body pre, .drawer-scroll pre, .d-body pre { max-width: 100%; overflow-x: auto; }
 .doc-body img { max-width: 100%; height: auto; }
 .drawer-scroll, .scroll { overflow-wrap: anywhere; }
+
+/* ── Keyboard shortcuts: sidebar hints + cheat sheet (press ?) ── */
+.sb-key { font-family: var(--font-mono); font-size: 10px; line-height: 1; color: var(--ink-4); background: var(--bg-3); border: 1px solid var(--border); border-radius: 4px; padding: 2px 5px; margin-left: 6px; opacity: 0; transition: opacity .12s; }
+.sb-item:hover .sb-key, .sb-item.active .sb-key { opacity: 0.7; }
+.keys-scrim { position: fixed; inset: 0; background: oklch(20% 0.03 255 / 0.4); opacity: 0; pointer-events: none; transition: opacity .14s; z-index: 60; }
+.keys-scrim.open { opacity: 1; pointer-events: auto; }
+.keys { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -48%) scale(0.98); opacity: 0; pointer-events: none; width: min(620px, 92vw); z-index: 61; transition: opacity .14s, transform .14s; }
+.keys.open { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
+.keys-card { background: var(--surface); border: 1px solid var(--border-2); border-radius: var(--radius-lg); box-shadow: var(--pop-shadow); overflow: hidden; }
+.keys-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--border); }
+.keys-head h3 { margin: 0; font-size: 14px; font-weight: 600; letter-spacing: -0.01em; }
+.keys-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 28px; padding: 16px 18px 20px; }
+@media (max-width: 560px) { .keys-grid { grid-template-columns: 1fr; } }
+.keys-col-label { font-family: var(--font-mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-4); margin: 0 0 8px; }
+.keys-row { display: flex; align-items: center; gap: 6px; padding: 4px 0; font-size: 12.5px; color: var(--ink-2); }
+.keys-row span { margin-left: 4px; }
+.keys kbd { font-family: var(--font-mono); font-size: 10.5px; line-height: 1; color: var(--ink-2); background: var(--bg-3); border: 1px solid var(--border-2); border-bottom-width: 2px; border-radius: 5px; padding: 3px 7px; min-width: 18px; text-align: center; }
+.li-row.li-sel { background: var(--accent-soft); box-shadow: inset 2px 0 0 var(--accent); }
