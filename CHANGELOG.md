@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.3] — 2026-06-01
+
 ### Added
 - **Keyboard shortcuts (Linear-style), shown where they live** — every view has a single-key jump
   (`d` Dashboard · `b` Board · `l` List · `s` Spec · `r` Roadmap · `c` Decisions · `g` Debug ·
@@ -159,5 +161,8 @@ The first public release. 🚀
 - `BUG-2` — a literal closing-script sequence inside content could close the data island early.
   The build now escapes `<` inside the embedded JSON.
 
-[Unreleased]: https://github.com/winsenlabs/rocketman/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/winsenlabs/rocketman/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/winsenlabs/rocketman/compare/v0.1.2...v0.1.3
+[0.1.2]: https://github.com/winsenlabs/rocketman/compare/v0.1.1...v0.1.2
+[0.1.1]: https://github.com/winsenlabs/rocketman/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/winsenlabs/rocketman/releases/tag/v0.1.0
