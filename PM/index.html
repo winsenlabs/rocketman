@@ -3229,8 +3229,8 @@ table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-
         </div>
         ${open?`<div class="adr-body">
           <div class="adr-block"><h4>Context</h4><p>${links(a.context)}</p></div>
-          <div class="adr-block"><h4>Options considered</h4><ul class="adr-options">${a.options.map(o=>`<li class="${o.chosen?'chosen':''}"><span class="opt-tag">${o.chosen?'chosen':'—'}</span><span>${links(o.text)}</span></li>`).join("")}</ul></div>
-          <div class="adr-block decision" style="grid-column:1/-1"><h4>Decision · by ${P[a.author].name}</h4><p>${links(a.decision)}</p></div>
+          <div class="adr-block"><h4>Options considered</h4><ul class="adr-options">${(a.options||[]).map(o=>`<li class="${o.chosen?'chosen':''}"><span class="opt-tag">${o.chosen?'chosen':'—'}</span><span>${links(o.text)}</span></li>`).join("")}</ul></div>
+          <div class="adr-block decision" style="grid-column:1/-1"><h4>Decision · by ${(P[a.author]||{}).name||a.author||"unknown"}</h4><p>${links(a.decision)}</p></div>
           <div class="adr-block" style="grid-column:1/-1"><h4>Consequences</h4><p>${links(a.consequences)}</p></div>
         </div>${supersedeNote}`:supersedeNote}
       </div>`;
@@ -3579,7 +3579,7 @@ table.req .p-must { color: var(--s-bug); } table.req .p-should { color: var(--s-
       <div class="d-summary">${iconFill("spark","sp")}<span>${links(a.summary)}</span></div>
       <div class="meta-grid"><div><div class="meta-k">Date</div><div class="meta-v mono">${a.date}</div></div><div><div class="meta-k">Author</div><div class="meta-v">${byline(a.author)}</div></div></div>
       <div class="d-sec"><h3>Context</h3><div class="d-body"><p>${links(a.context)}</p></div></div>
-      <div class="d-sec"><h3>Options considered</h3><ul class="adr-options">${a.options.map(o=>`<li class="${o.chosen?'chosen':''}"><span class="opt-tag">${o.chosen?'chosen':'—'}</span><span>${links(o.text)}</span></li>`).join("")}</ul></div>
+      <div class="d-sec"><h3>Options considered</h3><ul class="adr-options">${(a.options||[]).map(o=>`<li class="${o.chosen?'chosen':''}"><span class="opt-tag">${o.chosen?'chosen':'—'}</span><span>${links(o.text)}</span></li>`).join("")}</ul></div>
       <div class="d-sec"><h3>Decision</h3><div class="adr-block decision" style="margin:0;border-radius:var(--radius-sm)"><p>${links(a.decision)}</p></div></div>
       <div class="d-sec"><h3>Consequences</h3><div class="d-body"><p>${links(a.consequences)}</p></div></div>
       <div class="d-sec"><h3>Referenced by <span class="c">${(a.backlinks||[]).length}</span></h3><div class="backlinks">${backlinkChips(a.backlinks)}</div></div>
