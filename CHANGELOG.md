@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.4] — 2026-06-02
+
+### Fixed
+- **Decisions view crashed when expanding a sparse ADR** — expanding a decision re-renders the view,
+  and the expanded body dereferenced `P[a.author].name` and `a.options.map` with no guards. Any ADR
+  missing `options`, or whose `author` wasn't in the people registry, threw during re-render, so the
+  DOM never updated and the card looked like it "wouldn't expand." It surfaced once hand-added
+  decisions piled up past the seeded set (reported as "more than 15") — a data-shape bug, not a count
+  limit. The expand body and the drawer ADR view now guard both fields, so a sparse ADR renders with
+  fallbacks (author → name/id/"unknown", options → empty) instead of crashing. Verified by booting the
+  hub with 20 ADRs including 4 malformed records — all expand with no uncaught error.
+
 ## [0.1.3] — 2026-06-01
 
 ### Added
@@ -161,7 +173,8 @@ The first public release. 🚀
 - `BUG-2` — a literal closing-script sequence inside content could close the data island early.
   The build now escapes `<` inside the embedded JSON.
 
-[Unreleased]: https://github.com/winsenlabs/rocketman/compare/v0.1.3...HEAD
+[Unreleased]: https://github.com/winsenlabs/rocketman/compare/v0.1.4...HEAD
+[0.1.4]: https://github.com/winsenlabs/rocketman/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/winsenlabs/rocketman/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/winsenlabs/rocketman/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/winsenlabs/rocketman/compare/v0.1.0...v0.1.1

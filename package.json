@@ -1,6 +1,6 @@
 {
   "name": "@winsendotai/rocketman",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Idea to production on autopilot. An in-repo HTML project hub + a Claude skill track for responsible token-maxing. By Winsen Labs.",
   "type": "module",
   "publishConfig": {
